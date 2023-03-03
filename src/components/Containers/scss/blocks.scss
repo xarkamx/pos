@@ -1,0 +1,73 @@
+.errorContainer {
+  border: 3px solid red;
+  border-radius: 9px;
+
+  width: 80%;
+  margin: 0 auto;
+}
+.errorMessage {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+.splashScreen {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  display: flex;
+  align-content: center;
+  .content {
+    align-self: center;
+    margin: 0 auto;
+    text-align: center;
+  }
+  svg {
+    animation: shake 2s;
+    path {
+      fill: var(--primary);
+    }
+    animation-iteration-count: infinite;
+    width: 300px;
+    height: 300px;
+    margin: 10% 0%;
+  }
+  z-index: 999;
+  h2 {
+    color: white;
+    font-size: 3rem;
+    background: linear-gradient(90deg, #f54f6b 0%, #d756b0 100%);
+    background-size: 1600px 200px;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation-duration: 2s;
+    animation-name: animationgradienttitle;
+    animation-iteration-count: infinite;
+    animation-fill-mode: forwards;
+  }
+}
+.splashScreen-enter {
+  opacity: 0;
+  transform: scale(1.1);
+  transform: translateX(-100vw);
+}
+
+.splashScreen-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.splashScreen-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.splashScreen-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 300ms, transform 300ms;
+}
+.splashScreen-exit-done {
+  display: none;
+}

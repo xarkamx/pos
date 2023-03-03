@@ -1,0 +1,43 @@
+.skeletonPost {
+  .imgShell {
+    height: 80px;
+    width: 90%;
+    background: var(--grayGradient);
+    border-radius: 3px;
+  }
+}
+.descSkeleton {
+  div {
+    background: var(--grayGradient);
+    &:first-child {
+      margin-top: 0px;
+    }
+
+    height: 30px;
+    margin: 10% 0px;
+  }
+}
+.waiting {
+  animation-duration: 3s;
+  animation-name: animationgradienblock;
+  animation-iteration-count: infinite;
+  animation-fill-mode: forwards;
+}
+
+:root {
+  --grayGradient: linear-gradient(
+    40deg,
+    rgba(238, 238, 238, 1) 0%,
+    rgba(170, 170, 170, 1) 33%,
+    rgba(170, 170, 170, 1) 66%,
+    rgba(238, 238, 238, 1) 100%
+  );
+}
+
+.skeletonSingularPost {
+  .imgShell {
+    height: 300px;
+
+    background: var(--grayGradient);
+  }
+}

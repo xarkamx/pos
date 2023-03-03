@@ -1,0 +1,16 @@
+.contentTooltip {
+  position: relative;
+  .tooltip {
+    position: absolute;
+    width: 250px;
+    display: block;
+    background-color: rgba(255, 255, 255, 0.7);
+    color: black;
+    padding: 15px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border-radius: 9px;
+    text-align: center;
+  }
+}

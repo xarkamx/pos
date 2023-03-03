@@ -1,0 +1,22 @@
+.responsiveTable {
+  .singularList {
+    margin-bottom: 15px;
+    span {
+      font-weight: bolder;
+      font-size: 12px;
+      display: inline;
+      &:after {
+        content: ": ";
+      }
+    }
+    p {
+      padding: 2px;
+      min-height: 20px;
+      font-size: 12px;
+      display: inline;
+    }
+    .fa {
+      font-size: 1.3 em;
+    }
+  }
+}

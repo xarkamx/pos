@@ -32,7 +32,7 @@
     "react/jsx-key": 1,
     "import/no-cycle": 0,
     "arrow-body-style": 1,
-    "react/prop-types": 1,
+    "react/prop-types": 0,
     "no-param-reassign": 0,
     "no-nested-ternary": 0,
     "default-param-last": 0,
