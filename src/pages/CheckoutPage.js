@@ -1,16 +1,28 @@
-import { Card, Grid, List, ListItem, TextField, Typography, Button } from '@mui/material';
+import { Grid, TextField, Typography } from '@mui/material';
 import { Container } from '@mui/system';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Money } from '../components/Formats/FormatNumbers';
+import { useOrders } from '../hooks/useOrders';
 import { useCState } from '../hooks/useHooks';
-import { DiscountInput, ItemsList } from '../sections/@dashboard/checkout/itemsList';
+import { ItemsList } from '../sections/@dashboard/checkout/itemsList';
 import { ProductSearchInput } from '../sections/@dashboard/products/ProductSearchInput';
+import { PaymentForm } from '../sections/@dashboard/checkout/paymentForm';
+import { StatusModal } from '../components/CustomModal/StatusModal';
 
 
 export default function CheckoutPage () {
-  const { products, add, update, onDelete, total, subtotal, setDiscount } = useCheckout();
-
+  const { products,
+    add,
+    update,
+    onDelete,
+    total,
+    subtotal,
+    setDiscount,
+    error,
+    send, isLoading } = useCheckout();
+  const [rfc, setRfc] = useState('XAXX010101000');
+  const [open, setOpen] = useState(false);
+  const submitable = products.length > 0 && !isLoading;
   return (
     <>
       <Helmet>
@@ -19,16 +31,18 @@ export default function CheckoutPage () {
 
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Caja chica
+          Caja
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <ProductSearchInput onSubmit={add} />
-
           </Grid>
           <Grid item xs={12} sm={6} md={8}>
             <TextField label='RFC'
-              defaultValue={'XAXX010101000'}
+              value={rfc}
+              onChange={(ev) => {
+                setRfc(ev.target.value)
+              }}
               style={
                 {
                   width: '100%'
@@ -40,44 +54,25 @@ export default function CheckoutPage () {
               onEditQuantity={update} />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
-            <Card>
-              <List>
-
-                <ListItem>
-                  <Typography variant="subtitle1" sx={{ mb: 1 }} color='orange'>
-                    Subtotal: <Money number={subtotal} />
-                  </Typography>
-                </ListItem>
-                <ListItem>
-                  <DiscountInput onChange={(ev) => {
-                    setDiscount(ev.val)
-                  }} total={subtotal} />
-                </ListItem>
-                <hr />
-                <ListItem>
-                  <Typography variant="subtitle1" sx={{ mb: 1 }} color='darkseagreen'>
-                    Total: <Money number={total} />
-                  </Typography>
-                </ListItem>
-                <ListItem>
-                  <Grid container spacing={3}>
-                    <Grid item xs={6}>
-                      <Button variant="contained" fullWidth>
-                        Pago Total
-                      </Button>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Button variant="contained" fullWidth color='warning'>
-                        Pago Parcial
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-              </List>
-            </Card>
+            <PaymentForm
+              subtotal={subtotal}
+              total={total}
+              rfc={rfc}
+              send={(_id, payment) => {
+                send(rfc, payment)
+                setOpen(true)
+              }}
+              onDiscount={setDiscount}
+              submitable={submitable}
+            />
           </Grid>
         </Grid>
       </Container>
+      <StatusModal open={open}
+        onClose={() => {
+          setOpen(false);
+        }}
+        message={error ? "Error en registro" : "Completada"} status={error ? "error" : "success"} />
     </>
   );
 };
@@ -85,9 +80,15 @@ export default function CheckoutPage () {
 function useCheckout () {
   const [products, setProducts] = useCState({ items: [] });
   const [discount, setDiscount] = useState(0);
+  const { createOrder, isLoading, response, error } = useOrders();
   const subtotal = products.items.reduce((acc, cur) => acc + cur.amount, 0);
-  const total = subtotal - setDiscountToAbsoluteValue(discount, subtotal);
+  const fullDiscount = setDiscountToAbsoluteValue(discount, subtotal)
+  const total = subtotal - fullDiscount;
 
+  const clear = () => {
+    setProducts({ items: [] });
+    setDiscount(0);
+  };
   const onDelete = (id) => {
     const prod = products.items
     const index = prod.findIndex((product) => product.id === id);
@@ -126,7 +127,20 @@ function useCheckout () {
     onDelete,
     total,
     subtotal,
-    setDiscount
+    setDiscount,
+    isLoading,
+    response,
+    error,
+    send: (rfc, payment) => {
+      createOrder({
+        rfc,
+        discount: fullDiscount,
+        partialPayment: payment || total,
+        items: products.items.map(({ id, quantity }) => ({ productId: id, quantity }))
+      })
+      clear()
+    },
+    clear
   }
 }
 

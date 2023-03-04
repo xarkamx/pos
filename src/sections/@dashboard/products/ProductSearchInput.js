@@ -8,11 +8,12 @@ export function ProductSearchInput ({ onSubmit }) {
   const products = useProducts();
   const [product, setProduct] = useCState({ quantity: 1 })
   const options = products.products || [];
+
   return <form onSubmit={(ev) => {
     ev.preventDefault();
     if (!product.id) return;
     onSubmit?.({ ...product, amount: product.quantity * product.price });
-    setProduct({ quantity: 1, amount: 0 })
+    setProduct({ quantity: 1, id: null, name: null, price: null })
   }}>
     <div style={{
       padding: '10px 0',
@@ -20,6 +21,7 @@ export function ProductSearchInput ({ onSubmit }) {
       <Grid container spacing={3}>
         <Grid item xs={8}>
           <Autocomplete
+            value={product.name || ''}
             disablePortal
             id="combo-box-search-product"
             options={options}

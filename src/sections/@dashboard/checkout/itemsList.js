@@ -51,7 +51,7 @@ function QtyInput ({ onChange, value }) {
       setVal(ev.target.value)
     }} value={val} />
 }
-export function DiscountInput ({ onChange, total, value }) {
+export function DiscountInput ({ onChange, total, value = 0 }) {
   const [val, setVal] = useState(value)
   useEffect(() => {
     setVal(value)
