@@ -1,6 +1,7 @@
 import { Box, Button, Card, FormControl, Grid, InputLabel, List, ListItem, MenuItem, Modal, Select, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { Money } from '../../../components/Formats/FormatNumbers'
+import { PaymentMethodSelect } from '../payments/SelectPaymentMethod'
 import { DiscountInput } from './itemsList'
 
 export function PaymentForm ({ subtotal, total, rfc, send, onDiscount, submitable }) {
@@ -26,19 +27,10 @@ export function PaymentForm ({ subtotal, total, rfc, send, onDiscount, submitabl
           </Typography>
         </ListItem>
         <ListItem>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Tipo de pago</InputLabel>
-            <Select value={paymentMethod}
-              labelId="demo-simple-select-label"
-              id="demo-simple-select" fullWidth
-              onChange={(ev) => {
-                setPaymentMethod(ev.target.value)
-              }}
-            >
-              <MenuItem value='1'>Efectivo</MenuItem>
-              <MenuItem value='2'>Deposito</MenuItem>
-            </Select>
-          </FormControl>
+          <PaymentMethodSelect paymentMethod={paymentMethod} onChange={(ev) => {
+            setPaymentMethod(ev.target.value)
+          }} />
+
         </ListItem>
         <ListItem>
           <Grid container spacing={3}>

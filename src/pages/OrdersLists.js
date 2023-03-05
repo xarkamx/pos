@@ -1,17 +1,21 @@
-import { Card, Chip, Grid, TablePagination, TextField } from '@mui/material';
+import { Card, Chip, Grid, TablePagination } from '@mui/material';
 import { localeDate } from 'afio/src/core/helpers';
 import { useState } from 'react';
 import { Money } from '../components/Formats/FormatNumbers';
+import { SearchDatesInputs } from '../components/Inputs/SearchDateInput';
 import { CustomTable } from '../components/tables/Table';
 import { between } from '../core/helpers';
 import { useCState } from '../hooks/useHooks';
 import { useOrders } from '../hooks/useOrders';
+import { PaymentModal } from '../sections/@dashboard/orders/paymentModal';
 
 export function OrdersPage () {
-  const { orders } = useOrders();
+  const { orders, pay } = useOrders();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useCState(null);
+  const [openPaymentModal, setOpenPaymentModal] = useState(false);
+  const [order, setOrder] = useCState({});
   const color = (status) => {
     switch (status) {
       case 'pending':
@@ -38,7 +42,7 @@ export function OrdersPage () {
     padding: '1rem',
   }}>
     <EarninsResume orders={search ? ords : orders} />
-    <SearchOrdersInputs onChange={(dates) => {
+    <SearchDatesInputs onChange={(dates) => {
       setSearch(dates);
     }} />
 
@@ -56,56 +60,48 @@ export function OrdersPage () {
           setRowsPerPage(ev.target.value);
         }}
       />}
-      titles={['ID', 'Fecha', 'Cliente', 'Pago', 'Metodo de pago', 'subtotal', 'Total', 'Descuento', 'Estatus']}
+      titles={['ID', 'Fecha', 'Pago', 'subtotal', 'Total', 'Descuento', 'Estatus']}
       content={ords}
       format={(item) => [
         item.id,
         localeDate(item.createdAt),
-        item.rfc,
         <Money key={`item1-${item.id}`} number={item.partialPayment} />,
-        item.paymentType === 1 ? 'Efectivo' : 'Deposito',
         <Money key={`item2-${item.id}`} number={item.subtotal} />,
         <Money key={`item3-${item.id}`} number={item.total} />,
         <Money key={`item4-${item.id}`} number={item.discount} />,
-        <Chip key={`chip-${item.id}`} label={item.status} color={color(item.status)} sx={{
-          color: 'white',
-          fontWeight: 'bold',
-          textTransform: 'capitalize'
-        }} />
+        <Chip key={`chip-${item.id}`}
+          label={item.status}
+          color={color(item.status)}
+          onClick={() => {
+            if (item.status === 'paid') return;
+            setOrder(item);
+            setOpenPaymentModal(true);
+          }}
+          sx={{
+            color: 'white',
+            fontWeight: 'bold',
+            textTransform: 'capitalize'
+          }} />
       ]}
     />
+    <PaymentModal
+      amount={order.total - order.partialPayment}
+      max={order.total - order.partialPayment}
+      onPay={(clientId, amount, paymentMethod) => {
+        pay({ orderId: order.id, clientId, payment: amount, paymentMethod })
+        setOpenPaymentModal(false);
+      }}
+      onClose={() => {
+        setOpenPaymentModal(false);
+      }}
+      open={
+        openPaymentModal
+      } />
   </Card>
 
 }
 
-function SearchOrdersInputs ({ onChange }) {
-  const [dates, setDates] = useCState({
-    from: null,
-    to: null,
-  });
-  return <>
-    <Grid container spacing={2}>
-      <Grid item xs={12} md={6}>
-        <TextField
-          fullWidth label="Desde"
-          InputLabelProps={{ shrink: true }}
-          type='date' onChange={(ev) => {
-            setDates({ from: ev.target.value });
-            onChange({ ...dates, from: ev.target.value });
-          }} />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <TextField
-          fullWidth label="Hasta"
-          InputLabelProps={{ shrink: true }}
-          type='date' onChange={(ev) => {
-            setDates({ to: ev.target.value });
-            onChange({ ...dates, to: ev.target.value });
-          }} />
-      </Grid>
-    </Grid>
-  </>
-}
+
 function EarninsResume ({ orders = [] }) {
   let payment = 0;
   let total = 0;

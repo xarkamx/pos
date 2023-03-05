@@ -10,6 +10,7 @@ import Page404 from './pages/Page404';
 import DashboardAppPage from './pages/DashboardAppPage';
 import CheckoutPage from './pages/CheckoutPage';
 import { OrdersPage } from './pages/OrdersLists';
+import PaymentPages from './pages/PaymentsPage';
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +24,7 @@ export default function Router () {
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'user', element: <UserPage /> },
         { path: 'ordenes', element: <OrdersPage /> },
+        { path: 'pagos', element: <PaymentPages /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'caja', element: <CheckoutPage /> }
       ],
