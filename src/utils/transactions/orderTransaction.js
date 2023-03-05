@@ -9,7 +9,10 @@ export class OrderTransaction extends TransactionService {
   }
 
   async createOrder ({ rfc, products, discount, partialPayment, items }) {
-    console.log('here', rfc)
     return this.post('/orders', { rfc, products, discount, partialPayment, items });
+  }
+
+  async getOrders () {
+    return this.get('/orders');
   }
 }

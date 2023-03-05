@@ -170,10 +170,11 @@ export function CustomTable ({
   pageComponent,
   setDir,
   titles,
-  content,
+  content = [],
   onClick,
   format,
 }) {
+
   return (
     <TableContainer hook={setDir} titles={titles} pageComponent={pageComponent}>
       {content.map((item, key) => [
