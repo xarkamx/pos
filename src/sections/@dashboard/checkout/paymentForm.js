@@ -4,6 +4,7 @@ import { Money } from '../../../components/Formats/FormatNumbers'
 import { DiscountInput } from './itemsList'
 
 export function PaymentForm ({ subtotal, total, rfc, send, onDiscount, submitable }) {
+  const [paymentMethod, setPaymentMethod] = useState('1')
   return (
     <Card>
       <List>
@@ -27,9 +28,15 @@ export function PaymentForm ({ subtotal, total, rfc, send, onDiscount, submitabl
         <ListItem>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Tipo de pago</InputLabel>
-            <Select value={"efectivo"} labelId="demo-simple-select-label" id="demo-simple-select" fullWidth>
-              <MenuItem value='efectivo'>Efectivo</MenuItem>
-              <MenuItem value='tarjeta'>Deposito</MenuItem>
+            <Select value={paymentMethod}
+              labelId="demo-simple-select-label"
+              id="demo-simple-select" fullWidth
+              onChange={(ev) => {
+                setPaymentMethod(ev.target.value)
+              }}
+            >
+              <MenuItem value='1'>Efectivo</MenuItem>
+              <MenuItem value='2'>Deposito</MenuItem>
             </Select>
           </FormControl>
         </ListItem>
@@ -38,14 +45,15 @@ export function PaymentForm ({ subtotal, total, rfc, send, onDiscount, submitabl
             <Grid item xs={6}>
               <Button variant="contained" disabled={!submitable} fullWidth onClick={
                 () => {
-                  send()
+                  console.log({ paymentMethod })
+                  send(rfc, total, paymentMethod)
                 }
               }>
                 Pago Total
               </Button>
             </Grid>
             <Grid item xs={6}>
-              <PartialPaymentModal send={send} total={total} rfc={rfc} submitable={submitable} />
+              <PartialPaymentModal send={send} total={total} rfc={rfc} submitable={submitable} paymentMethod={paymentMethod} />
             </Grid>
           </Grid>
         </ListItem>
@@ -54,7 +62,7 @@ export function PaymentForm ({ subtotal, total, rfc, send, onDiscount, submitabl
   )
 }
 
-function PartialPaymentModal ({ send, rfc, total, submitable }) {
+function PartialPaymentModal ({ send, rfc, total, submitable, paymentMethod }) {
   const [open, setOpen] = useState(false)
   const [payment, setPayment] = useState(0)
   return (
@@ -79,7 +87,7 @@ function PartialPaymentModal ({ send, rfc, total, submitable }) {
           }}>
             <form onSubmit={(ev) => {
               ev.preventDefault()
-              send(rfc, payment)
+              send(rfc, payment, paymentMethod)
               setOpen(false)
             }}>
               <Typography variant="h4" sx={{ mb: 5 }}>

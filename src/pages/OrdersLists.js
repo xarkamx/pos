@@ -56,13 +56,14 @@ export function OrdersPage () {
           setRowsPerPage(ev.target.value);
         }}
       />}
-      titles={['ID', 'Fecha', 'Cliente', 'Pago', 'subtotal', 'Total', 'Descuento', 'Estatus']}
+      titles={['ID', 'Fecha', 'Cliente', 'Pago', 'Metodo de pago', 'subtotal', 'Total', 'Descuento', 'Estatus']}
       content={ords}
       format={(item) => [
         item.id,
         localeDate(item.createdAt),
         item.rfc,
         <Money key={`item1-${item.id}`} number={item.partialPayment} />,
+        item.paymentType === 1 ? 'Efectivo' : 'Deposito',
         <Money key={`item2-${item.id}`} number={item.subtotal} />,
         <Money key={`item3-${item.id}`} number={item.total} />,
         <Money key={`item4-${item.id}`} number={item.discount} />,
