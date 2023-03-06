@@ -8,6 +8,7 @@ import { ItemsList } from '../sections/@dashboard/checkout/itemsList';
 import { ProductSearchInput } from '../sections/@dashboard/products/ProductSearchInput';
 import { PaymentForm } from '../sections/@dashboard/checkout/paymentForm';
 import { StatusModal } from '../components/CustomModal/StatusModal';
+import { ClientsSearchInput } from '../sections/@dashboard/clients/SelectClient';
 
 
 export default function CheckoutPage () {
@@ -20,7 +21,7 @@ export default function CheckoutPage () {
     setDiscount,
     error,
     send, isLoading } = useCheckout();
-  const [rfc, setRfc] = useState('XAXX010101000');
+  const [clientId, setClient] = useState(0);
   const [open, setOpen] = useState(false);
   const submitable = products.length > 0 && !isLoading;
   return (
@@ -38,16 +39,9 @@ export default function CheckoutPage () {
             <ProductSearchInput onSubmit={add} />
           </Grid>
           <Grid item xs={12} sm={6} md={8}>
-            <TextField label='RFC'
-              value={rfc}
-              onChange={(ev) => {
-                setRfc(ev.target.value)
-              }}
-              style={
-                {
-                  width: '100%'
-                }
-              } />
+            <ClientsSearchInput onSubmit={(client) => {
+              setClient(client.id)
+            }} />
             <ItemsList
               products={products}
               onDeleteProduct={onDelete}
@@ -57,9 +51,9 @@ export default function CheckoutPage () {
             <PaymentForm
               subtotal={subtotal}
               total={total}
-              rfc={rfc}
+              clientId={clientId}
               send={(_id, payment, method) => {
-                send(rfc, payment, method)
+                send(clientId, payment, method)
                 setOpen(true)
               }}
               onDiscount={setDiscount}
@@ -106,9 +100,9 @@ function useCheckout () {
     isLoading,
     response,
     error,
-    send: (rfc, payment, paymentMethod) => {
+    send: (clientId, payment, paymentMethod) => {
       console.log(paymentMethod)
-      sendFn({ rfc, payment, discount: fullDiscount, paymentMethod, total, products, createOrder, clear })
+      sendFn({ clientId, payment, discount: fullDiscount, paymentMethod, total, products, createOrder, clear })
     },
     clear
   }
@@ -156,10 +150,10 @@ function addFn ({ values, setProducts, products }) {
   }
   setProducts({ items: prod });
 }
-function sendFn ({ rfc, payment, total, paymentMethod, discount, products, createOrder, clear }) {
-  console.log({ paymentMethod })
+function sendFn ({ clientId, payment, total, paymentMethod, discount, products, createOrder, clear }) {
+
   createOrder({
-    rfc,
+    clientId,
     discount,
     partialPayment: payment || total,
     paymentType: paymentMethod,

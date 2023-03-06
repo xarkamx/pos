@@ -13,7 +13,6 @@ export function numberToMoney (number) {
     style: "currency",
     currency: "MXN",
   });
-  number = Math.abs(number);
   return formatter.format(number);
 }
 export async function playAudio (url) {

@@ -11,4 +11,8 @@ export class PaymentsTransaction extends TransactionService {
   async getPayments () {
     return this.get('/payments');
   }
+
+  async addPayment (payment) {
+    return this.post('/payments', payment);
+  }
 }

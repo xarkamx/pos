@@ -8,8 +8,8 @@ export class OrderTransaction extends TransactionService {
     this.products = [];
   }
 
-  async createOrder ({ rfc, products, discount, partialPayment, paymentType, items }) {
-    return this.post('/orders', { rfc, products, discount, partialPayment, paymentType, items });
+  async createOrder ({ clientId, products, discount, partialPayment, paymentType, items }) {
+    return this.post('/orders', { clientId, products, discount, partialPayment, paymentType, items });
   }
 
   async getOrders () {

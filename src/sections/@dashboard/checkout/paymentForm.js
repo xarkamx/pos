@@ -1,10 +1,10 @@
-import { Box, Button, Card, FormControl, Grid, InputLabel, List, ListItem, MenuItem, Modal, Select, TextField, Typography } from '@mui/material'
+import { Box, Button, Card, Grid, List, ListItem, Modal, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { Money } from '../../../components/Formats/FormatNumbers'
 import { PaymentMethodSelect } from '../payments/SelectPaymentMethod'
 import { DiscountInput } from './itemsList'
 
-export function PaymentForm ({ subtotal, total, rfc, send, onDiscount, submitable }) {
+export function PaymentForm ({ subtotal, total, clientId, send, onDiscount, submitable }) {
   const [paymentMethod, setPaymentMethod] = useState('1')
   return (
     <Card>
@@ -38,14 +38,14 @@ export function PaymentForm ({ subtotal, total, rfc, send, onDiscount, submitabl
               <Button variant="contained" disabled={!submitable} fullWidth onClick={
                 () => {
                   console.log({ paymentMethod })
-                  send(rfc, total, paymentMethod)
+                  send(clientId, total, paymentMethod)
                 }
               }>
                 Pago Total
               </Button>
             </Grid>
             <Grid item xs={6}>
-              <PartialPaymentModal send={send} total={total} rfc={rfc} submitable={submitable} paymentMethod={paymentMethod} />
+              <PartialPaymentModal send={send} total={total} clientId={clientId} submitable={submitable} paymentMethod={paymentMethod} />
             </Grid>
           </Grid>
         </ListItem>
@@ -54,7 +54,7 @@ export function PaymentForm ({ subtotal, total, rfc, send, onDiscount, submitabl
   )
 }
 
-function PartialPaymentModal ({ send, rfc, total, submitable, paymentMethod }) {
+function PartialPaymentModal ({ send, clientId, total, submitable, paymentMethod }) {
   const [open, setOpen] = useState(false)
   const [payment, setPayment] = useState(0)
   return (
@@ -79,7 +79,7 @@ function PartialPaymentModal ({ send, rfc, total, submitable, paymentMethod }) {
           }}>
             <form onSubmit={(ev) => {
               ev.preventDefault()
-              send(rfc, payment, paymentMethod)
+              send(clientId, payment, paymentMethod)
               setOpen(false)
             }}>
               <Typography variant="h4" sx={{ mb: 5 }}>
