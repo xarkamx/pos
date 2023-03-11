@@ -4,13 +4,13 @@ import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
 //
 import BlogPage from './pages/BlogPage';
-import UserPage from './pages/UserPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import DashboardAppPage from './pages/DashboardAppPage';
 import CheckoutPage from './pages/CheckoutPage';
 import { OrdersPage } from './pages/OrdersLists';
 import PaymentPages from './pages/PaymentsPage';
+import ClientsPage from './pages/ClientsPage';
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ export default function Router () {
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
-        { path: 'user', element: <UserPage /> },
+        { path: 'clientes', element: <ClientsPage /> },
         { path: 'ordenes', element: <OrdersPage /> },
         { path: 'pagos', element: <PaymentPages /> },
         { path: 'blog', element: <BlogPage /> },

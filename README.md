@@ -1,8 +1,9 @@
 # ToDo
 
-* [ ] Forzar focus en input principal despues de cada agregado de producto
+* [X] Forzar focus en input principal despues de cada agregado de producto
 * [ ] crear comando para pago rapido
-* [ ] Crear lista de clientes
+* [X] Crear lista de clientes
+* [ ] Crear lista de productos
 * [ ] Agregar boton de eliminar pagos
 * [ ] Crear vista de items por ordenes
 * [ ] Crear vista de ordenes por cliente

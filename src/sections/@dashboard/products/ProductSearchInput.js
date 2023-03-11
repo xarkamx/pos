@@ -1,11 +1,13 @@
 
 import { Autocomplete, Button, Grid, TextField } from '@mui/material';
+import { useRef } from 'react';
 import { useCState } from '../../../hooks/useHooks';
 import { useProducts } from '../../../hooks/useProducts';
 
 // propTypes
 export function ProductSearchInput ({ onSubmit }) {
   const products = useProducts();
+  let textInput = null;
   const [product, setProduct] = useCState({ quantity: 1 })
   const options = products.products || [];
 
@@ -14,6 +16,7 @@ export function ProductSearchInput ({ onSubmit }) {
     if (!product.id) return;
     onSubmit?.({ ...product, amount: product.quantity * product.price });
     setProduct({ quantity: 1, id: null, name: null, price: null })
+    textInput.focus();
   }}>
     <div style={{
       padding: '10px 0',
@@ -34,7 +37,9 @@ export function ProductSearchInput ({ onSubmit }) {
                 price: nv?.price,
               })
             }}
-            renderInput={(params) => <TextField {...params} label="Productos" />} />
+            renderInput={(params) => <TextField {...params} autoFocus inputRef={input => {
+              textInput = input;
+            }} label="Productos" />} />
         </Grid>
         <Grid item xs={2}>
           <TextField label="Cantidad" type='number'

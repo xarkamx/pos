@@ -13,6 +13,7 @@ export class ClientsTransaction extends TransactionService {
   }
 
   async addClient (client) {
+    client.phones = client.phones.split(',');
     return this.post('/clients', client);
   }
 }
