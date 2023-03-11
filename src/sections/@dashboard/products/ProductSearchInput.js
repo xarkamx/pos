@@ -1,6 +1,5 @@
 
 import { Autocomplete, Button, Grid, TextField } from '@mui/material';
-import { useRef } from 'react';
 import { useCState } from '../../../hooks/useHooks';
 import { useProducts } from '../../../hooks/useProducts';
 

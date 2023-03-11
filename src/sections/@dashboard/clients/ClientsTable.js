@@ -10,7 +10,7 @@ export function ClientsTable ({ clients = [] }) {
         client.name,
         client.rfc,
         client.phones.join(', ') || 'N/A',
-        <a href={`mailto:${client.email}`}>
+        <a href={`mailto:${client.email}`} key={`mail-${client.id}`}>
           {client.email}
         </a>,
         client.legal,

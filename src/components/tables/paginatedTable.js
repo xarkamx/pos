@@ -6,6 +6,8 @@ export function PaginatedTable ({ items = [], format, titles }) {
   const itemsCount = items.length;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const itemsInPage = items.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
   return <CustomTable
     pageComponent={
       <TablePagination
@@ -23,7 +25,7 @@ export function PaginatedTable ({ items = [], format, titles }) {
       />
     }
     titles={titles}
-    content={items}
+    content={itemsInPage}
     format={format}
   />
 }
