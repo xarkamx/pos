@@ -1,4 +1,4 @@
-import { Card, List, ListItem, TextField, Typography } from '@mui/material';
+import { Button, Card, List, ListItem, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 
 
@@ -22,7 +22,7 @@ export function QuickFormContainer ({ children, title = 'quickForm', onSubmit })
   );
 }
 
-export function QuickFormInput ({ pattern, onChange, ...props }) {
+export function QuickFormInput ({ pattern, onChange, inputProps, ...props }) {
   const [error, setError] = useState(false)
   return <ListItem>
     <TextField {...props}
@@ -32,7 +32,13 @@ export function QuickFormInput ({ pattern, onChange, ...props }) {
         setError(!isValid)
         onChange(ev)
       }} inputProps={{
-        pattern
+        pattern, ...inputProps
       }} />
+  </ListItem>
+}
+
+export function QuickFormButton ({ children, ...props }) {
+  return <ListItem>
+    <Button {...props}>{children}</Button>
   </ListItem>
 }

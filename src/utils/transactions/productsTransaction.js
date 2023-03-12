@@ -16,4 +16,12 @@ export class ProductsTransaction extends TransactionService {
   async getProducts () {
     return this.get('/products');
   }
+
+  async addProduct (product) {
+    return this.post('/products', product);
+  }
+
+  async deleteProduct (id) {
+    return this.delete(`/products/${id}`);
+  }
 }
