@@ -5,17 +5,18 @@ import { Money } from '../components/Formats/FormatNumbers';
 import { SearchDatesInputs } from '../components/Inputs/SearchDateInput';
 import { CustomTable } from '../components/tables/Table';
 import { between } from '../core/helpers';
-import { useCState } from '../hooks/useHooks';
+import { useCState, useHistory } from '../hooks/useHooks';
 import { useOrders } from '../hooks/useOrders';
 import { PaymentModal } from '../sections/@dashboard/orders/paymentModal';
 
 export function OrdersPage () {
-  const { orders, pay } = useOrders();
+  const { orders, pay, isLoading } = useOrders();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useCState(null);
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [order, setOrder] = useCState({});
+  const history = useHistory();
   const color = (status) => {
     switch (status) {
       case 'pending':
@@ -27,6 +28,9 @@ export function OrdersPage () {
       default:
         return 'info';
     }
+  }
+  if (isLoading) {
+    return <h1>Cargando...</h1>
   }
   let ords = orders?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   if (search) {
@@ -60,19 +64,25 @@ export function OrdersPage () {
           setRowsPerPage(ev.target.value);
         }}
       />}
-      titles={['ID', 'Fecha', 'Pago', 'subtotal', 'Total', 'Descuento', 'Estatus']}
+      titles={['ID', 'RFC', 'Cliente', 'Fecha', 'subtotal', 'Descuento', 'Total', 'Pago', 'Estatus']}
       content={ords}
+      onClick={(item) => {
+        history(`/dashboard/ordenes/${item.id}`)
+      }}
       format={(item) => [
         item.id,
+        item.rfc || 'XAXX010101000',
+        item.clientName || 'Consumidor final',
         localeDate(item.createdAt),
-        <Money key={`item1-${item.id}`} number={item.partialPayment} />,
         <Money key={`item2-${item.id}`} number={item.subtotal} />,
-        <Money key={`item3-${item.id}`} number={item.total} />,
         <Money key={`item4-${item.id}`} number={item.discount} />,
+        <Money key={`item3-${item.id}`} number={item.total} />,
+        <Money key={`item1-${item.id}`} number={item.partialPayment} />,
         <Chip key={`chip-${item.id}`}
           label={item.status}
           color={color(item.status)}
-          onClick={() => {
+          onClick={(ev) => {
+            ev.stopPropagation();
             if (item.status === 'paid') return;
             setOrder(item);
             setOpenPaymentModal(true);
@@ -126,20 +136,20 @@ function EarninsResume ({ orders = [] }) {
     padding: '1rem',
   }}>
     <Grid item xs={12} md={4}>
-      <Card sx={{ ...sx, backgroundColor: 'orange' }}>
+      <Card sx={{ ...sx, backgroundColor: 'darkorchid' }}>
         <h3>Subtotal</h3>
         <Money number={payment} />
       </Card>
     </Grid>
     <Grid item xs={12} md={4}>
-      <Card sx={{ ...sx, backgroundColor: 'lightgreen' }}>
+      <Card sx={{ ...sx, backgroundColor: 'green' }}>
         <h3>Total</h3>
         <Money number={total} />
       </Card>
     </Grid>
     <Grid item xs={12} md={4}>
       <Card sx={{ ...sx, backgroundColor: 'red' }}>
-        <h3>Pendiente</h3>
+        <h3>Por Cobrar</h3>
         <Money number={total - payment} />
       </Card>
     </Grid>

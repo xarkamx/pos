@@ -9,5 +9,10 @@ export function usePayments () {
       query.refetch();
     }
   });
-  return { payments: query.data, addPayment: mutation.mutate }
+  const del = useMutation((id) => new PaymentsTransaction().deletePayment(id), {
+    onSuccess: () => {
+      query.refetch();
+    }
+  });
+  return { payments: query.data, addPayment: mutation.mutate, deletePayment: del.mutate };
 }

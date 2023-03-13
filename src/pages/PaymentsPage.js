@@ -6,7 +6,7 @@ import PaymentTable from '../sections/@dashboard/payments/PaymentsTable';
 import { QuickPaymentForm } from '../sections/@dashboard/payments/QuickPaymentForm';
 
 export default function PaymentPages () {
-  const { payments, addPayment } = usePayments();
+  const { payments, addPayment, deletePayment } = usePayments();
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -16,7 +16,7 @@ export default function PaymentPages () {
         <QuickPaymentForm onSubmit={addPayment} />
       </Grid>
       <Grid item xs={8}>
-        <PaymentTable payments={payments} />
+        <PaymentTable payments={payments} onDeletePayment={deletePayment} />
       </Grid>
     </Grid>
   );

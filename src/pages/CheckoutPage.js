@@ -1,6 +1,7 @@
-import { Grid, TextField, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
+import { useReactToPrint } from 'react-to-print';
 import { Container } from '@mui/system';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useOrders } from '../hooks/useOrders';
 import { useCState } from '../hooks/useHooks';
@@ -9,6 +10,8 @@ import { ProductSearchInput } from '../sections/@dashboard/products/ProductSearc
 import { PaymentForm } from '../sections/@dashboard/checkout/paymentForm';
 import { StatusModal } from '../components/CustomModal/StatusModal';
 import { ClientsSearchInput } from '../sections/@dashboard/clients/SelectClient';
+import { Ticket } from '../sections/@dashboard/orders/Ticket';
+
 
 
 export default function CheckoutPage () {
@@ -20,7 +23,20 @@ export default function CheckoutPage () {
     subtotal,
     setDiscount,
     error,
-    send, isLoading } = useCheckout();
+    send,
+    isLoading,
+    orderId,
+    discount,
+    clear
+  } = useCheckout();
+
+  const ref = useRef();
+  const print = useReactToPrint({
+    content: () => ref.current,
+    onAfterPrint: () => {
+      clear()
+    }
+  })
   const [clientId, setClient] = useState(0);
   const [open, setOpen] = useState(false);
   const submitable = products.length > 0 && !isLoading;
@@ -62,14 +78,29 @@ export default function CheckoutPage () {
           </Grid>
         </Grid>
       </Container>
+      <div style={{
+        display: 'block',
+      }}>
+        <Ticket
+          clientId={clientId}
+          ref={ref}
+          products={products}
+          orderId={orderId}
+          subtotal={subtotal}
+          total={total}
+          discount={discount}
+        />
+      </div>
       <StatusModal open={open}
         onClose={() => {
+          print();
           setOpen(false);
         }}
         message={error ? "Error en registro" : "Completada"} status={error ? "error" : "success"} />
     </>
   );
 };
+
 
 function useCheckout () {
   const [products, setProducts] = useCState({ items: [] });
@@ -83,7 +114,6 @@ function useCheckout () {
     setProducts({ items: [] });
     setDiscount(0);
   };
-
   // a class for this return would be better
   return {
     products: products.items,
@@ -99,9 +129,10 @@ function useCheckout () {
     setDiscount,
     isLoading,
     response,
+    discount: fullDiscount,
+    orderId: response?.data.orderId,
     error,
     send: (clientId, payment, paymentMethod) => {
-      console.log(paymentMethod)
       sendFn({ clientId, payment, discount: fullDiscount, paymentMethod, total, products, createOrder, clear })
     },
     clear
@@ -150,7 +181,7 @@ function addFn ({ values, setProducts, products }) {
   }
   setProducts({ items: prod });
 }
-function sendFn ({ clientId, payment, total, paymentMethod, discount, products, createOrder, clear }) {
+function sendFn ({ clientId, payment, total, paymentMethod, discount, products, createOrder }) {
 
   createOrder({
     clientId,
@@ -159,5 +190,5 @@ function sendFn ({ clientId, payment, total, paymentMethod, discount, products, 
     paymentType: paymentMethod,
     items: products.items.map(({ id, quantity }) => ({ productId: id, quantity }))
   })
-  clear()
+
 }

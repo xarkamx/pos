@@ -11,3 +11,8 @@ export function useClients () {
   });
   return { clients: query.data, addClient: mutation.mutate }
 }
+
+export function useClientResume (id) {
+  const query = useQuery(['clientResume', id], () => new ClientsTransaction().getClientResume(id));
+  return { clientResume: query.data }
+}

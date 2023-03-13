@@ -19,4 +19,12 @@ export class OrderTransaction extends TransactionService {
   async pay ({ orderId, payment, clientId, paymentMethod }) {
     return this.put(`/orders/${orderId}/payment`, { payment, paymentMethod, clientId })
   }
+
+  async getOrder (orderId) {
+    return this.get(`/orders/${orderId}`);
+  }
+
+  async getOrderPayments (orderId) {
+    return this.get(`/orders/${orderId}/payments`);
+  }
 }

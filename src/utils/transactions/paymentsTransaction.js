@@ -15,4 +15,8 @@ export class PaymentsTransaction extends TransactionService {
   async addPayment (payment) {
     return this.post('/payments', payment);
   }
+
+  async deletePayment (id) {
+    return this.delete(`/payments/${id}`);
+  }
 }

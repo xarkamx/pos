@@ -1,6 +1,7 @@
 import { IconButton, TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { DeleteSmallButton } from '../../../components/Buttons/IconButons';
 import { Money } from '../../../components/Formats/FormatNumbers';
 import Iconify from '../../../components/iconify/Iconify';
 import { PaginatedTable } from '../../../components/tables/paginatedTable';
@@ -42,9 +43,3 @@ export default function ProductList ({ products = [], onDeleteProduct }) {
 }
 
 
-function DeleteSmallButton ({ onClick }) {
-  return (
-    <IconButton onClick={onClick} className='delete-button'>
-      <Iconify icon="eva:close-fill" sx={{ color: 'red' }} />
-    </IconButton>);
-}

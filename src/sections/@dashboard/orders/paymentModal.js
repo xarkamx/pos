@@ -1,6 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, List, ListItem, Slide, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Money } from '../../../components/Formats/FormatNumbers';
+import { ClientsSearchInput } from '../clients/SelectClient';
 import { PaymentMethodSelect } from '../payments/SelectPaymentMethod';
 
 const Transition = React.forwardRef((props, ref) => (<Slide direction="up" ref={ref} {...props} />));
@@ -38,9 +39,11 @@ export function PaymentModal ({ amount, max = Infinity, clientId, onPay, open, o
         </Typography>
         <List>
           <ListItem>
-            <TextField label="Cliente" value={clientId} onChange={(ev) => {
-              setClientId(ev.target.value)
-            }} />
+            <ClientsSearchInput
+              onSubmit={(client) => {
+                setClientId(client.id)
+              }}
+            />
           </ListItem>
           <ListItem>
             <TextField label="Monto" inputProps={{

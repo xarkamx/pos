@@ -1,8 +1,9 @@
-import { Card, Checkbox, IconButton, TextField } from '@mui/material';
+import { Card, IconButton, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Money } from '../../../components/Formats/FormatNumbers';
 import { CustomTable } from '../../../components/tables/Table';
 import Iconify from '../../../components/iconify';
+import { ConditionalWall } from '../../../components/FilterWall/ConditionalWall';
 
 
 export function ItemsList ({ products = [], onEditQuantity, onDeleteProduct }) {
@@ -26,9 +27,20 @@ export function ItemsList ({ products = [], onEditQuantity, onDeleteProduct }) {
           </IconButton>,
           values.name,
           <Money number={values.price} key={`m-${values.id}`} />,
-          <QtyInput key={`i-${values.id}`} onChange={(qty) => {
-            onEditQuantity(values.id, parseInt(qty, 10))
-          }} value={values.quantity} />,
+          <ConditionalWall
+            or={
+              values.quantity
+            }
+            condition={
+              onEditQuantity
+            }
+            key={`i-${values.id}`}
+          >
+            <QtyInput onChange={(qty) => {
+              onEditQuantity(values.id, parseInt(qty, 10))
+            }} value={values.quantity} />
+          </ConditionalWall>
+          ,
           <Money number={values.amount} key={`m2-${values.id}`} />
         ]
         }
@@ -38,6 +50,8 @@ export function ItemsList ({ products = [], onEditQuantity, onDeleteProduct }) {
     </Card >
   );
 }
+
+
 
 function QtyInput ({ onChange, value }) {
   const [val, setVal] = useState(value)

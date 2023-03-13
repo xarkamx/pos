@@ -11,6 +11,7 @@ import { OrdersPage } from './pages/OrdersLists';
 import PaymentPages from './pages/PaymentsPage';
 import ClientsPage from './pages/ClientsPage';
 import ProductsPage from './pages/ProductsPage';
+import OrderPage from './pages/OrderPage';
 
 // ----------------------------------------------------------------------
 
@@ -24,6 +25,7 @@ export default function Router () {
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'clientes', element: <ClientsPage /> },
         { path: 'ordenes', element: <OrdersPage /> },
+        { path: 'ordenes/:orderId', element: <OrderPage /> },
         { path: 'pagos', element: <PaymentPages /> },
         { path: 'productos', element: <ProductsPage /> },
         { path: 'caja', element: <CheckoutPage /> }

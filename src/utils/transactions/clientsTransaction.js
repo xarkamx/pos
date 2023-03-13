@@ -16,4 +16,8 @@ export class ClientsTransaction extends TransactionService {
     client.phones = client.phones.split(',');
     return this.post('/clients', client);
   }
+
+  async getClientResume (id) {
+    return this.get(`/clients/${id}/resume`);
+  }
 }
