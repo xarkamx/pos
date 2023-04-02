@@ -5,8 +5,8 @@
   "version": "1.7.0",
   "private": false,
   "scripts": {
-    "dev": "react-scripts start",
-    "build": "react-scripts build",
+    "dev": "react-dotenv && react-scripts start",
+    "build": "react-dotenv && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint --ext .js,.jsx ./src",
@@ -83,5 +83,10 @@
   },
   "overrides": {
     "nth-check": "2.1.1"
+  },
+  "react-dotenv": {
+    "whitelist": [
+      "API_URL"
+    ]
   }
 }
