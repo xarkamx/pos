@@ -24,4 +24,11 @@ export class ProductsTransaction extends TransactionService {
   async deleteProduct (id) {
     return this.delete(`/products/${id}`);
   }
+
+  async updateProduct (id, product) {
+    if (!product) {
+      return false;
+    }
+    return this.put(`/products/${id}`, product);
+  }
 }

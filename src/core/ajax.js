@@ -7,7 +7,7 @@ export class Ajax extends Helpers {
    * @param {*} method
    * @param {*} headers
    */
-  async fetchData(
+  async fetchData (
     path,
     parameters = {},
     method = "get",
@@ -29,11 +29,10 @@ export class Ajax extends Helpers {
       response.code = data.status;
       return response;
     } catch (e) {
-      console.log("Error en backend");
       return { data: [] };
     }
   }
-  async fetchFile(path) {
+  async fetchFile (path) {
     const headers = {
       "Content-Type": "application/x-www-form-urlencoded",
     };
@@ -43,14 +42,14 @@ export class Ajax extends Helpers {
     blob.name = this.pathSlicer(path).fileName;
     return blob;
   }
-  async fetchHTML(path) {
+  async fetchHTML (path) {
     const headers = {
       "Content-Type": "application/json",
     };
     const data = await this._fetch(path, {}, "get", headers);
     return await data.text();
   }
-  async _fetch(path, parameters, method, headers, stringify) {
+  async _fetch (path, parameters, method, headers, stringify) {
     let args = { headers };
     if (method.toLowerCase() === "get") {
       parameters = this.objectToSerialize(parameters);

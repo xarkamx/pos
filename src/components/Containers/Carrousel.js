@@ -3,7 +3,7 @@ import { LadderScroll } from "../Scroller/LadderScroll";
 import VisibilitySensor from "react-visibility-sensor";
 import { optionalFn } from "../../core/helpers";
 import "./scss/carrousel.scss";
-export function Carrousel({ children, autoRun = true }) {
+export function Carrousel ({ children, autoRun = true }) {
   const [currentPage, setPage] = useState(0);
   const ref = useRef();
   const [scrolledDistance, setDistance] = useState(0);
@@ -60,7 +60,7 @@ export function Carrousel({ children, autoRun = true }) {
               key={key}
               id={key}
               item={item}
-              onVisible={(element) => {}}
+              onVisible={(element) => { }}
               style={{ width: `${100 / totalPages}%` }}
             />
           ))}
@@ -77,13 +77,13 @@ export function Carrousel({ children, autoRun = true }) {
     </>
   );
 
-  function xSlide(x, animate = false) {
+  function xSlide (x, animate = false) {
     const carrousel = document.querySelector(".car-container");
     carrousel.style.transition = animate ? "all 200ms ease-in-out" : "none";
     carrousel.style.transform = `matrix(1, 0, 0, 1, ${x}, 0)`;
   }
 }
-function SlidePage({ id, item, onVisible, style }) {
+function SlidePage ({ id, item, onVisible, style }) {
   let page = useRef();
   let code = `slide-page-${id}`;
   return (
@@ -92,7 +92,6 @@ function SlidePage({ id, item, onVisible, style }) {
       offset={{ left: 100, right: 100 }}
       onChange={(visible) => {
         if (visible)
-          //console.log("soy visible", id);
           optionalFn(onVisible)(page.current);
       }}
     >
@@ -110,7 +109,7 @@ function SlidePage({ id, item, onVisible, style }) {
     </VisibilitySensor>
   );
 }
-function DotMarker({ totalPages, relativePercent, currentPage, onClick }) {
+function DotMarker ({ totalPages, relativePercent, currentPage, onClick }) {
   let dots = [];
   for (let index = 0; index < totalPages; index++) {
     let active = currentPage === index ? "active" : "";

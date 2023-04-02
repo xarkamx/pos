@@ -79,7 +79,7 @@ export default function CheckoutPage () {
         </Grid>
       </Container>
       <div style={{
-        display: 'block',
+        display: 'none',
       }}>
         <Ticket
           clientId={clientId}

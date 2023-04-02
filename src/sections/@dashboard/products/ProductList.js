@@ -1,10 +1,9 @@
-import { IconButton, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { DeleteSmallButton } from '../../../components/Buttons/IconButons';
-import { Money } from '../../../components/Formats/FormatNumbers';
-import Iconify from '../../../components/iconify/Iconify';
 import { PaginatedTable } from '../../../components/tables/paginatedTable';
+import { DebounceInput } from '../../../components/Inputs/DebounceInput';
 
 // ----------------------------------------------------------------------
 
@@ -12,13 +11,12 @@ ProductList.propTypes = {
   products: PropTypes.array.isRequired,
 };
 
-export default function ProductList ({ products = [], onDeleteProduct }) {
+export default function ProductList ({ products = [], onDeleteProduct, onUpdateProduct }) {
   const [search, setSearch] = useState('');
   const filteredProducts = products.filter((product) => {
     const searchValues = search.split(' ');
     return searchValues.some((value) => product.label.toLowerCase().includes(value.toLowerCase()));
   });
-  console.log(filteredProducts)
   return (
     <>
       <TextField fullWidth label="Buscar" value={search} onChange={(ev) => setSearch(ev.target.value)} />
@@ -31,10 +29,14 @@ export default function ProductList ({ products = [], onDeleteProduct }) {
               onDeleteProduct(product.id);
             }} key={`del-${product.id}`} />,
             product.id,
-            product.label,
-            <Money number={product.price} key={
-              `money-${product.id}`
-            } />,
+            <DebounceInput
+              fullWidth value={product.label} key={`name-${product.id}`} onChange={(ev) => {
+                onUpdateProduct({ id: product.id, name: ev.target.value });
+              }} />,
+            <DebounceInput
+              value={product.price} key={`val-${product.id}`} onChange={(ev) => {
+                onUpdateProduct({ id: product.id, price: ev.target.value });
+              }} />,
           ]
         )}
       />

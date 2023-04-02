@@ -10,10 +10,16 @@ export function useProducts () {
   const del = useMutation((id) => new ProductsTransaction().deleteProduct(id), {
     onSuccess: () => query.refetch()
   });
+
+  const update = useMutation((product) => {
+    const { id, ...rest } = product;
+    new ProductsTransaction().updateProduct(id, rest);
+  });
   return {
     products: query.data?.map(item => ({ label: item.name, id: item.id, price: item.price })),
     add: add.mutate,
     del: del.mutate,
+    update: update.mutate
 
   }
 }

@@ -8,7 +8,6 @@ export function ProductQuickForm ({ onSubmit }) {
   })
   return (
     <QuickFormContainer title='Registra Producto' onSubmit={() => {
-      console.log(product)
       onSubmit(product)
     }}>
       <QuickFormInput label='Nombre' fullWidth
