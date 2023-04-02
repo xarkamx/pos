@@ -1,9 +1,7 @@
-const dotenv = require('dotenv');
-
-dotenv.config();
+import env from "react-dotenv";
 
 export const config = {
   apis: {
-    bos: process.env.REACT_APP_API_BOS,
+    bos: env.REACT_APP_API_BOS,
   }
 }
