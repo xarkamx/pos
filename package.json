@@ -86,7 +86,7 @@
   },
   "react-dotenv": {
     "whitelist": [
-      "API_URL"
+      "REACT_BOS_API_URL"
     ]
   }
 }
