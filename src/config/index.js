@@ -1,5 +1,9 @@
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 export const config = {
   apis: {
-    bos: 'http://127.0.0.1:8000'
+    bos: process.env.REACT_APP_API_BOS,
   }
 }
