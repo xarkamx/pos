@@ -5,16 +5,16 @@
   "version": "1.7.0",
   "private": false,
   "scripts": {
+    "envJson": "node console/envToJson.js",
     "dev": "react-scripts start",
-    "build": "envJson && react-scripts build",
+    "build": "yarn envJson && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint --ext .js,.jsx ./src",
     "lint:fix": "eslint --fix --ext .js,.jsx ./src",
     "clear-all": "rm -rf build node_modules",
     "re-start": "rm -rf build node_modules && yarn install && yarn start",
-    "re-build": "rm -rf build node_modules && yarn install && yarn build",
-    "envJson": "node console/envToJson.js"
+    "re-build": "rm -rf build node_modules && yarn install && yarn build"
   },
   "eslintConfig": {
     "extends": [
