@@ -1,6 +1,5 @@
-import env from "react-dotenv";
+import env from '../env.json'
 
-console.log(env, '')
 export const config = {
   apis: {
     bos: env.REACT_BOS_API_URL,
