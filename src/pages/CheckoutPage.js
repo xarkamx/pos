@@ -29,7 +29,6 @@ export default function CheckoutPage () {
     discount,
     clear
   } = useCheckout();
-
   const ref = useRef();
   const print = useReactToPrint({
     content: () => ref.current,
@@ -38,6 +37,7 @@ export default function CheckoutPage () {
     }
   })
   const [clientId, setClient] = useState(0);
+  const [payment, setPayment] = useState(0);
   const [open, setOpen] = useState(false);
   const submitable = products.length > 0 && !isLoading;
   return (
@@ -69,6 +69,7 @@ export default function CheckoutPage () {
               total={total}
               clientId={clientId}
               send={(_id, payment, method) => {
+                setPayment(payment)
                 send(clientId, payment, method)
                 setOpen(true)
               }}
@@ -88,6 +89,7 @@ export default function CheckoutPage () {
           orderId={orderId}
           subtotal={subtotal}
           total={total}
+          payment={payment}
           discount={discount}
         />
       </div>

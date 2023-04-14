@@ -24,6 +24,9 @@
       "impliedStrict": true
     }
   },
+  "ignorePatterns": [
+    "src/core/*.js"
+  ],
   "rules": {
     "no-new": 0,
     "no-console": "warn",

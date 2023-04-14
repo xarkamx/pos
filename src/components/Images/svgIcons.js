@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-export function SvgButton({ name, style, ...rest }) {
+
+export function SvgButton ({ name, style, ...rest }) {
   return (
     <SVG
-      //className={name}
+      className={name}
       src={`/static/ICONOS/Botones/SVG/${name}.svg`}
       style={{ minHeight: "20px", minWidth: "20px", ...style }}
       {...rest}
     />
   );
 }
-export function SVG({ src, style, className = "", ...rest }) {
+export function SVG ({ src, style, className = "", ...rest }) {
   const [inlineSvg, setSvg] = useState("");
   const [isMounted, setIsMounted] = useState(true);
   const loadSvg = () => {
@@ -20,14 +21,16 @@ export function SVG({ src, style, className = "", ...rest }) {
     });
     return () => setIsMounted(false);
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(loadSvg, [src]);
   return (
     <span
       style={{ display: "block", ...style }}
       {...rest}
       className={`svg ${className}`}
+      // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{
         __html: inlineSvg,
-      }}></span>
+      }} />
   );
 }

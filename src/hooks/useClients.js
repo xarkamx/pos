@@ -14,5 +14,5 @@ export function useClients () {
 
 export function useClientResume (id) {
   const query = useQuery(['clientResume', id], () => new ClientsTransaction().getClientResume(id));
-  return { clientResume: query.data }
+  return { clientResume: id ? query.data : undefined }
 }

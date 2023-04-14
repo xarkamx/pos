@@ -1,4 +1,4 @@
-import { Card, TablePagination } from '@mui/material';
+import { TablePagination } from '@mui/material';
 import { useState } from 'react';
 import { DeleteSmallButton } from '../../../components/Buttons/IconButons';
 import { Money } from '../../../components/Formats/FormatNumbers';

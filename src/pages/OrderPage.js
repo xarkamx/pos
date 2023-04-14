@@ -27,7 +27,6 @@ export default function OrderPage () {
     amount: item.total,
   }));
   const status = translations[order?.order.status] || '';
-  const statusSize = order?.order.status !== 'paid' ? '6' : '12';
   const date = localeDate(order?.order.createdAt)
   const colors = {
     'pending': 'orange',

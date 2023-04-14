@@ -1,8 +1,8 @@
 import React from "react";
 import { CSSTransition } from "react-transition-group";
 import "./scss/blocks.scss";
-/* eslint eqeqeq: 0*/
-export function SplashScreen({ open, children, background }) {
+/* eslint eqeqeq: 0 */
+export function SplashScreen ({ open, children, background }) {
   return (
     <CSSTransition
       timeout={300}

@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, List, ListItem, Slide, TextField, Typography } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, Slide, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Money } from '../../../components/Formats/FormatNumbers';
 import { ClientsSearchInput } from '../clients/SelectClient';

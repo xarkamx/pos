@@ -37,7 +37,6 @@ export function PaymentForm ({ subtotal, total, clientId, send, onDiscount, subm
             <Grid item xs={6}>
               <Button variant="contained" disabled={!submitable} fullWidth onClick={
                 () => {
-                  console.log({ paymentMethod })
                   send(clientId, total, paymentMethod)
                 }
               }>

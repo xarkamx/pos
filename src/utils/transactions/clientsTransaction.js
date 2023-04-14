@@ -18,6 +18,7 @@ export class ClientsTransaction extends TransactionService {
   }
 
   async getClientResume (id) {
+    if (!id) return Promise.resolve({});
     return this.get(`/clients/${id}/resume`);
   }
 }

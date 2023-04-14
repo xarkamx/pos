@@ -1,12 +1,13 @@
-import React, { useState } from "react";
 
 import "./scss/tooltip.scss";
-export function Tooltip({ message, children, className, ...rest }) {
+import React, { useState } from "react";
+
+export function Tooltip ({ message, children, className, ...rest }) {
   const [show, toggle] = useState(0);
   return (
     <span
       className="contentTooltip"
-      onMouseEnter={(ev) => {
+      onMouseEnter={() => {
         toggle(1);
       }}
       onMouseLeave={() => {
