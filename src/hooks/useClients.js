@@ -9,7 +9,14 @@ export function useClients () {
       query.refetch();
     }
   });
-  return { clients: query.data, addClient: mutation.mutate }
+
+  const updateMutation = useMutation((content) => new ClientsTransaction()
+    .updateClient(content.id, content.client), {
+    onSuccess: () => {
+      query.refetch();
+    }
+  });
+  return { clients: query.data, addClient: mutation.mutate, updateClient: updateMutation.mutate }
 }
 
 export function useClientResume (id) {

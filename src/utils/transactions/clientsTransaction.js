@@ -21,4 +21,8 @@ export class ClientsTransaction extends TransactionService {
     if (!id) return Promise.resolve({});
     return this.get(`/clients/${id}/resume`);
   }
+
+  async updateClient (id, client) {
+    return this.put(`/clients/${id}`, client);
+  }
 }

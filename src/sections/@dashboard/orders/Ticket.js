@@ -28,7 +28,9 @@ function ClientTicket ({ orders, latestPurchase, totalDebt }) {
   return (
     <div>
       <h4>Detalles del cliente</h4>
-      <ul>
+      <ul style={{
+        listStyle: 'none',
+      }}>
         <li>Compras realizadas: {orders}</li>
         <li>Ultima compra: {localeDate(latestPurchase)}</li>
         <li>Adeudo a la fecha: <Money number={totalDebt} /></li>

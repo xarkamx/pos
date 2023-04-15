@@ -1,8 +1,8 @@
 {
-  "name": "@minimal/material-kit-react",
-  "author": "minimals.cc",
+  "name": "@pos/pos-web",
+  "author": "xarkamx",
   "licence": "MIT",
-  "version": "1.7.0",
+  "version": "1.0.0",
   "private": false,
   "scripts": {
     "envJson": "node console/envToJson.js",

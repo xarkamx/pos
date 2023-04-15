@@ -4,14 +4,14 @@ import { ClientsTable } from '../sections/@dashboard/clients/ClientsTable';
 import { QuickClientForm } from '../sections/@dashboard/clients/QuickClientAddForm';
 
 export default function ClientsPage () {
-  const { clients, addClient } = useClients();
+  const { clients, addClient, updateClient } = useClients();
   return (
     <Grid container spacing={2}>
       <Grid item xs={4}>
         <QuickClientForm onSubmit={addClient} />
       </Grid>
       <Grid item xs={8}>
-        <ClientsTable clients={clients} />
+        <ClientsTable clients={clients} onUpdateClient={updateClient} />
       </Grid>
     </Grid>
   );

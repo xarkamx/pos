@@ -36,6 +36,12 @@ export function QuickClientForm ({ onSubmit }) {
           setClientData({ phones: ev.target.value })
         }}
       />
+      <QuickFormInput label='Codigo Postal' fullWidth
+        pattern={'[0-9]{5}'}
+        onChange={(ev) => {
+          setClientData({ postal_code: ev.target.value })
+        }}
+      />
       <ListItem>
         <Button type='submit' variant='contained' fullWidth>Registrar</Button>
       </ListItem>
