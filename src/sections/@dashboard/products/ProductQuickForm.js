@@ -9,6 +9,7 @@ export function ProductQuickForm ({ onSubmit }) {
   return (
     <QuickFormContainer title='Registra Producto' onSubmit={() => {
       onSubmit(product)
+      setProducts({ name: '', price: 0 })
     }}>
       <QuickFormInput label='Nombre' fullWidth
         pattern='[a-zA-Z0-9 #"\/]{3,250}'

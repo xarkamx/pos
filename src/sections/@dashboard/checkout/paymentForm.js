@@ -56,6 +56,7 @@ export function PaymentForm ({ subtotal, total, clientId, send, onDiscount, subm
 function PartialPaymentModal ({ send, clientId, total, submitable, paymentMethod }) {
   const [open, setOpen] = useState(false)
   const [payment, setPayment] = useState(0)
+  submitable = submitable ? clientId : false
   return (
     <>
       <Button variant="contained" disabled={!submitable} fullWidth color='warning' onClick={() => {

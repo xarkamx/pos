@@ -4,7 +4,7 @@ import { useClientResume } from '../../../hooks/useClients';
 import { ConditionalWall } from '../../../components/FilterWall/ConditionalWall';
 import { numberPadStart, localeDate } from '../../../core/helpers';
 
-function TicketProduct ({ name, qty, amount }) {
+function TicketProduct ({ name, qty, price, amount }) {
   return (
     <tr >
       <td style={{
@@ -17,6 +17,13 @@ function TicketProduct ({ name, qty, amount }) {
           paddingRight: '3rem',
           borderBottom: '1px solid #000',
         }}>{name}</td>
+
+      <td
+        style={{
+          borderBottom: '1px solid #000',
+        }}>{price}</td>
+
+
       <td style={{
         borderBottom: '1px solid #000',
       }}><Money number={amount} /></td>
@@ -28,7 +35,7 @@ function ClientTicket ({ clientName, clientRfc, orders, latestPurchase, totalDeb
   return (
     <div>
       <h4>Detalles del cliente</h4>
-      <h5>{`${clientName} (${clientRfc})`}</h5>
+      <h5>{`${clientName} (${clientRfc || 'XAXX010101000'})`}</h5>
       <ul style={{
         listStyle: 'none',
       }}>
@@ -52,7 +59,7 @@ export const Ticket = React.forwardRef((props, ref) => {
     marginTop: '2rem',
     borderRadius: '5px',
     border: '1px solid #000',
-    padding: '1rem',
+    padding: '1rem'
   }
   return (
     <div ref={ref} style={{
@@ -81,19 +88,32 @@ export const Ticket = React.forwardRef((props, ref) => {
         <table style={{
           width: '100%'
         }}>
+          <thead>
+            <tr>
+              <td>Cantidad</td>
+              <td>Producto</td>
+              <td>Precio</td>
+              <td>Importe</td>
+            </tr>
+          </thead>
           <tbody>
             {products.map((product) => (
               <TicketProduct
                 key={product.id}
                 name={product.name}
                 qty={product.quantity}
+                price={product.price}
                 amount={product.amount}
               />
             ))}
           </tbody>
         </table>
       </div>
-      <div style={sectionStyle}>
+      <div style={
+        {
+          ...sectionStyle,
+          pageBreakBefore: products.length > 5 ? 'always' : 'auto'
+        }}>
         <h4>Resumen</h4>
         <DetailsTag label={'subtotal'} value={subtotal} />
         <DetailsTag label={'descuento'} value={discount} />
@@ -103,7 +123,7 @@ export const Ticket = React.forwardRef((props, ref) => {
         </ConditionalWall>
       </div>
 
-      <ConditionalWall condition={clientResume}>
+      <ConditionalWall condition={clientResume?.clientName}>
         <div style={sectionStyle}>
           <ClientTicket
             clientName={clientResume?.clientName}

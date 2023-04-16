@@ -55,15 +55,16 @@ export default function CheckoutPage () {
             <ProductSearchInput onSubmit={add} />
           </Grid>
           <Grid item xs={12} sm={6} md={8}>
-            <ClientsSearchInput onSubmit={(client) => {
-              setClient(client.id)
-            }} />
+
             <ItemsList
               products={products}
               onDeleteProduct={onDelete}
               onEditQuantity={update} />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
+            <ClientsSearchInput onSubmit={(client) => {
+              setClient(client.id)
+            }} />
             <PaymentForm
               subtotal={subtotal}
               total={total}
