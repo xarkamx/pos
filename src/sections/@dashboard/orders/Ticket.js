@@ -24,17 +24,17 @@ function TicketProduct ({ name, qty, amount }) {
   );
 }
 
-function ClientTicket ({ orders, latestPurchase, totalDebt }) {
+function ClientTicket ({ clientName, clientRfc, orders, latestPurchase, totalDebt }) {
   return (
     <div>
       <h4>Detalles del cliente</h4>
+      <h5>{`${clientName} (${clientRfc})`}</h5>
       <ul style={{
         listStyle: 'none',
       }}>
         <li>Compras realizadas: {orders}</li>
         <li>Ultima compra: {localeDate(latestPurchase)}</li>
         <li>Adeudo a la fecha: <Money number={totalDebt} /></li>
-        <li>Notas pendientes de pago: {totalDebt}</li>
       </ul>
       <h5>
         Para cualquier duda o aclaración, favor de comunicarse al 3336383996
@@ -72,7 +72,8 @@ export const Ticket = React.forwardRef((props, ref) => {
         <img src='/assets/logo.svg' alt='logo' style={{
           width: '80px',
         }} />
-        <h3>NOTA: {numberPadStart(2, orderId)}</h3>
+        <h3>Hojalateria Gutierrez</h3>
+        <h3>NOTA DE VENTA: {numberPadStart(2, orderId)}</h3>
       </div>
       <div style={sectionStyle}>
         <h4>Productos</h4>
@@ -105,6 +106,8 @@ export const Ticket = React.forwardRef((props, ref) => {
       <ConditionalWall condition={clientResume}>
         <div style={sectionStyle}>
           <ClientTicket
+            clientName={clientResume?.clientName}
+            clientRfc={clientResume?.rfc}
             orders={clientResume?.orders}
             latestPurchase={clientResume?.latestPurchase}
             totalDebt={clientResume?.totalDebt}

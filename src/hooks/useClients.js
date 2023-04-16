@@ -1,11 +1,14 @@
 
 import { useMutation, useQuery } from 'react-query';
 import { ClientsTransaction } from '../utils/transactions/clientsTransaction';
+import { usePopUp } from '../context/PopUpContext';
 
 export function useClients () {
+  const { popUpAlert } = usePopUp();
   const query = useQuery('clients', () => new ClientsTransaction().getClients());
   const mutation = useMutation((client) => new ClientsTransaction().addClient(client), {
     onSuccess: () => {
+      popUpAlert('success', 'Cliente agregado correctamente');
       query.refetch();
     }
   });

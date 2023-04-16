@@ -9,22 +9,25 @@ import ThemeProvider from './theme';
 // components
 import { StyledChart } from './components/chart';
 import ScrollToTop from './components/scroll-to-top';
+import { PopUpContextProvider } from './context/PopUpContext';
 
 // ----------------------------------------------------------------------
 const queryClient = new QueryClient()
 export default function App () {
+
   return (
     <HelmetProvider>
       <BrowserRouter>
-        <ThemeProvider>
-
-          <ScrollToTop />
-          <StyledChart />
-          <QueryClientProvider client={queryClient}>
-            <Router />
-            <ReactQueryDevtools initialIsOpen />
-          </QueryClientProvider>
-        </ThemeProvider>
+        <PopUpContextProvider>
+          <ThemeProvider>
+            <ScrollToTop />
+            <StyledChart />
+            <QueryClientProvider client={queryClient}>
+              <Router />
+              <ReactQueryDevtools initialIsOpen />
+            </QueryClientProvider>
+          </ThemeProvider>
+        </PopUpContextProvider>
       </BrowserRouter>
     </HelmetProvider>
   );

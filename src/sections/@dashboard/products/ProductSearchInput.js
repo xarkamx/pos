@@ -21,7 +21,7 @@ export function ProductSearchInput ({ onSubmit }) {
       padding: '10px 0',
     }}>
       <Grid container spacing={3}>
-        <Grid item xs={8}>
+        <Grid item sm={8} xs={12}>
           <Autocomplete
             value={product.name || ''}
             disablePortal
@@ -40,8 +40,8 @@ export function ProductSearchInput ({ onSubmit }) {
               textInput = input;
             }} label="Productos" />} />
         </Grid>
-        <Grid item xs={2}>
-          <TextField label="Cantidad" type='number'
+        <Grid item sm={2} xs={12}>
+          <TextField label="Cantidad" fullWidth type='number'
             InputProps={{
               inputProps: {
                 min: 1
@@ -57,7 +57,7 @@ export function ProductSearchInput ({ onSubmit }) {
             value={product.quantity}
           />
         </Grid>
-        <Grid item xs={2} style={
+        <Grid item sm={2} xs={12} style={
           {
             display: 'flex',
             justifyContent: 'center',

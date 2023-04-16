@@ -5,6 +5,8 @@ import { styled } from '@mui/material/styles';
 //
 import Header from './header';
 import Nav from './nav';
+import { StatusModal } from '../../components/CustomModal/StatusModal';
+import { usePopUp } from '../../context/PopUpContext';
 
 // ----------------------------------------------------------------------
 
@@ -32,17 +34,21 @@ const Main = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function DashboardLayout() {
-  const [open, setOpen] = useState(false);
+export default function DashboardLayout () {
+  const { popUp, open, toggle } = usePopUp();
+  const [openHeader, setOpen] = useState(false);
 
   return (
     <StyledRoot>
       <Header onOpenNav={() => setOpen(true)} />
 
-      <Nav openNav={open} onCloseNav={() => setOpen(false)} />
+      <Nav openNav={openHeader} onCloseNav={() => setOpen(false)} />
 
       <Main>
         <Outlet />
+        <StatusModal {...popUp} open={open} onClose={() => {
+          toggle();
+        }} />
       </Main>
     </StyledRoot>
   );
