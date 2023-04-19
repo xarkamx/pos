@@ -31,4 +31,8 @@ export class ProductsTransaction extends TransactionService {
     }
     return this.put(`/products/${id}`, product);
   }
+
+  async getProductInventoryList () {
+    return this.get('/products/inventory');
+  }
 }

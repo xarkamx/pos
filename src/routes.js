@@ -12,6 +12,7 @@ import PaymentPages from './pages/PaymentsPage';
 import ClientsPage from './pages/ClientsPage';
 import ProductsPage from './pages/ProductsPage';
 import OrderPage from './pages/OrderPage';
+import { InventoryPage } from './pages/Inventory';
 
 // ----------------------------------------------------------------------
 
@@ -28,7 +29,11 @@ export default function Router () {
         { path: 'ordenes/:orderId', element: <OrderPage /> },
         { path: 'pagos', element: <PaymentPages /> },
         { path: 'productos', element: <ProductsPage /> },
-        { path: 'caja', element: <CheckoutPage /> }
+        { path: 'caja', element: <CheckoutPage /> },
+        {
+          path: 'inventario',
+          element: <InventoryPage />,
+        }
       ],
     },
     {

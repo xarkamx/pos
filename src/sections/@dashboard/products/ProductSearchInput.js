@@ -1,5 +1,7 @@
 
 import { Autocomplete, Button, Grid, TextField } from '@mui/material';
+
+import { useState } from 'react';
 import { useCState } from '../../../hooks/useHooks';
 import { useProducts } from '../../../hooks/useProducts';
 
@@ -74,4 +76,21 @@ export function ProductSearchInput ({ onSubmit }) {
       </Grid>
     </div>
   </form>
+}
+
+export function BasicProductSearch ({ onChange }) {
+  const [product, setProduct] = useState({})
+  const products = useProducts();
+  const options = products.products || [];
+  return <Autocomplete
+    value={product.label || ''}
+    disablePortal
+    options={options}
+    fullWidth
+    onChange={(ev, nv) => {
+      if (!nv?.id) return;
+      setProduct(nv);
+      onChange?.(nv);
+    }}
+    renderInput={(params) => <TextField {...params} autoFocus label="Productos" />} />
 }

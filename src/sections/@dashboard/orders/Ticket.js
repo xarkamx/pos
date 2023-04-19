@@ -21,7 +21,7 @@ function TicketProduct ({ name, qty, price, amount }) {
       <td
         style={{
           borderBottom: '1px solid #000',
-        }}>{price}</td>
+        }}><Money number={price} /></td>
 
 
       <td style={{
@@ -83,6 +83,9 @@ export const Ticket = React.forwardRef((props, ref) => {
         <h3>NOTA DE VENTA: {numberPadStart(2, orderId)}</h3>
       </div>
       <div style={sectionStyle}>
+        <i>
+          <h4>Fecha: {localeDate(new Date())}</h4>
+        </i>
         <h4>Productos</h4>
         <hr />
         <table style={{

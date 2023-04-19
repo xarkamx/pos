@@ -4,7 +4,7 @@ import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import LoyaltyIcon from '@mui/icons-material/Loyalty';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-
+import InventoryIcon from '@mui/icons-material/Inventory';
 // ----------------------------------------------------------------------
 
 const navConfig = [
@@ -18,6 +18,11 @@ const navConfig = [
     title: 'productos',
     path: '/dashboard/productos',
     icon: <LoyaltyIcon />,
+  },
+  {
+    title: 'inventario',
+    path: '/dashboard/inventario',
+    icon: <InventoryIcon />,
   },
   {
     title: 'Ordenes',
