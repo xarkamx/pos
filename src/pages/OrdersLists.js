@@ -49,7 +49,6 @@ export function OrdersPage () {
     <SearchDatesInputs onChange={(dates) => {
       setSearch(dates);
     }} />
-
     <CustomTable
       pageComponent={<TablePagination
         rowsPerPageOptions={[5, 10, 25]}

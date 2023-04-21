@@ -1,4 +1,5 @@
 import { config } from '../../config';
+import { isObjectEmpty } from '../../core/helpers';
 
 const { TransactionService } = require('./transactionService');
 
@@ -12,8 +13,9 @@ export class OrderTransaction extends TransactionService {
     return this.post('/orders', { clientId, products, discount, partialPayment, paymentType, items });
   }
 
-  async getOrders () {
-    return this.get('/orders');
+  async getOrders (query) {
+    query = isObjectEmpty(query) ? '' : `?${new URLSearchParams(query).toString()}`;
+    return this.get(`/orders${query}`);
   }
 
   async pay ({ orderId, payment, clientId, paymentMethod }) {

@@ -13,6 +13,7 @@ import ClientsPage from './pages/ClientsPage';
 import ProductsPage from './pages/ProductsPage';
 import OrderPage from './pages/OrderPage';
 import { InventoryPage } from './pages/Inventory';
+import SinglePageClient from './pages/clients/client';
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +26,7 @@ export default function Router () {
         { element: <Navigate to="/dashboard/caja" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'clientes', element: <ClientsPage /> },
+        { path: 'clientes/:clientId', element: <SinglePageClient /> },
         { path: 'ordenes', element: <OrdersPage /> },
         { path: 'ordenes/:orderId', element: <OrderPage /> },
         { path: 'pagos', element: <PaymentPages /> },
