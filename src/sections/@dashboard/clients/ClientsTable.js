@@ -16,7 +16,10 @@ export function ClientsTable ({ clients = [], onUpdateClient }) {
       email.toLowerCase().includes(query) ||
       phones.join(',').toLowerCase().includes(query)
     );
-  })
+  }).map((client) => ({
+    ...client,
+    phones: Array.isArray(client.phones) ? client.phones : [client.phones]
+  }))
   return (
     <>
       <TextField label="Buscar" variant="outlined" fullWidth onChange={(event) => {
