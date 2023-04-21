@@ -7,11 +7,10 @@ export function InventoryTable ({ items = [] }) {
   const [search, setSearch] = useState('');
 
   const filtered = items.filter((item) => {
-    const { id, externalId, price, quantity } = item;
+    const { id, price, quantity } = item;
     const query = search.toLowerCase();
     return (
       id.toString().includes(query) ||
-      externalId.toLowerCase().includes(query) ||
       price.toLowerCase().includes(query) ||
       quantity.toString().includes(query)
     );
