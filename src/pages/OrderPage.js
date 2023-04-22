@@ -54,6 +54,7 @@ export default function OrderPage () {
         </Grid>
         <Grid item xs={12} md={4}>
           <ClientCard
+            id={order?.order.clientId}
             rfc={order?.order.rfc}
             name={order?.order.clientName}
             email={order?.order.email}

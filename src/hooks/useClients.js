@@ -22,7 +22,14 @@ export function useClients () {
   return { clients: query.data, addClient: mutation.mutate, updateClient: updateMutation.mutate }
 }
 
-export function useClientResume (id) {
+export function useClient (id) {
   const query = useQuery(['clientResume', id], () => new ClientsTransaction().getClientResume(id));
-  return { clientResume: id ? query.data : undefined }
+  const client = useQuery(['client', id], () => new ClientsTransaction().getClient(id));
+  const setClient = useMutation((content) => new ClientsTransaction()
+    .updateClient(content.id, content.client), {
+    onSuccess: () => {
+      client.refetch();
+    }
+  });
+  return { clientResume: id ? query.data : undefined, client: client.data, setClient: setClient.mutate }
 }

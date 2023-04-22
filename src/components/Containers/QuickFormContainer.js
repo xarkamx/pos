@@ -2,9 +2,10 @@ import { Button, Card, List, ListItem, TextField, Typography } from '@mui/materi
 import { useState } from 'react';
 
 
-export function QuickFormContainer ({ children, title = 'quickForm', onSubmit }) {
+export function QuickFormContainer ({ children, title = 'quickForm', onSubmit, sx }) {
   return (
     <form
+      style={sx}
       className='quick-form-container'
       onSubmit={(ev) => {
         ev.preventDefault()

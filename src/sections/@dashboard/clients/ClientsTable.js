@@ -1,11 +1,14 @@
 
 import { useState } from 'react';
-import { TextField } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import { useNavigate } from 'react-router-dom';
+import { IconButton, TextField } from '@mui/material';
 import { PaginatedTable } from '../../../components/tables/paginatedTable';
 import { DebounceInput } from '../../../components/Inputs/DebounceInput';
 
 export function ClientsTable ({ clients = [], onUpdateClient }) {
   const [search, setSearch] = useState('');
+  const navigate = useNavigate()
   const filtered = clients.filter((client) => {
     const { id, name, rfc, email, phones } = client;
     const query = search.toLowerCase();
@@ -27,7 +30,7 @@ export function ClientsTable ({ clients = [], onUpdateClient }) {
       }} />
       <PaginatedTable
         items={filtered}
-        titles={['Id', 'Nombre', 'RFC', 'Teléfonos', 'Email', 'Facturable', 'Codigo Postal']}
+        titles={['Id', 'Nombre', 'RFC', 'Teléfonos', 'Email', 'Facturable', 'Codigo Postal', 'Acciones']}
         format={(client) => ([
           client.id,
           <DebounceInput key={`name-${client.id}`} label="Nombre" variant="standard" value={client.name}
@@ -49,7 +52,12 @@ export function ClientsTable ({ clients = [], onUpdateClient }) {
             onChange={(ev) => {
               onUpdateClient({ id: client.id, client: { postal_code: ev.target.value.toUpperCase() } })
             }}
-          />
+          />,
+          <IconButton key={`edit-${client.id}`} onClick={() => {
+            navigate(`/dashboard/clientes/${client.id}`)
+          }} >
+            <EditIcon />
+          </IconButton>
         ])}
       />
     </>

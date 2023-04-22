@@ -70,7 +70,11 @@ export function OrdersTable ({ orders, onStatusClick }) {
           <Chip key={`chip-${item.id}`}
             label={item.status}
             color={color(item.status)}
-            onClick={onStatusClick}
+            onClick={(ev) => {
+              ev.stopPropagation();
+              if (item.status === 'paid') return;
+              onStatusClick(item);
+            }}
             sx={{
               color: 'white',
               fontWeight: 'bold',

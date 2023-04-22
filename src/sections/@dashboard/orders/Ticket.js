@@ -1,6 +1,6 @@
 import React from 'react';
 import { Money } from '../../../components/Formats/FormatNumbers';
-import { useClientResume } from '../../../hooks/useClients';
+import { useClient } from '../../../hooks/useClients';
 import { ConditionalWall } from '../../../components/FilterWall/ConditionalWall';
 import { numberPadStart, localeDate } from '../../../core/helpers';
 
@@ -54,7 +54,7 @@ function ClientTicket ({ clientName, clientRfc, orders, latestPurchase, totalDeb
 
 export const Ticket = React.forwardRef((props, ref) => {
   const { products, orderId, subtotal, discount, total, clientId, payment } = props;
-  const { clientResume } = useClientResume(clientId);
+  const { clientResume } = useClient(clientId);
   const sectionStyle = {
     marginTop: '2rem',
     borderRadius: '5px',
