@@ -31,5 +31,5 @@ export function useClient (id) {
       client.refetch();
     }
   });
-  return { clientResume: id ? query.data : undefined, client: client.data, setClient: setClient.mutate }
+  return { clientResume: id ? query.data : undefined, client: client?.data || {}, setClient: setClient.mutate }
 }
