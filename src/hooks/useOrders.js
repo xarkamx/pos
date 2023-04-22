@@ -2,9 +2,9 @@
 import { useMutation, useQuery } from 'react-query';
 import { OrderTransaction } from '../utils/transactions/orderTransaction';
 
-export function useOrders () {
+export function useOrders (queryString = {}) {
 
-  const query = useQuery('orders', () => new OrderTransaction().getOrders());
+  const query = useQuery('orders', () => new OrderTransaction().getOrders(queryString));
   const mutation = useMutation((order) => new OrderTransaction().createOrder(order));
   const update = useMutation((payment) => new OrderTransaction().pay(payment), {
     onSuccess: () => {

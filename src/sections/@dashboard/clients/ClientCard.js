@@ -1,14 +1,17 @@
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, List, ListItem, Button, ListItemText } from '@mui/material';
 import { ConditionalWall } from '../../../components/FilterWall/ConditionalWall';
 
 
+
 export function ClientCard ({
+  id,
   rfc,
   name,
   phones,
   email,
 }) {
-
+  const navigate = useNavigate();
   return (
     <Card className='ClientCard'>
       <CardHeader title={name} />
@@ -19,7 +22,9 @@ export function ClientCard ({
           <PhonesList phones={phones} />
           <ConditionalWall condition={rfc}>
             <ListItem type='container'>
-              <Button variant='contained' fullWidth color='primary'>Detalles</Button>
+              <Button variant='contained' fullWidth color='primary' onClick={() => {
+                navigate(`/dashboard/clientes/${id}`)
+              }}>Detalles</Button>
             </ListItem>
           </ConditionalWall>
 
@@ -31,6 +36,7 @@ export function ClientCard ({
 }
 
 function PhonesList ({ phones = [] }) {
+  if (!Array.isArray(phones)) phones = [phones];
   if (!phones || phones.length === 0) return null;
   return (
     <>
