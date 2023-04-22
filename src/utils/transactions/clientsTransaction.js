@@ -9,6 +9,7 @@ export class ClientsTransaction extends TransactionService {
   }
 
   async getClients () {
+
     return this.get('/clients');
   }
 
@@ -23,7 +24,17 @@ export class ClientsTransaction extends TransactionService {
 
   async getClient (id) {
     if (!id) return Promise.resolve({});
-    return this.get(`/clients/${id}`);
+    const format = {
+      rfc: '',
+      name: '',
+      email: '',
+      phones: '',
+      legal: false,
+      postal_code: ''
+    }
+    const client = await this.get(`/clients/${id}`);
+
+    return { ...format, ...client };
   }
 
   async updateClient (id, client) {

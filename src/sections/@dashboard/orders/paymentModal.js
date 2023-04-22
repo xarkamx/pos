@@ -49,7 +49,7 @@ export function PaymentModal ({ amount, max = Infinity, clientId, onPay, open, o
             <TextField label="Monto" inputProps={{
               min: 1,
               max,
-            }} value={payment}
+            }} value={payment || 0}
               onChange={(ev) => {
                 let { value } = ev.target
                 if (value > max) {

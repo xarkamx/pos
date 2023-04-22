@@ -17,7 +17,7 @@ export default function SinglePageClient () {
   const { orders, pay } = useOrders({ clientId });
   const { client, clientResume, setClient } = useClient(clientId);
 
-  if (!client && !clientResume) return null;
+  if (!client || !clientResume) return null;
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -65,11 +65,11 @@ function ClientBasicForm ({ rfc, name, email, phones, legal, postalCode, onItemC
         setVals({ email: ev.target.value })
         onItemChange({ email: ev.target.value })
       }} />
-      <QuickDebounceInput label='Teléfono' value={vals.phones} onChange={(ev) => {
+      <QuickDebounceInput label='Teléfono' value={vals.phones?.join(',')} onChange={(ev) => {
         setVals({ phones: ev.target.value })
         onItemChange({ phones: ev.target.value })
       }} />
-      <QuickDebounceInput label='Código Postal' value={vals.postalCode} onChange={(ev) => {
+      <QuickDebounceInput label='Código Postal' value={vals.postalCode || ''} onChange={(ev) => {
         setVals({ postalCode: ev.target.value })
         onItemChange({ postal_code: ev.target.value })
       }} />
