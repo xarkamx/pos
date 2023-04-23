@@ -13,7 +13,7 @@ export default function PaymentTable ({ payments, onDeletePayment }) {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useCState(null);
   const [query, setQuery] = useState('');
-  let pays = payments?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) || [];
+  let pays = payments
   if (search) {
     const to = new Date(search.to).getTime();
     const from = new Date(search.from).getTime();
@@ -28,6 +28,7 @@ export default function PaymentTable ({ payments, onDeletePayment }) {
       return str.toLowerCase().includes(query.toLowerCase());
     });
   }
+  pays = pays?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) || [];
   const itemsCount = search ? pays.length : payments?.length || 0;
   return (
     <>

@@ -136,13 +136,13 @@ function EarninsResume ({ orders = [] }) {
   }}>
     <Grid item xs={12} md={4}>
       <Card sx={{ ...sx, backgroundColor: 'darkorchid' }}>
-        <h3>Subtotal</h3>
+        <h3>Ingresos reales</h3>
         <Money number={payment} />
       </Card>
     </Grid>
     <Grid item xs={12} md={4}>
       <Card sx={{ ...sx, backgroundColor: 'green' }}>
-        <h3>Total</h3>
+        <h3>Ingresos Estimados</h3>
         <Money number={total} />
       </Card>
     </Grid>
