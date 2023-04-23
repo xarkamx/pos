@@ -6,23 +6,17 @@ import { PaymentFlowSelect, PaymentMethodSelect, PaymentTypeSelect } from './Sel
 
 
 export function QuickPaymentForm ({ onSubmit }) {
-  const [payment, setPayment] = useCState({
+  const defaultPayment = {
     clientId: 0,
     amount: 0,
     paymentMethod: 1,
     flow: 'inflow',
     paymentType: 'sale',
     description: '',
-  })
+  }
+  const [payment, setPayment] = useCState(defaultPayment)
   const clear = () => {
-    setPayment({
-      clientId: '',
-      amount: 0,
-      paymentMethod: 1,
-      flow: 'inflow',
-      paymentType: 'sale',
-      description: '',
-    })
+    setPayment(defaultPayment)
   }
   return <form onSubmit={(ev) => {
     ev.preventDefault()

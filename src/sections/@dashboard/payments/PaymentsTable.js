@@ -29,7 +29,7 @@ export default function PaymentTable ({ payments, onDeletePayment }) {
     });
   }
   pays = pays?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) || [];
-  const itemsCount = search ? pays.length : payments?.length || 0;
+  const itemsCount = pays.length || 0;
   return (
     <>
       <TextField fullWidth label="Buscar" sx={{
