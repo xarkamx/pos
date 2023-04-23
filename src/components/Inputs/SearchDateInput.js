@@ -1,7 +1,8 @@
 import { Grid, TextField } from '@mui/material';
 import { useCState } from '../../hooks/useHooks';
+import { validInputDate } from '../../core/helpers';
 
-export function SearchDatesInputs ({ onChange }) {
+export function SearchDatesInputs ({ onChange, dfrom }) {
   const [dates, setDates] = useCState({
     from: null,
     to: null,
@@ -10,6 +11,7 @@ export function SearchDatesInputs ({ onChange }) {
     <Grid container spacing={2}>
       <Grid item xs={12} md={6}>
         <TextField
+          defaultValue={validInputDate(dfrom)}
           fullWidth label="Desde"
           InputLabelProps={{ shrink: true }}
           type='date' onChange={(ev) => {
@@ -21,6 +23,7 @@ export function SearchDatesInputs ({ onChange }) {
       </Grid>
       <Grid item xs={12} md={6}>
         <TextField
+          defaultValue={validInputDate(new Date())}
           fullWidth label="Hasta"
           InputLabelProps={{ shrink: true }}
           type='date' onChange={(ev) => {

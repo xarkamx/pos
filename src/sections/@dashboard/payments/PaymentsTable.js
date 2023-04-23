@@ -12,9 +12,9 @@ import { TotalResume } from './PaymentsResume';
 export default function PaymentTable ({ payments, onDeletePayment }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [search, setSearch] = useCState(null);
+  const [search, setSearch] = useCState({ from: getLastMonday(new Date()), to: new Date() });
   const [query, setQuery] = useState('');
-  let pays = payments
+  let pays = payments || [];
   if (search) {
     const to = new Date(search.to).getTime();
     const from = new Date(search.from).getTime();
@@ -29,8 +29,8 @@ export default function PaymentTable ({ payments, onDeletePayment }) {
       return str.toLowerCase().includes(query.toLowerCase());
     });
   }
-  pays = pays?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) || [];
-  const itemsCount = pays.length || 0;
+  const pages = pays?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) || [];
+  const itemsCount = search || query ? pays?.length : payments?.length;
   return (
     <>
 
@@ -41,6 +41,7 @@ export default function PaymentTable ({ payments, onDeletePayment }) {
         setQuery(ev.target.value);
       }} />
       <SearchDatesInputs
+        dfrom={search.from}
         onChange={(dates) => {
           setSearch(dates);
         }}
@@ -62,7 +63,7 @@ export default function PaymentTable ({ payments, onDeletePayment }) {
           />
         }
         titles={['', 'ID', 'Fecha', 'Referencia', 'Flujo', 'Descripcion', 'Tipo de pago', 'Pago', 'Método']}
-        content={pays}
+        content={pages}
         format={(item) => [
           <DeleteSmallButton key={`del-${item.id}`} onClick={() => {
             onDeletePayment(item.id);
@@ -93,4 +94,10 @@ export function SimplePaymentsTable ({ payments }) {
       <Money key={`item2-${item.id}`} number={item.amount} />
     ]}
   />
+}
+
+function getLastMonday (date) {
+  const day = date.getDay();
+  const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+  return new Date(date.setDate(diff));
 }
