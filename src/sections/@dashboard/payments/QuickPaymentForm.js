@@ -7,7 +7,7 @@ import { PaymentFlowSelect, PaymentMethodSelect, PaymentTypeSelect } from './Sel
 
 export function QuickPaymentForm ({ onSubmit }) {
   const [payment, setPayment] = useCState({
-    clientId: '',
+    clientId: 0,
     amount: 0,
     paymentMethod: 1,
     flow: 'inflow',

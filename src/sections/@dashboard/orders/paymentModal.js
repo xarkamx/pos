@@ -7,7 +7,7 @@ import { PaymentMethodSelect } from '../payments/SelectPaymentMethod';
 const Transition = React.forwardRef((props, ref) => (<Slide direction="up" ref={ref} {...props} />));
 
 export function PaymentModal ({ amount, max = Infinity, clientId, onPay, open, onClose }) {
-  const [payment, setPayment] = useState(amount)
+  const [payment, setPayment] = useState(0)
   const [paymentMethod, setPaymentMethod] = useState(1)
   const [currentClientId, setClientId] = useState(clientId)
   const clear = () => {
@@ -16,10 +16,9 @@ export function PaymentModal ({ amount, max = Infinity, clientId, onPay, open, o
     setClientId(clientId)
   }
   useEffect(() => {
-    setPayment(amount);
     setClientId(clientId);
 
-  }, [amount, clientId])
+  }, [clientId])
   return <Dialog
     open={open}
     TransitionComponent={Transition}
@@ -49,7 +48,10 @@ export function PaymentModal ({ amount, max = Infinity, clientId, onPay, open, o
             <TextField label="Monto" inputProps={{
               min: 1,
               max,
-            }} value={payment || 0}
+            }} value={payment}
+              onFocus={(ev) => {
+                ev.target.select()
+              }}
               onChange={(ev) => {
                 let { value } = ev.target
                 if (value > max) {

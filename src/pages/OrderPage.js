@@ -1,4 +1,6 @@
 import { Card, CardHeader, Collapse, Grid, Button } from '@mui/material';
+
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactToPrint from 'react-to-print';
@@ -11,13 +13,16 @@ import { ClientCard } from '../sections/@dashboard/clients/ClientCard';
 import { PaymentModal } from '../sections/@dashboard/orders/paymentModal';
 import { Ticket } from '../sections/@dashboard/orders/Ticket';
 import { SimplePaymentsTable } from '../sections/@dashboard/payments/PaymentsTable';
-
+import { DangerModal } from '../components/CustomModal/ConfirmModal';
+import { ClientsSearchInput } from '../sections/@dashboard/clients/SelectClient';
+import { Money } from '../components/Formats/FormatNumbers';
 
 
 export default function OrderPage () {
   const { orderId } = useParams();
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
-  const { order, payments, isLoading, pay } = useOrder(orderId);
+  const { order, payments, isLoading, pay, del, update } = useOrder(orderId);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   if (isLoading) return <h1>Cargando...</h1>
   const formatOrder = order?.items.map((item) => ({
     id: item.productId,
@@ -37,12 +42,18 @@ export default function OrderPage () {
     <>
 
       <Grid container spacing={3}>
-        <Grid item xs={12}>
+        <Grid item xs={12} sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}>
           <h1
             style={{
               color: colors[order?.order.status],
             }}
           >Orden: {orderId} - {status}  {date} </h1>
+          <Button color='error' onClick={() => {
+            setOpenDeleteModal(true);
+          }} startIcon={<DeleteForeverIcon />}>BORRAR</Button>
         </Grid>
         <Grid item xs={12}>
           <OrderStatusCard
@@ -53,6 +64,11 @@ export default function OrderPage () {
           />
         </Grid>
         <Grid item xs={12} md={4}>
+          <ClientsSearchInput onSubmit={(ev) => {
+            update({
+              clientId: ev.id
+            })
+          }} />
           <ClientCard
             id={order?.order.clientId}
             rfc={order?.order.rfc}
@@ -80,6 +96,16 @@ export default function OrderPage () {
             }} fullWidth>Pagar</Button>
           </Grid>
         </ConditionalWall>
+        <DangerModal open={openDeleteModal}
+          condition={(val) => val === orderId}
+          onClose={() => {
+            setOpenDeleteModal(false);
+          }}
+          onConfirm={() => {
+            setOpenDeleteModal(false);
+            del(orderId);
+          }}
+          message={"Para eliminar la nota ingresa el folio de la misma en el siguiente campo"} />
       </Grid>
 
 
@@ -105,16 +131,16 @@ function OrderStatusCard ({ discount, total, payment, subtotal }) {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={3}>
-        <AppWidgetSummary title="Total" total={total} color="success" icon={'material-symbols:attach-money'} />
+        <AppWidgetSummary title="Total" total={<Money number={total} />} color="success" icon={'material-symbols:attach-money'} />
       </Grid>
       <Grid item xs={12} md={3}>
-        <AppWidgetSummary title="Descuento" total={discount} color="warning" icon={'material-symbols:money'} />
+        <AppWidgetSummary title="Descuento" total={<Money number={discount} />} color="warning" icon={'material-symbols:money'} />
       </Grid>
       <Grid item xs={12} md={3}>
-        <AppWidgetSummary title="Subtotal" total={subtotal} icon={'material-symbols:attach-money'} />
+        <AppWidgetSummary title="Subtotal" total={<Money number={subtotal} />} icon={'material-symbols:attach-money'} />
       </Grid>
       <Grid item xs={12} md={3}>
-        <AppWidgetSummary title="Pagado" total={payment} color="info" icon={'material-symbols:money'} />
+        <AppWidgetSummary title="Pagado" total={<Money number={payment} />} color="info" icon={'material-symbols:money'} />
       </Grid>
     </Grid>
   );

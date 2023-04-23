@@ -1,4 +1,4 @@
-import { TablePagination } from '@mui/material';
+import { TablePagination, TextField } from '@mui/material';
 import { useState } from 'react';
 import { DeleteSmallButton } from '../../../components/Buttons/IconButons';
 import { Money } from '../../../components/Formats/FormatNumbers';
@@ -12,6 +12,7 @@ export default function PaymentTable ({ payments, onDeletePayment }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useCState(null);
+  const [query, setQuery] = useState('');
   let pays = payments?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) || [];
   if (search) {
     const to = new Date(search.to).getTime();
@@ -21,10 +22,20 @@ export default function PaymentTable ({ payments, onDeletePayment }) {
       return between(createdAt, from || 0, to || Infinity);
     });
   }
+  if (query) {
+    pays = pays.filter((item) => {
+      const str = `${item.id} ${item.description} ${item.externalId} ${item.amount}`;
+      return str.toLowerCase().includes(query.toLowerCase());
+    });
+  }
   const itemsCount = search ? pays.length : payments?.length || 0;
   return (
-    <
-      >
+    <>
+      <TextField fullWidth label="Buscar" sx={{
+        marginBottom: '1rem'
+      }} onChange={(ev) => {
+        setQuery(ev.target.value);
+      }} />
       <SearchDatesInputs
         onChange={(dates) => {
           setSearch(dates);

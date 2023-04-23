@@ -1,4 +1,6 @@
 
+
+import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
 import { OrderTransaction } from '../utils/transactions/orderTransaction';
 
@@ -23,6 +25,7 @@ export function useOrders (queryString = {}) {
 }
 
 export function useOrder (orderId) {
+  const navigate = useNavigate();
   const query = useQuery(['order', orderId], () => {
     const orderTransaction = new OrderTransaction();
     const prom = [
@@ -36,6 +39,18 @@ export function useOrder (orderId) {
       query.refetch();
     },
   });
+
+  const del = useMutation((orderId) => new OrderTransaction().deleteOrder(orderId), {
+    onSuccess: () => {
+      navigate('/dashboard/ordenes');
+    },
+  });
+
+  const updateOrder = useMutation((order) => new OrderTransaction().updateOrder(orderId, order), {
+    onSuccess: () => {
+      query.refetch();
+    },
+  });
   const [order, payments] = query.data || [];
   return {
     isLoading: query.isLoading,
@@ -43,6 +58,8 @@ export function useOrder (orderId) {
     order,
     payments,
     pay: pay.mutate,
+    del: del.mutate,
+    update: updateOrder.mutate,
   }
 }
 

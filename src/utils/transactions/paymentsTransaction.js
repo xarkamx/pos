@@ -1,6 +1,6 @@
 import { config } from '../../config';
+import { TransactionService } from './transactionService';
 
-const { TransactionService } = require('./transactionService');
 
 export class PaymentsTransaction extends TransactionService {
   constructor () {

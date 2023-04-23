@@ -11,6 +11,7 @@ import { DebounceInput } from '../../components/Inputs/DebounceInput';
 import { localeDate } from '../../core/helpers';
 import { AppWidgetSummary } from '../../sections/@dashboard/app';
 import { PaymentModal } from '../../sections/@dashboard/orders/paymentModal';
+import { Money } from '../../components/Formats/FormatNumbers';
 
 export default function SinglePageClient () {
   const { clientId } = useParams();
@@ -50,6 +51,7 @@ export default function SinglePageClient () {
 
 
 function ClientBasicForm ({ rfc, name, email, phones, legal, postalCode, onItemChange }) {
+  if (!Array.isArray(phones)) phones = [phones]
   const [vals, setVals] = useCState({ rfc, name, email, phones, legal, postalCode })
   return (
     <QuickFormContainer title={'Cliente'}>
@@ -66,8 +68,9 @@ function ClientBasicForm ({ rfc, name, email, phones, legal, postalCode, onItemC
         onItemChange({ email: ev.target.value })
       }} />
       <QuickDebounceInput label='Teléfono' value={vals.phones?.join(',')} onChange={(ev) => {
-        setVals({ phones: ev.target.value })
-        onItemChange({ phones: ev.target.value })
+        const phones = ev.target.value.split(',')
+        setVals({ phones })
+        onItemChange({ phones: JSON.stringify(phones) })
       }} />
       <QuickDebounceInput label='Código Postal' value={vals.postalCode || ''} onChange={(ev) => {
         setVals({ postalCode: ev.target.value })
@@ -87,16 +90,16 @@ function ClientCards ({ orders, pending, totalPaid, totalDebt }) {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={3}>
-        <AppWidgetSummary title="Notas" total={orders} color="success" icon={'material-symbols:attach-money'} />
+        <AppWidgetSummary title="Notas" total={orders} color="success" icon={'material-symbols:list-alt'} />
       </Grid>
       <Grid item xs={12} md={3}>
-        <AppWidgetSummary title="Pendientes" total={pending} color="warning" icon={'material-symbols:money'} />
+        <AppWidgetSummary title="Pendientes" total={pending} color="warning" icon={'material-symbols:list-alt'} />
       </Grid>
       <Grid item xs={12} md={3}>
-        <AppWidgetSummary title="Total Pagado" total={totalPaid} icon={'material-symbols:attach-money'} />
+        <AppWidgetSummary title="Total Pagado" total={<Money number={totalPaid} />} icon={'material-symbols:attach-money'} />
       </Grid>
       <Grid item xs={12} md={3}>
-        <AppWidgetSummary title="Deuda Total" total={totalDebt} color="info" icon={'material-symbols:money'} />
+        <AppWidgetSummary title="Deuda Total" total={<Money number={totalDebt} />} color="info" icon={'material-symbols:money'} />
       </Grid>
     </Grid>
   )

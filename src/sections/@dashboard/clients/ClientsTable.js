@@ -9,7 +9,10 @@ import { DebounceInput } from '../../../components/Inputs/DebounceInput';
 export function ClientsTable ({ clients = [], onUpdateClient }) {
   const [search, setSearch] = useState('');
   const navigate = useNavigate()
-  const filtered = clients.filter((client) => {
+  const filtered = clients.map((client) => ({
+    ...client,
+    phones: Array.isArray(client.phones) ? client.phones : [client.phones]
+  })).filter((client) => {
     const { id, name, rfc, email, phones } = client;
     const query = search.toLowerCase();
     return (
@@ -19,10 +22,7 @@ export function ClientsTable ({ clients = [], onUpdateClient }) {
       email.toLowerCase().includes(query) ||
       phones.join(',').toLowerCase().includes(query)
     );
-  }).map((client) => ({
-    ...client,
-    phones: Array.isArray(client.phones) ? client.phones : [client.phones]
-  }))
+  })
   return (
     <>
       <TextField label="Buscar" variant="outlined" fullWidth onChange={(event) => {

@@ -33,7 +33,8 @@ export function QuickClientForm ({ onSubmit }) {
       <QuickFormInput label='Telefonos' fullWidth
         pattern={'[0-9]{10}(,[0-9]{10})*'}
         onChange={(ev) => {
-          setClientData({ phones: ev.target.value })
+          const phones = ev.target.value.split(',').map((phone) => phone.trim())
+          setClientData({ phones: JSON.stringify(phones) })
         }}
       />
       <QuickFormInput label='Codigo Postal' fullWidth

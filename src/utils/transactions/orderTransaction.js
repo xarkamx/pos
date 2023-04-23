@@ -22,11 +22,19 @@ export class OrderTransaction extends TransactionService {
     return this.put(`/orders/${orderId}/payment`, { payment, paymentMethod, clientId })
   }
 
+  async deleteOrder (orderId) {
+    return this.delete(`/orders/${orderId}`);
+  }
+
   async getOrder (orderId) {
     return this.get(`/orders/${orderId}`);
   }
 
   async getOrderPayments (orderId) {
     return this.get(`/orders/${orderId}/payments`);
+  }
+
+  async updateOrder (id, order) {
+    return this.put(`/orders/${id}`, order);
   }
 }
