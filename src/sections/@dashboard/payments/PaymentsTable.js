@@ -7,6 +7,7 @@ import { PaginatedTable } from '../../../components/tables/paginatedTable';
 import { CustomTable } from '../../../components/tables/Table';
 import { between, localeDate } from '../../../core/helpers';
 import { useCState } from '../../../hooks/useHooks';
+import { TotalResume } from './PaymentsResume';
 
 export default function PaymentTable ({ payments, onDeletePayment }) {
   const [page, setPage] = useState(0);
@@ -32,6 +33,8 @@ export default function PaymentTable ({ payments, onDeletePayment }) {
   const itemsCount = pays.length || 0;
   return (
     <>
+
+      <TotalResume payments={pays} />
       <TextField fullWidth label="Buscar" sx={{
         marginBottom: '1rem'
       }} onChange={(ev) => {
