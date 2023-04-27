@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, List, ListItem, Button, ListItemText } from '@mui/material';
+import { Card, CardContent, CardHeader, List, ListItem, Button, ListItemText, Chip } from '@mui/material';
 import { ConditionalWall } from '../../../components/FilterWall/ConditionalWall';
 
 
@@ -41,7 +41,7 @@ function PhonesList ({ phones = [] }) {
   return (
     <>
       {phones.map((phone) => (
-        <a href={`tel:${phone}`} key={phone}>{phone}</a>
+        <a href={`tel:${phone}`} key={phone}><Chip label={phone} /></a>
       ))}
     </>
   );

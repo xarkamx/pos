@@ -25,7 +25,7 @@ const navConfig = [
     icon: <InventoryIcon />,
   },
   {
-    title: 'Ordenes',
+    title: 'Notas de venta',
     path: '/dashboard/ordenes',
     icon: <ReceiptIcon />,
   },

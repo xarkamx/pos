@@ -50,7 +50,7 @@ export default function OrderPage () {
             style={{
               color: colors[order?.order.status],
             }}
-          >Orden: {orderId} - {status}  {date} </h1>
+          >Nota: {orderId} - {status}  {date} </h1>
           <Button color='error' onClick={() => {
             setOpenDeleteModal(true);
           }} startIcon={<DeleteForeverIcon />}>BORRAR</Button>

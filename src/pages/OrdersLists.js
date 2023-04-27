@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Money } from '../components/Formats/FormatNumbers';
 import { SearchDatesInputs } from '../components/Inputs/SearchDateInput';
 import { CustomTable } from '../components/tables/Table';
-import { between } from '../core/helpers';
+import { between, getLastMonday } from '../core/helpers';
 import { useCState, useHistory } from '../hooks/useHooks';
 import { useOrders } from '../hooks/useOrders';
 import { PaymentModal } from '../sections/@dashboard/orders/paymentModal';
@@ -13,7 +13,7 @@ export function OrdersPage () {
   const { orders, pay, isLoading } = useOrders();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [search, setSearch] = useCState(null);
+  const [search, setSearch] = useCState({ from: getLastMonday(new Date()), to: new Date() });
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [order, setOrder] = useCState({});
   const history = useHistory();
@@ -46,9 +46,11 @@ export function OrdersPage () {
     padding: '1rem',
   }}>
     <EarninsResume orders={search ? ords : orders} />
-    <SearchDatesInputs onChange={(dates) => {
-      setSearch(dates);
-    }} />
+    <SearchDatesInputs
+      dfrom={search.from}
+      onChange={(dates) => {
+        setSearch(dates);
+      }} />
     <CustomTable
       pageComponent={<TablePagination
         rowsPerPageOptions={[5, 10, 25]}

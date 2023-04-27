@@ -5,7 +5,7 @@ import { Money } from '../../../components/Formats/FormatNumbers';
 import { SearchDatesInputs } from '../../../components/Inputs/SearchDateInput';
 import { PaginatedTable } from '../../../components/tables/paginatedTable';
 import { CustomTable } from '../../../components/tables/Table';
-import { between, localeDate } from '../../../core/helpers';
+import { between, getLastMonday, localeDate } from '../../../core/helpers';
 import { useCState } from '../../../hooks/useHooks';
 import { TotalResume } from './PaymentsResume';
 
@@ -39,11 +39,13 @@ export default function PaymentTable ({ payments, onDeletePayment }) {
         marginBottom: '1rem'
       }} onChange={(ev) => {
         setQuery(ev.target.value);
+        setPage(0);
       }} />
       <SearchDatesInputs
         dfrom={search.from}
         onChange={(dates) => {
           setSearch(dates);
+          setPage(0);
         }}
       />
       <CustomTable
@@ -59,6 +61,7 @@ export default function PaymentTable ({ payments, onDeletePayment }) {
             }}
             onRowsPerPageChange={(ev) => {
               setRowsPerPage(ev.target.value);
+              setPage(0)
             }}
           />
         }
@@ -96,8 +99,3 @@ export function SimplePaymentsTable ({ payments }) {
   />
 }
 
-function getLastMonday (date) {
-  const day = date.getDay();
-  const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-  return new Date(date.setDate(diff));
-}

@@ -54,7 +54,7 @@ function ClientTicket ({ clientName, clientRfc, orders, latestPurchase, totalDeb
 
 export const Ticket = React.forwardRef((props, ref) => {
   const { products, orderId, subtotal, discount, total, clientId, payment } = props;
-  const { clientResume } = useClient(clientId);
+  const { clientResume, client } = useClient(clientId);
   const sectionStyle = {
     marginTop: '2rem',
     borderRadius: '5px',
@@ -86,6 +86,7 @@ export const Ticket = React.forwardRef((props, ref) => {
         <i>
           <h4>Fecha: {localeDate(new Date())}</h4>
         </i>
+        <p>{client?.name}</p>
         <h4>Productos</h4>
         <hr />
         <table style={{

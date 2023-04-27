@@ -117,3 +117,9 @@ export function envURL () {
     ? process.env.REACT_APP_LOCAL_URL
     : process.env.REACT_APP_API_URL;
 }
+
+export function getLastMonday (date) {
+  const day = date.getDay();
+  const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+  return new Date(date.setDate(diff));
+}
