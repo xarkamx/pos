@@ -1,4 +1,4 @@
-import { Card, Chip, Grid, TablePagination } from '@mui/material';
+import { Card, Chip, Grid, TextField } from '@mui/material';
 import { localeDate } from 'afio/src/core/helpers';
 import { useState } from 'react';
 import { Money } from '../components/Formats/FormatNumbers';
@@ -11,11 +11,10 @@ import { PaymentModal } from '../sections/@dashboard/orders/paymentModal';
 
 export function OrdersPage () {
   const { orders, pay, isLoading } = useOrders();
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useCState({ from: getLastMonday(new Date()), to: new Date() });
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [order, setOrder] = useCState({});
+  const [query, setQuery] = useState('');
   const history = useHistory();
   const color = (status) => {
     switch (status) {
@@ -32,7 +31,15 @@ export function OrdersPage () {
   if (isLoading) {
     return <h1>Cargando...</h1>
   }
-  let ords = orders?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  let ords = orders;
+  if (query) {
+    ords = ords.filter((item) => {
+      const queryList = query.split(' ');
+
+      const searchableString = Object.values(item).join(' ').toLowerCase();
+      return queryList.some((q) => searchableString.includes(q.toLowerCase()));
+    });
+  }
   if (search) {
     const to = new Date(search.to).getTime();
     const from = new Date(search.from).getTime();
@@ -41,30 +48,24 @@ export function OrdersPage () {
       return between(createdAt, from || 0, to || Infinity)
     });
   }
-  const itemsCount = search ? ords.length : orders?.length || 0;
+
   return <Card sx={{
     padding: '1rem',
   }}>
     <EarninsResume orders={search ? ords : orders} />
+    <TextField label="Buscar"
+      variant="outlined"
+      sx={{ width: '100%', marginBottom: '1rem' }}
+      onChange={(ev) => {
+        setQuery(ev.target.value);
+      }}
+    />
     <SearchDatesInputs
       dfrom={search.from}
       onChange={(dates) => {
         setSearch(dates);
       }} />
     <CustomTable
-      pageComponent={<TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={itemsCount}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={(ev, pageNumber) => {
-          setPage(pageNumber);
-        }}
-        onRowsPerPageChange={(ev) => {
-          setRowsPerPage(ev.target.value);
-        }}
-      />}
       titles={['ID', 'RFC', 'Cliente', 'Fecha', 'subtotal', 'Descuento', 'Total', 'Pago', 'Estatus']}
       content={ords}
       onClick={(item) => {
