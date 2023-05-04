@@ -9,8 +9,9 @@ import useResponsive from '../../../hooks/useResponsive';
 import Logo from '../../../components/logo';
 import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
-//
-import navConfig from './config';
+import { routes } from '../../../routes';
+import { useAuth } from '../../../hooks/useAuth';
+
 
 // ----------------------------------------------------------------------
 
@@ -25,9 +26,17 @@ Nav.propTypes = {
   onCloseNav: PropTypes.func,
 };
 
+
 export default function Nav ({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
-
+  const auth = useAuth();
+  let navConfig = routes[0].children.filter((item) => item.title);
+  navConfig = navConfig.filter((item) => {
+    if (item.roles) {
+      return item.roles.some((role) => auth.access?.roles?.includes(role));
+    }
+    return true;
+  }).sort((a, b) => a.title.localeCompare(b.title));
   const isDesktop = useResponsive('up', 'lg');
 
   useEffect(() => {

@@ -14,3 +14,4 @@
 * [ ] Crear apartado de traduccion
 * [ ] Botones de eliminar deberian de pedir confirmacion.
 * [ ] Dado el endpoint con la doc de la API asegurate de que todos las respuestas esten correctamente formateadas deacuerdo al los schemas.
+* [ ] Add a workflow to edit paid orders

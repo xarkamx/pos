@@ -24,6 +24,10 @@ export class TransactionService {
     const headers = {
       'Content-Type': 'application/json'
     }
+    const access = localStorage.getItem('accessToken')
+    if (access) {
+      headers.Authorization = `Bearer ${JSON.parse(access).jwt}`
+    }
     path = `${this.url}${path}`
     const data = {
       method,
