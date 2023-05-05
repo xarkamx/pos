@@ -2,8 +2,8 @@ import { TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { DeleteSmallButton } from '../../../components/Buttons/IconButons';
-import { PaginatedTable } from '../../../components/tables/paginatedTable';
 import { DebounceInput } from '../../../components/Inputs/DebounceInput';
+import { CustomTable } from '../../../components/tables/Table';
 
 // ----------------------------------------------------------------------
 
@@ -20,8 +20,8 @@ export default function ProductList ({ products = [], onDeleteProduct, onUpdateP
   return (
     <>
       <TextField fullWidth label="Buscar" value={search} onChange={(ev) => setSearch(ev.target.value)} />
-      <PaginatedTable
-        items={filteredProducts}
+      <CustomTable
+        content={filteredProducts}
         titles={['', 'Id', 'Nombre', 'Precio']}
         format={(product) => (
           [
@@ -31,10 +31,12 @@ export default function ProductList ({ products = [], onDeleteProduct, onUpdateP
             product.id,
             <DebounceInput
               fullWidth value={product.label} key={`name-${product.id}`} onChange={(ev) => {
+                if (!ev.target.value) return;
                 onUpdateProduct({ id: product.id, name: ev.target.value });
               }} />,
             <DebounceInput
               value={product.price} key={`val-${product.id}`} onChange={(ev) => {
+                if (!ev.target.value) return;
                 onUpdateProduct({ id: product.id, price: ev.target.value });
               }} />,
           ]
