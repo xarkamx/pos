@@ -1,7 +1,7 @@
 import { TextField } from '@mui/material';
 import { useState } from 'react';
-import { PaginatedTable } from '../../../components/tables/paginatedTable';
 import { Money } from '../../../components/Formats/FormatNumbers';
+import { CustomTable } from '../../../components/tables/Table';
 
 export function InventoryTable ({ items = [] }) {
   const [search, setSearch] = useState('');
@@ -21,8 +21,8 @@ export function InventoryTable ({ items = [] }) {
       <TextField label="Buscar" variant="outlined" fullWidth onChange={(event) => {
         setSearch(event.target.value)
       }} />
-      <PaginatedTable
-        items={filtered}
+      <CustomTable
+        content={filtered}
         titles={['Id', 'Nombre', 'Cantidad', 'Precio', 'Proyección']}
         format={(items) => ([
           items.id,

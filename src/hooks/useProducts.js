@@ -24,7 +24,7 @@ export function useProducts () {
     products: query.data?.map(item => ({ label: item.name, id: item.id, price: item.price })),
     add: add.mutate,
     del: del.mutate,
-    update: update.mutate
-
+    update: update.mutate,
+    refresh: query.refetch
   }
 }

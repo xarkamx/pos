@@ -39,6 +39,11 @@ export class TransactionService {
     }
 
     return fetch(path, data)
-      .then(response => response.json())
+      .then(response => {
+        if (response.status >= 400) {
+          throw new Error('Error en la petición')
+        }
+        return response.json()
+      })
   }
 }
