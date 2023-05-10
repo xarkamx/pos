@@ -18,10 +18,10 @@ export default function LoginForm () {
 
 
   return (
-    <form onSubmit={(ev) => {
+    <form onSubmit={async (ev) => {
       ev.preventDefault();
-      onSubmit();
-      navigate('/dashboard', { replace: true });
+      await onSubmit();
+      navigate('/', { replace: true });
     }}>
       <Stack spacing={3}>
         <TextField name="email" label="Correo" onChange={(ev) => {

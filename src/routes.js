@@ -7,6 +7,7 @@ import LoyaltyIcon from '@mui/icons-material/Loyalty';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import InventoryIcon from '@mui/icons-material/Inventory';
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
@@ -24,6 +25,7 @@ import { InventoryPage } from './pages/Inventory';
 import SinglePageClient from './pages/clients/client';
 import { useAuth } from './hooks/useAuth';
 import { isObjectEmpty } from './core/helpers';
+import { UsersPage } from './pages/users';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -32,7 +34,6 @@ export const routes = [
     element: <DashboardLayout />,
     auth: true,
     children: [
-      { element: <Navigate to="/dashboard/caja" />, index: true },
       { path: 'app', element: <DashboardAppPage />, roles: ['admin', 'cashier'] },
       {
         path: 'clientes',
@@ -61,7 +62,7 @@ export const routes = [
       {
         path: 'caja', element: <CheckoutPage />, roles: ['admin', 'cashier'],
         icon: <PointOfSaleIcon />,
-        title: 'Caja'
+        title: 'Caja',
       },
       {
         path: 'inventario',
@@ -70,16 +71,24 @@ export const routes = [
         icon: <InventoryIcon />,
         title: 'Inventario',
       },
+      {
+        path: 'usuarios',
+        title: 'Usuarios',
+        element: <UsersPage />,
+        roles: ['admin'],
+        icon: <PeopleOutlineIcon />,
+      }
     ],
   },
   {
     path: 'login',
     element: <LoginPage />,
+    index: true,
   },
   {
     element: <SimpleLayout />,
     children: [
-      { element: <Navigate to="/dashboard/caja" />, index: true },
+      { element: <Navigate to="/dashboard/caja" /> },
       { path: '404', element: <Page404 /> },
       { path: '*', element: <Navigate to="/404" /> },
     ],
@@ -91,6 +100,7 @@ export const routes = [
 ];
 
 function filterRoutes (routes, auth) {
+  if (auth.access.roles.includes('master')) return routes;
   return routes.map((route) => {
     if (route.auth) {
       route.element = auth.access ? route.element : <Navigate to="/login" />;
@@ -115,8 +125,27 @@ function HelmetElement ({ title, children }) {
   )
 }
 
+
 export default function Router () {
   const auth = useAuth();
   const customRoutes = !isObjectEmpty(auth.access) ? filterRoutes(routes, auth) : routes.filter((route) => !route.auth);
-  return useRoutes(customRoutes);
+
+  const defaultRoute = {
+    path: '/',
+    element: <Navigate to="/login" />,
+  }
+
+  if (!isObjectEmpty(auth.access)) {
+    const mainPages = {
+      cashier: '/dashboard/caja',
+      admin: '/dashboard/app',
+      storer: '/dashboard/inventario',
+      master: '/dashboard/app',
+    }
+    const mainRole = auth.access.roles[0];
+    defaultRoute.element = <Navigate to={mainPages[mainRole]} />;
+  }
+
+  return useRoutes([...customRoutes, defaultRoute]);
 }
+
