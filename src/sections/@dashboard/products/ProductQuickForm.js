@@ -20,8 +20,8 @@ export function ProductQuickForm ({ onSubmit }) {
       },
       price: {
         type: 'number',
-        minimum: 0,
-        errorMessage: 'El precio debe ser mayor a 0'
+        errorMessage: 'El precio debe ser mayor a 0',
+        minimum: 0
       }
     }
   })
@@ -48,7 +48,7 @@ export function ProductQuickForm ({ onSubmit }) {
       }}
         value={product.price}
         onChange={(ev) => {
-          setProducts({ price: ev.target.value })
+          setProducts({ price: parseFloat(ev.target.value) })
         }}
       />
       <QuickFormButton
