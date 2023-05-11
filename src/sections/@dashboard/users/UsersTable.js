@@ -1,9 +1,20 @@
-import { Button, TextField } from '@mui/material';
+
+import { useState } from 'react';
+import { TextField } from '@mui/material';
 import { CustomTable } from '../../../components/tables/Table';
 
 export function UsersTable ({ users = [] }) {
+  const [search, setSearch] = useState('')
+  if (search) {
+    users = users.filter(user => {
+      const searcheable = `${user.name} ${user.email}`
+      return searcheable.toLowerCase().includes(search.toLowerCase())
+    })
+  }
   return (<>
-    <TextField label="Buscar" variant="outlined" fullWidth />
+    <TextField label="Buscar" variant="outlined" fullWidth onChange={(ev) => {
+      setSearch(ev.target.value)
+    }} />
     <CustomTable
       titles={['Nombre', 'Correo', 'Acciones']}
       content={users}
@@ -11,7 +22,7 @@ export function UsersTable ({ users = [] }) {
         user.name,
         user.email,
         <>
-          <Button variant='contained' color='primary' size='small' onClick={() => { }}>Editar</Button>
+
         </>
       ]}
     />

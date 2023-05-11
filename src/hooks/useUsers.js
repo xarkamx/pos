@@ -17,7 +17,7 @@ export function useUsers () {
 
   return {
     userList,
-    addUser,
+    addUser: addUser.mutate,
     updateUser,
   }
 }

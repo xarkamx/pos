@@ -10,4 +10,8 @@ export class UsersTransactions extends TransactionService {
   async getUsers () {
     return this.get('/users');
   }
+
+  async addUser (user) {
+    return this.post('/users', user);
+  }
 }
