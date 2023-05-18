@@ -26,6 +26,7 @@ import SinglePageClient from './pages/clients/client';
 import { useAuth } from './hooks/useAuth';
 import { isObjectEmpty } from './core/helpers';
 import { UsersPage } from './pages/users';
+import { BillingPage } from './pages/clients/billing';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -43,6 +44,11 @@ export const routes = [
         title: 'Clientes',
       },
       { path: 'clientes/:clientId', element: <SinglePageClient />, roles: ['admin', 'cashier'] },
+      {
+        path: 'clientes/:clientId/factura',
+        element: <BillingPage />,
+        roles: ['admin', 'cashier'],
+      },
       {
         path: 'ordenes', element: <OrdersPage />, roles: ['admin', 'cashier'],
         icon: <ReceiptIcon />,

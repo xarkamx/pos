@@ -1,4 +1,5 @@
-import { Card, Chip, Grid, TextField } from '@mui/material';
+import { Button, Card, Chip, Grid, TextField, Typography } from '@mui/material';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { localeDate } from 'afio/src/core/helpers';
 import { useState } from 'react';
 import { Money } from '../components/Formats/FormatNumbers';
@@ -8,9 +9,10 @@ import { between, getLastMonday } from '../core/helpers';
 import { useCState, useHistory } from '../hooks/useHooks';
 import { useOrders } from '../hooks/useOrders';
 import { PaymentModal } from '../sections/@dashboard/orders/paymentModal';
+import { DangerModal } from '../components/CustomModal/ConfirmModal';
 
 export function OrdersPage () {
-  const { orders, pay, isLoading } = useOrders();
+  const { orders, pay, checkIn, isLoading } = useOrders();
   const [search, setSearch] = useCState({ from: getLastMonday(new Date()), to: new Date() });
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [order, setOrder] = useCState({});
@@ -66,18 +68,13 @@ export function OrdersPage () {
         setSearch(dates);
       }} />
     <CustomTable
-      titles={['ID', 'RFC', 'Cliente', 'Fecha', 'subtotal', 'Descuento', 'Total', 'Pago', 'Estatus']}
+      titles={['ID', 'RFC', 'Cliente', 'Fecha', 'Total', 'Pago', 'Estatus', 'Facturado', 'Acciones']}
       content={ords}
-      onClick={(item) => {
-        history(`/dashboard/ordenes/${item.id}`)
-      }}
       format={(item) => [
         item.id,
         item.rfc || 'XAXX010101000',
         item.clientName || 'Consumidor final',
         localeDate(item.createdAt),
-        <Money key={`item2-${item.id}`} number={item.subtotal} />,
-        <Money key={`item4-${item.id}`} number={item.discount} />,
         <Money key={`item3-${item.id}`} number={item.total} />,
         <Money key={`item1-${item.id}`} number={item.partialPayment} />,
         <Chip key={`chip-${item.id}`}
@@ -93,7 +90,13 @@ export function OrdersPage () {
             color: 'white',
             fontWeight: 'bold',
             textTransform: 'capitalize'
-          }} />
+          }} />,
+        <BillingButton order={item} key={`billing-${item.id}`} onClick={() => {
+          checkIn(item.id);
+        }} />,
+        <Button key={`item2-${item.id}`} onClick={() => {
+          history(`/dashboard/ordenes/${item.id}`)
+        }}>Ver</Button>
       ]}
     />
     <PaymentModal
@@ -156,4 +159,33 @@ function EarninsResume ({ orders = [] }) {
       </Card>
     </Grid>
   </Grid>
+}
+
+function BillingButton ({ order, onClick }) {
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const valid = [order.rfc, order.email, order.postalCode]
+
+  if (!valid.every(val => val)) return <Typography variant="caption" color="error">Datos incompletos</Typography>;
+  if (order.billed) return <Chip label="Facturado" color="success" sx={{
+    color: 'white',
+  }} />
+  return <><Button variant={'contained'} endIcon={<ReceiptLongIcon />}
+    onClick={(ev) => {
+      ev.stopPropagation();
+      setOpenConfirm(true);
+    }}
+  >Facturar</Button>
+
+    <DangerModal
+      message={`¿Estás seguro de facturar la orden ${order.id}?`}
+      placeholder='Escribe el ID de la orden para confirmar'
+      onClose={() => {
+        setOpenConfirm(false);
+      }}
+      onConfirm={() => {
+        setOpenConfirm(false);
+        onClick(order.id);
+      }}
+      open={openConfirm} condition={(input) => parseInt(input, 10) === parseInt(order.id, 10)} icon={ReceiptLongIcon} color='info' />
+  </>
 }

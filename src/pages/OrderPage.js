@@ -16,12 +16,13 @@ import { SimplePaymentsTable } from '../sections/@dashboard/payments/PaymentsTab
 import { DangerModal } from '../components/CustomModal/ConfirmModal';
 import { ClientsSearchInput } from '../sections/@dashboard/clients/SelectClient';
 import { Money } from '../components/Formats/FormatNumbers';
+import { BillingButton } from './orders/billingButton';
 
 
 export default function OrderPage () {
   const { orderId } = useParams();
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
-  const { order, payments, isLoading, pay, del, update } = useOrder(orderId);
+  const { order, payments, isLoading, pay, del, update, checkIn } = useOrder(orderId);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   if (isLoading) return <h1>Cargando...</h1>
   const formatOrder = order?.items.map((item) => ({
@@ -80,22 +81,31 @@ export default function OrderPage () {
         <Grid item xs={12} md={8}>
           <CollapsableTables payments={payments} products={formatOrder} />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <PrintTicket orderId={orderId} products={
             formatOrder
           }
             order={order}
           />
         </Grid>
-        <ConditionalWall condition={order?.order.status === 'pending'}>
-          <Grid item xs={6}>
+        <Grid item xs={4}>
+
+          <ConditionalWall condition={order?.order.status === 'pending'}>
             <Button variant='contained' color='success' onClick={() => {
+              if (isLoading) return;
               setOpenPaymentModal(true);
             }} sx={{
               color: 'white',
             }} fullWidth>Pagar</Button>
-          </Grid>
-        </ConditionalWall>
+
+          </ConditionalWall>
+        </Grid>
+        <Grid item xs={4}>
+          <BillingButton billingId={order.order.billed} orderId={orderId} onBilling={() => {
+            if (isLoading) return;
+            checkIn(orderId);
+          }} />
+        </Grid>
         <DangerModal open={openDeleteModal}
           condition={(val) => val === orderId}
           onClose={() => {
@@ -106,7 +116,7 @@ export default function OrderPage () {
             del(orderId);
           }}
           message={"Para eliminar la nota ingresa el folio de la misma en el siguiente campo"} />
-      </Grid>
+      </Grid >
 
 
       <PaymentModal
