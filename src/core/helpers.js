@@ -31,6 +31,17 @@ export function localeDate (dateString = null) {
     day: "numeric",
   });
 }
+
+export function localeDateUTFMex (dateString = null) {
+  const date = dateString ? new Date(dateString) : new Date();
+  return date.toLocaleDateString("es-MX", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  });
+}
 /**
  * Convierte una fecha a un formato valido para inputs
  * @param {*} dateString
@@ -121,5 +132,26 @@ export function envURL () {
 export function getLastMonday (date) {
   const day = date.getDay();
   const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-  return new Date(date.setDate(diff));
+  const monday = new Date(date.setDate(diff)).setHours(0, 0, 0, 0);
+  return monday;
+}
+
+export function getEndOfDay (date) {
+  return new Date(date).setHours(23, 59, 59, 999);
+}
+
+export function objectToSerialize (param) {
+  if (!param) {
+    return "";
+  }
+  let keys = Object.keys(param),
+    values = [];
+  for (let k in keys) {
+    let value =
+      typeof param[keys[k]] === "object"
+        ? JSON.stringify(param[keys[k]])
+        : param[keys[k]];
+    values.push(keys[k] + "=" + value);
+  }
+  return values.join("&");
 }

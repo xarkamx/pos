@@ -1,6 +1,8 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { PAYMENT_TYPE } from '../../../config/constants'
 
 export function PaymentMethodSelect ({ paymentMethod, onChange }) {
+  const paymentMethods = PAYMENT_TYPE
   return (<FormControl fullWidth>
     <InputLabel id="payment-method-label">Tipo de pago</InputLabel>
     <Select value={paymentMethod}
@@ -8,8 +10,12 @@ export function PaymentMethodSelect ({ paymentMethod, onChange }) {
       id="payment-method-select" fullWidth
       onChange={onChange}
     >
-      <MenuItem value='1'>Efectivo</MenuItem>
-      <MenuItem value='2'>Deposito</MenuItem>
+      {paymentMethods.map((method) => (
+        <MenuItem
+          key={`method-${method.codigo}`}
+          value={method.codigo}>
+          {method.descripcion}
+        </MenuItem>))}
     </Select>
   </FormControl>)
 }

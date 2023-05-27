@@ -3,9 +3,10 @@
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
 import { OrderTransaction } from '../utils/transactions/orderTransaction';
+import { usePopUp } from '../context/PopUpContext';
 
 export function useOrders (queryString = {}) {
-
+  const { popUpAlert } = usePopUp();
   const query = useQuery('orders', () => new OrderTransaction().getOrders(queryString));
   const mutation = useMutation((order) => new OrderTransaction().createOrder(order));
   const update = useMutation((payment) => new OrderTransaction().pay(payment), {
@@ -14,18 +15,30 @@ export function useOrders (queryString = {}) {
     },
   });
 
+  const checkIn = useMutation((orderId) => new OrderTransaction().checkIn(orderId), {
+    onSuccess: () => {
+      query.refetch();
+    },
+    onError: () => {
+      popUpAlert('error', 'Error al facturar');
+
+    },
+  });
+
   return {
     createOrder: mutation.mutate,
-    isLoading: mutation.isLoading || query.isLoading || update.isLoading,
+    isLoading: mutation.isLoading || query.isLoading || update.isLoading || checkIn.isLoading,
     error: mutation.error,
     response: mutation.data,
     orders: query.data,
     pay: update.mutate,
+    checkIn: checkIn.mutate,
   }
 }
 
 export function useOrder (orderId) {
   const navigate = useNavigate();
+  const { popUpAlert } = usePopUp();
   const query = useQuery(['order', orderId], () => {
     const orderTransaction = new OrderTransaction();
     const prom = [
@@ -51,6 +64,26 @@ export function useOrder (orderId) {
       query.refetch();
     },
   });
+
+
+  const checkIn = useMutation((orderId) => new OrderTransaction().checkIn(orderId), {
+    onSuccess: () => {
+      query.refetch();
+    },
+    onError: () => {
+      popUpAlert('error', 'Error al facturar');
+
+    }
+  });
+
+  const cancelBilling = useMutation((orderId) => new OrderTransaction().cancelBilling(orderId), {
+    onSuccess: () => {
+      query.refetch();
+    },
+    onError: () => {
+      popUpAlert('error', 'Error al cancelar la factura');
+    },
+  });
   const [order, payments] = query.data || [];
   return {
     isLoading: query.isLoading,
@@ -60,6 +93,8 @@ export function useOrder (orderId) {
     pay: pay.mutate,
     del: del.mutate,
     update: updateOrder.mutate,
+    checkIn: checkIn.mutate,
+    cancelBilling: cancelBilling.mutate,
   }
 }
 

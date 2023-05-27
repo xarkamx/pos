@@ -19,6 +19,7 @@ export function PaymentModal ({ amount, max = Infinity, clientId, onPay, open, o
     setClientId(clientId);
 
   }, [clientId])
+  if (Number.isNaN(max)) max = Infinity
   return <Dialog
     open={open}
     TransitionComponent={Transition}

@@ -10,7 +10,7 @@ export default function ProductsPage () {
       <Grid item xs={12} md={4}>
         <ProductQuickForm onSubmit={add} />
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={8}>
         <ProductList products={products} onDeleteProduct={del} onUpdateProduct={update} />
       </Grid>
     </Grid>

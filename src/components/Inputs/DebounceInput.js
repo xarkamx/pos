@@ -2,9 +2,8 @@ import { TextField } from '@mui/material';
 import { useState } from 'react';
 
 let timer = null;
-export function DebounceInput ({ timeout = 1000, onChange, value, variant, ...props }) {
+export function DebounceInput ({ timeout = 1000, onChange, value = '', variant, ...props }) {
   const [val, setValue] = useState(value);
-
   return <TextField
     variant={variant || 'standard'}
     value={val}

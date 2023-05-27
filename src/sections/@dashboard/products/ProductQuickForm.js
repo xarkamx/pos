@@ -51,6 +51,7 @@ export function ProductQuickForm ({ onSubmit }) {
           setProducts({ price: parseFloat(ev.target.value) })
         }}
       />
+
       <QuickFormButton
         type='submit'
         variant='contained'

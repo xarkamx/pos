@@ -1,4 +1,14 @@
 import { Navigate, useRoutes } from 'react-router-dom';
+
+import { Helmet } from 'react-helmet-async';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
+import LoyaltyIcon from '@mui/icons-material/Loyalty';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
@@ -14,48 +24,142 @@ import ProductsPage from './pages/ProductsPage';
 import OrderPage from './pages/OrderPage';
 import { InventoryPage } from './pages/Inventory';
 import SinglePageClient from './pages/clients/client';
+import { useAuth } from './hooks/useAuth';
+import { isObjectEmpty } from './core/helpers';
+import { UsersPage } from './pages/users';
+import { BillingPage } from './pages/clients/billing';
+import { BillingList } from './pages/billing';
 
 // ----------------------------------------------------------------------
+export const routes = [
+  {
+    path: '/dashboard',
+    element: <DashboardLayout />,
+    auth: true,
+    children: [
+      { path: 'app', element: <DashboardAppPage />, roles: ['admin', 'cashier'] },
+      {
+        path: 'clientes',
+        element: <ClientsPage />,
+        roles: ['admin', 'cashier'],
+        icon: <SupervisedUserCircleIcon />,
+        title: 'Clientes',
+      },
+      { path: 'clientes/:clientId', element: <SinglePageClient />, roles: ['admin', 'cashier'] },
+      {
+        path: 'clientes/:clientId/factura',
+        element: <BillingPage />,
+        roles: ['admin', 'cashier'],
+      },
+      {
+        path: 'ordenes', element: <OrdersPage />, roles: ['admin', 'cashier'],
+        icon: <ReceiptIcon />,
+        title: 'Notas de venta'
+      },
+      { path: 'ordenes/:orderId', element: <OrderPage />, roles: ['admin', 'cashier'] },
+      {
+        path: 'pagos', element: <PaymentPages />, roles: ['admin', 'cashier'],
+        icon: <MonetizationOnIcon />,
+        title: 'Pagos'
+      },
+      {
+        path: 'productos', element: <ProductsPage />, roles: ['admin', 'storer', 'cashier'],
+        icon: <LoyaltyIcon />,
+        title: 'Productos'
+      },
+      {
+        path: 'caja', element: <CheckoutPage />, roles: ['admin', 'cashier'],
+        icon: <PointOfSaleIcon />,
+        title: 'Caja',
+      },
+      {
+        path: 'inventario',
+        element: <InventoryPage />,
+        roles: ['admin', 'storer'],
+        icon: <InventoryIcon />,
+        title: 'Inventario',
+      },
+      {
+        path: 'usuarios',
+        title: 'Usuarios',
+        element: <UsersPage />,
+        roles: ['admin'],
+        icon: <PeopleOutlineIcon />,
+      }, {
+        path: 'facturas',
+        title: 'Facturas',
+        element: <BillingList />,
+        roles: ['admin'],
+        icon: <ReceiptLongIcon />,
+      }
+    ],
+  },
+  {
+    path: 'login',
+    element: <LoginPage />,
+    index: true,
+  },
+  {
+    element: <SimpleLayout />,
+    children: [
+      { element: <Navigate to="/dashboard/caja" /> },
+      { path: '404', element: <Page404 /> },
+      { path: '*', element: <Navigate to="/404" /> },
+    ],
+  },
+  {
+    path: '*',
+    element: <Navigate to="/404" replace />,
+  },
+];
+
+function filterRoutes (routes, auth) {
+  if (auth.access.roles.includes('master')) return routes;
+  return routes.map((route) => {
+    if (route.auth) {
+      route.element = auth.access ? route.element : <Navigate to="/login" />;
+    }
+    if (route.roles) {
+      const valid = route.roles.some((role) => auth.access.roles.includes(role));
+      route.element = valid ? route.element : <Navigate to="/404" />;
+    }
+    if (route.children) route.children = filterRoutes(route.children, auth);
+
+    if (route.title) route.element = <HelmetElement title={route.title}>{route.element}</HelmetElement>
+    return route;
+  });
+}
+
+function HelmetElement ({ title, children }) {
+  return (
+    <>
+      <Helmet><title>{title} | POS </title></Helmet>
+      {children}
+    </>
+  )
+}
+
 
 export default function Router () {
-  const routes = useRoutes([
-    {
-      path: '/dashboard',
-      element: <DashboardLayout />,
-      children: [
-        { element: <Navigate to="/dashboard/caja" />, index: true },
-        { path: 'app', element: <DashboardAppPage /> },
-        { path: 'clientes', element: <ClientsPage /> },
-        { path: 'clientes/:clientId', element: <SinglePageClient /> },
-        { path: 'ordenes', element: <OrdersPage /> },
-        { path: 'ordenes/:orderId', element: <OrderPage /> },
-        { path: 'pagos', element: <PaymentPages /> },
-        { path: 'productos', element: <ProductsPage /> },
-        { path: 'caja', element: <CheckoutPage /> },
-        {
-          path: 'inventario',
-          element: <InventoryPage />,
-        }
-      ],
-    },
-    {
-      path: 'login',
-      element: <LoginPage />,
-    },
-    {
-      element: <SimpleLayout />,
-      children: [
-        { element: <Navigate to="/dashboard/caja" />, index: true },
-        { path: '404', element: <Page404 /> },
-        { path: '*', element: <Navigate to="/404" /> },
-      ],
-    },
-    {
-      path: '*',
-      element: <Navigate to="/404" replace />,
-    },
-  ]);
+  const auth = useAuth();
+  const customRoutes = !isObjectEmpty(auth.access) ? filterRoutes(routes, auth) : routes.filter((route) => !route.auth);
 
-  return routes;
+  const defaultRoute = {
+    path: '/',
+    element: <Navigate to="/login" />,
+  }
+
+  if (!isObjectEmpty(auth.access)) {
+    const mainPages = {
+      cashier: '/dashboard/caja',
+      admin: '/dashboard/app',
+      storer: '/dashboard/inventario',
+      master: '/dashboard/app',
+    }
+    const mainRole = auth.access.roles[0];
+    defaultRoute.element = <Navigate to={mainPages[mainRole]} />;
+  }
+
+  return useRoutes([...customRoutes, defaultRoute]);
 }
 

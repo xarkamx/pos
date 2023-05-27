@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { IconButton, TextField } from '@mui/material';
 import { PaginatedTable } from '../../../components/tables/paginatedTable';
 import { DebounceInput } from '../../../components/Inputs/DebounceInput';
+import { taxSystem } from '../../../config/constants';
 
 export function ClientsTable ({ clients = [], onUpdateClient }) {
   const [search, setSearch] = useState('');
@@ -30,25 +31,20 @@ export function ClientsTable ({ clients = [], onUpdateClient }) {
       }} />
       <PaginatedTable
         items={filtered}
-        titles={['Id', 'Nombre', 'RFC', 'Teléfonos', 'Email', 'Facturable', 'Codigo Postal', 'Acciones']}
+        titles={['Id', 'Nombre', 'RFC', 'Email', 'Facturable', 'Codigo Postal', 'Acciones']}
         format={(client) => ([
           client.id,
-          <DebounceInput key={`name-${client.id}`} label="Nombre" variant="standard" value={client.name}
-            onChange={(ev) => {
-              onUpdateClient({ id: client.id, client: { name: ev.target.value.toUpperCase() } })
-            }}
-          />,
+          client.name,
           <DebounceInput key={`rfc-${client.id}`} label="RFC" variant="standard" value={client.rfc}
             onChange={(ev) => {
               onUpdateClient({ id: client.id, client: { rfc: ev.target.value.toUpperCase() } })
             }}
           />,
-          client.phones.join(', ') || 'N/A',
           <a href={`mailto:${client.email}`} key={`mail-${client.id}`}>
             {client.email}
           </a>,
-          client.legal,
-          <DebounceInput key={`rfc-${client.id}`} label="Codigo Postal" variant="standard" value={client.postal_code}
+          taxSystem[client.tax_system],
+          <DebounceInput key={`rfc-${client.id}`} label="Codigo Postal" variant="standard" value={client.postal_code || ''}
             onChange={(ev) => {
               onUpdateClient({ id: client.id, client: { postal_code: ev.target.value.toUpperCase() } })
             }}

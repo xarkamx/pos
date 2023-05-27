@@ -11,7 +11,7 @@ export function InventoryTable ({ items = [] }) {
     const query = search.toLowerCase();
     if (!id) return false;
     return (
-      id.toString().includes(query) ||
+      id?.toString().includes(query) ||
       price.toLowerCase().includes(query) ||
       quantity.toString().includes(query)
     );
