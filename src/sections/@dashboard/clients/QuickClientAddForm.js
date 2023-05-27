@@ -1,6 +1,7 @@
-import { Button, ListItem } from '@mui/material';
+import { Autocomplete, Button, ListItem } from '@mui/material';
 import { QuickFormContainer, QuickFormInput } from '../../../components/Containers/QuickFormContainer';
 import { useCState } from '../../../hooks/useHooks';
+import { taxSystem } from '../../../config/constants';
 
 export function QuickClientForm ({ onSubmit }) {
   const [clientData, setClientData] = useCState({
@@ -8,6 +9,8 @@ export function QuickClientForm ({ onSubmit }) {
     name: '',
     email: '',
     phones: '',
+    postal_code: '',
+    tax_system: { value: '612' }
   })
   return (
     <QuickFormContainer title={'Registro de clientes'} onSubmit={() => {
@@ -43,6 +46,11 @@ export function QuickClientForm ({ onSubmit }) {
           setClientData({ postal_code: ev.target.value })
         }}
       />
+      <TaxSystem
+        onChange={(val) => {
+          setClientData({ tax_system: val })
+        }}
+      />
       <ListItem>
         <Button type='submit' variant='contained' fullWidth>Registrar</Button>
       </ListItem>
@@ -50,3 +58,19 @@ export function QuickClientForm ({ onSubmit }) {
 }
 
 
+function TaxSystem ({ onChange }) {
+  const [value, setValue] = useCState({ label: 'Personas Físicas con Actividades Empresariales y Profesionales', value: '612' })
+  const ts = Object.keys(taxSystem)
+  return <Autocomplete
+    options={ts.map(k => ({ label: taxSystem[k], value: k }))}
+    label='Regimen Fiscal'
+    fullWidth
+    isOptionEqualToValue={(option, value) => option.value === value.value}
+    value={value}
+    onChange={(ev, value) => {
+      setValue(value)
+      onChange(value)
+    }}
+    renderInput={(params) => <QuickFormInput {...params} label='Regimen Fiscal' fullWidth />}
+  />
+}

@@ -7,12 +7,13 @@ import { LoadingButton } from '@mui/lab';
 import Iconify from '../../../components/iconify';
 import { LoginTransaction } from '../../../utils/transactions/loginTransaction';
 import { useAuth } from '../../../hooks/useAuth';
+import { usePopUp } from '../../../context/PopUpContext';
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm () {
   const navigate = useNavigate();
-  const { setPassword, setEmail, onSubmit } = useLogin();
+  const { setPassword, setEmail, onSubmit, loading } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
 
 
@@ -48,7 +49,7 @@ export default function LoginForm () {
       </Stack>
 
 
-      <LoadingButton fullWidth sx={{
+      <LoadingButton loading={loading} fullWidth sx={{
         margin: '16px 0'
       }} size="large" type="submit" variant="contained" >
         Login
@@ -60,12 +61,22 @@ export default function LoginForm () {
 function useLogin () {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const auth = useAuth();
+  const { popUpAlert } = usePopUp();
 
   const onSubmit = async () => {
+    setLoading(true);
     const basService = new LoginTransaction();
-    auth.setAccess(await basService.login(email, password));
+    try {
+
+      auth.setAccess(await basService.login(email, password));
+    }
+    catch (err) {
+      popUpAlert('error', 'Error al iniciar sesión');
+    }
+    setLoading(false);
   };
 
-  return { setPassword, setEmail, onSubmit };
+  return { setPassword, setEmail, onSubmit, loading };
 };

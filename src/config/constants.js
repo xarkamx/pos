@@ -23,3 +23,94 @@ export const taxSystem = {
   "625": "Régimen de las Actividades Empresariales con ingresos a través de Plataformas Tecnológicas",
   "626": "Régimen Simplificado de Confianza"
 }
+
+export const PAYMENT_TYPE = [
+  {
+    "codigo": "01",
+    "descripcion": "Efectivo"
+  },
+  {
+    "codigo": "02",
+    "descripcion": "Cheque nominativo"
+  },
+  {
+    "codigo": "03",
+    "descripcion": "Transferencia electrónica de fondos"
+  },
+  {
+    "codigo": "04",
+    "descripcion": "Tarjeta de crédito"
+  },
+  {
+    "codigo": "05",
+    "descripcion": "Monedero electrónico"
+  },
+  {
+    "codigo": "06",
+    "descripcion": "Dinero electrónico"
+  },
+  {
+    "codigo": "08",
+    "descripcion": "Vales de despensa"
+  },
+  {
+    "codigo": "12",
+    "descripcion": "Dación en pago"
+  },
+  {
+    "codigo": "13",
+    "descripcion": "Pago por subrogación"
+  },
+  {
+    "codigo": "14",
+    "descripcion": "Pago por consignación"
+  },
+  {
+    "codigo": "15",
+    "descripcion": "Condonación"
+  },
+  {
+    "codigo": "17",
+    "descripcion": "Compensación"
+  },
+  {
+    "codigo": "23",
+    "descripcion": "Novación"
+  },
+  {
+    "codigo": "24",
+    "descripcion": "Confusión"
+  },
+  {
+    "codigo": "25",
+    "descripcion": "Remisión de deuda"
+  },
+  {
+    "codigo": "26",
+    "descripcion": "Prescripción o caducidad"
+  },
+  {
+    "codigo": "27",
+    "descripcion": "A satisfacción del acreedor"
+  },
+  {
+    "codigo": "28",
+    "descripcion": "Tarjeta de débito"
+  },
+  {
+    "codigo": "29",
+    "descripcion": "Tarjeta de servicios"
+  },
+  {
+    "codigo": "30",
+    "descripcion": "Aplicación de anticipos"
+  },
+  {
+    "codigo": "31",
+    "descripcion": "Intermediario pagos"
+  },
+  {
+    "codigo": "99",
+    "descripcion": "Por definir"
+  }
+]

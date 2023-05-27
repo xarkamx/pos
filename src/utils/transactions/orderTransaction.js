@@ -23,7 +23,7 @@ export class OrderTransaction extends TransactionService {
   }
 
   async checkIn (orderId) {
-    return this.bill({ orderIds: [orderId] });
+    return this.bill([orderId]);
   }
 
   async cancelBilling (billingId) {

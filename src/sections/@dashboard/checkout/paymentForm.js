@@ -5,7 +5,7 @@ import { PaymentMethodSelect } from '../payments/SelectPaymentMethod'
 import { DiscountInput } from './itemsList'
 
 export function PaymentForm ({ subtotal, total, clientId, send, onDiscount, submitable }) {
-  const [paymentMethod, setPaymentMethod] = useState('1')
+  const [paymentMethod, setPaymentMethod] = useState('01')
   return (
     <Card>
       <List>

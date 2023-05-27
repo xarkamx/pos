@@ -8,6 +8,8 @@ import useResponsive from '../hooks/useResponsive';
 import Logo from '../components/logo';
 // sections
 import { LoginForm } from '../sections/auth/login';
+import { StatusModal } from '../components/CustomModal/StatusModal';
+import { usePopUp } from '../context/PopUpContext';
 
 // ----------------------------------------------------------------------
 
@@ -41,7 +43,7 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 export default function LoginPage () {
   const mdUp = useResponsive('up', 'md');
-
+  const { popUp, open, toggle } = usePopUp();
   return (
     <>
       <Helmet>
@@ -72,6 +74,9 @@ export default function LoginPage () {
               Ingresa en POS HG
             </Typography>
             <LoginForm />
+            <StatusModal {...popUp} open={open} onClose={() => {
+              toggle();
+            }} />
           </StyledContent>
         </Container>
       </StyledRoot>

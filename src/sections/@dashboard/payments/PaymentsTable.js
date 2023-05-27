@@ -5,14 +5,15 @@ import { Money } from '../../../components/Formats/FormatNumbers';
 import { SearchDatesInputs } from '../../../components/Inputs/SearchDateInput';
 import { PaginatedTable } from '../../../components/tables/paginatedTable';
 import { CustomTable } from '../../../components/tables/Table';
-import { between, getLastMonday, localeDate } from '../../../core/helpers';
+import { between, getEndOfDay, getLastMonday, localeDateUTFMex } from '../../../core/helpers';
 import { useCState } from '../../../hooks/useHooks';
 import { TotalResume } from './PaymentsResume';
+import { paymentType } from '../../../utils/formats';
 
 export default function PaymentTable ({ payments, onDeletePayment }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [search, setSearch] = useCState({ from: getLastMonday(new Date()), to: new Date() });
+  const [search, setSearch] = useCState({ from: getLastMonday(new Date()), to: getEndOfDay(new Date()) });
   const [query, setQuery] = useState('');
   let pays = payments || [];
   if (search) {
@@ -72,13 +73,13 @@ export default function PaymentTable ({ payments, onDeletePayment }) {
             onDeletePayment(item.id);
           }} />,
           item.id,
-          localeDate(item.createdAt),
+          localeDateUTFMex(item.createdAt),
           item.externalId,
           item.flow === 'inflow' ? 'Entrada' : 'Salida',
           item.description,
           item.paymentType,
           <Money key={`item2-${item.id}`} number={item.amount} />,
-          item.paymentMethod === 1 ? 'Efectivo' : 'Deposito',
+          paymentType(item.paymentMethod),
         ]}
       />
     </>

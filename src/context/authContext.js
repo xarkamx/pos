@@ -1,14 +1,20 @@
-// Auth Context for react
+
 
 import { createContext, useMemo, useState } from 'react';
+
 
 export const AuthContext = createContext();
 
 export function AuthProvider ({ children }) {
   const accessToken = localStorage.getItem('accessToken');
   const [access, setAccess] = useState(JSON.parse(accessToken) || {});
+  const memo = useMemo(() => ({
+    access: getAccess(access, setAccess),
+    setAccess: setAccessToken(setAccess),
+    logOut: removeAccessToken(setAccess)
+  }), [access]);
 
-  const memo = useMemo(() => ({ access: getAccess(access, setAccess), setAccess: setAccessToken(setAccess), logOut: removeAccessToken(setAccess) }), [access]);
+
   return <AuthContext.Provider value={memo}>{
     children
   }</AuthContext.Provider>;

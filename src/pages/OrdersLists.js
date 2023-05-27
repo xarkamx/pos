@@ -1,19 +1,19 @@
 import { Button, Card, Chip, Grid, TextField, Typography } from '@mui/material';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import { localeDate } from 'afio/src/core/helpers';
 import { useState } from 'react';
 import { Money } from '../components/Formats/FormatNumbers';
 import { SearchDatesInputs } from '../components/Inputs/SearchDateInput';
 import { CustomTable } from '../components/tables/Table';
-import { between, getLastMonday } from '../core/helpers';
+import { between, getEndOfDay, getLastMonday, localeDateUTFMex } from '../core/helpers';
 import { useCState, useHistory } from '../hooks/useHooks';
 import { useOrders } from '../hooks/useOrders';
 import { PaymentModal } from '../sections/@dashboard/orders/paymentModal';
 import { DangerModal } from '../components/CustomModal/ConfirmModal';
+import { paymentType } from '../utils/formats';
 
 export function OrdersPage () {
   const { orders, pay, checkIn, isLoading } = useOrders();
-  const [search, setSearch] = useCState({ from: getLastMonday(new Date()), to: new Date() });
+  const [search, setSearch] = useCState({ from: getLastMonday(new Date()), to: getEndOfDay(new Date()) });
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [order, setOrder] = useCState({});
   const [query, setQuery] = useState('');
@@ -68,15 +68,15 @@ export function OrdersPage () {
         setSearch(dates);
       }} />
     <CustomTable
-      titles={['ID', 'RFC', 'Cliente', 'Fecha', 'Total', 'Pago', 'Estatus', 'Facturado', 'Acciones']}
+      titles={['ID', 'Cliente', 'Fecha', 'Total', 'Pago', 'Tipo de pago', 'Estatus', 'Facturado', 'Acciones']}
       content={ords}
       format={(item) => [
         item.id,
-        item.rfc || 'XAXX010101000',
         item.clientName || 'Consumidor final',
-        localeDate(item.createdAt),
+        localeDateUTFMex(item.createdAt),
         <Money key={`item3-${item.id}`} number={item.total} />,
         <Money key={`item1-${item.id}`} number={item.partialPayment} />,
+        paymentType(item.paymentType),
         <Chip key={`chip-${item.id}`}
           label={item.status}
           color={color(item.status)}
@@ -113,7 +113,6 @@ export function OrdersPage () {
         openPaymentModal
       } />
   </Card>
-
 }
 
 
@@ -189,3 +188,4 @@ function BillingButton ({ order, onClick }) {
       open={openConfirm} condition={(input) => parseInt(input, 10) === parseInt(order.id, 10)} icon={ReceiptLongIcon} color='info' />
   </>
 }
+
