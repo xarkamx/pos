@@ -75,6 +75,15 @@ export function useOrder (orderId) {
 
     }
   });
+
+  const cancelBilling = useMutation((orderId) => new OrderTransaction().cancelBilling(orderId), {
+    onSuccess: () => {
+      query.refetch();
+    },
+    onError: () => {
+      popUpAlert('error', 'Error al cancelar la factura');
+    },
+  });
   const [order, payments] = query.data || [];
   return {
     isLoading: query.isLoading,
@@ -85,6 +94,7 @@ export function useOrder (orderId) {
     del: del.mutate,
     update: updateOrder.mutate,
     checkIn: checkIn.mutate,
+    cancelBilling: cancelBilling.mutate,
   }
 }
 

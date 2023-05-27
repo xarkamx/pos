@@ -123,3 +123,19 @@ export function getLastMonday (date) {
   const diff = date.getDate() - day + (day === 0 ? -6 : 1);
   return new Date(date.setDate(diff));
 }
+
+export function objectToSerialize (param) {
+  if (!param) {
+    return "";
+  }
+  let keys = Object.keys(param),
+    values = [];
+  for (let k in keys) {
+    let value =
+      typeof param[keys[k]] === "object"
+        ? JSON.stringify(param[keys[k]])
+        : param[keys[k]];
+    values.push(keys[k] + "=" + value);
+  }
+  return values.join("&");
+}

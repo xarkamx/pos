@@ -1,10 +1,14 @@
+import { objectToSerialize } from '../../core/helpers'
 
 export class TransactionService {
   constructor (url) {
     this.url = url
   }
 
-  get (path) {
+  get (path, parameters = null) {
+    if (parameters) {
+      path = `${path}?${objectToSerialize(parameters)}`
+    }
     return this._fetch(path, 'get')
   }
 

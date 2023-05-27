@@ -23,7 +23,21 @@ export class OrderTransaction extends TransactionService {
   }
 
   async checkIn (orderId) {
-    return this.post(`/billing`, { orderIds: [orderId] });
+    return this.bill({ orderIds: [orderId] });
+  }
+
+  async cancelBilling (billingId) {
+    return this.delete(`/billing/${billingId}`, {
+      motive: '03'
+    });
+  }
+
+  async getAllBills (query) {
+    return this.get(`/billing`, query);
+  }
+
+  async bill (orderIds) {
+    return this.post(`/billing`, { orderIds });
   }
 
   async deleteOrder (orderId) {

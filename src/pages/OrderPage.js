@@ -22,7 +22,7 @@ import { BillingButton } from './orders/billingButton';
 export default function OrderPage () {
   const { orderId } = useParams();
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
-  const { order, payments, isLoading, pay, del, update, checkIn } = useOrder(orderId);
+  const { order, payments, isLoading, pay, del, update, checkIn, cancelBilling } = useOrder(orderId);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   if (isLoading) return <h1>Cargando...</h1>
   const formatOrder = order?.items.map((item) => ({
@@ -52,9 +52,11 @@ export default function OrderPage () {
               color: colors[order?.order.status],
             }}
           >Nota: {orderId} - {status}  {date} </h1>
-          <Button color='error' onClick={() => {
-            setOpenDeleteModal(true);
-          }} startIcon={<DeleteForeverIcon />}>BORRAR</Button>
+          <ConditionalWall condition={!order?.order.billed}>
+            <Button color='error' onClick={() => {
+              setOpenDeleteModal(true);
+            }} startIcon={<DeleteForeverIcon />}>BORRAR</Button>
+          </ConditionalWall>
         </Grid>
         <Grid item xs={12}>
           <OrderStatusCard
@@ -103,8 +105,13 @@ export default function OrderPage () {
         <Grid item xs={4}>
           <BillingButton billingId={order.order.billed} orderId={orderId} onBilling={() => {
             if (isLoading) return;
-            checkIn(orderId);
-          }} />
+            if (order.order.billed) {
+              cancelBilling(order.order.billed);
+            } else {
+              checkIn(orderId);
+            }
+          }}
+          />
         </Grid>
         <DangerModal open={openDeleteModal}
           condition={(val) => val === orderId}

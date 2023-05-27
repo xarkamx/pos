@@ -5,6 +5,7 @@ import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import LoyaltyIcon from '@mui/icons-material/Loyalty';
 import ReceiptIcon from '@mui/icons-material/Receipt';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
@@ -27,6 +28,7 @@ import { useAuth } from './hooks/useAuth';
 import { isObjectEmpty } from './core/helpers';
 import { UsersPage } from './pages/users';
 import { BillingPage } from './pages/clients/billing';
+import { BillingList } from './pages/billing';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -83,6 +85,12 @@ export const routes = [
         element: <UsersPage />,
         roles: ['admin'],
         icon: <PeopleOutlineIcon />,
+      }, {
+        path: 'facturas',
+        title: 'Facturas',
+        element: <BillingList />,
+        roles: ['admin'],
+        icon: <ReceiptLongIcon />,
       }
     ],
   },

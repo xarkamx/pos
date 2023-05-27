@@ -1,5 +1,5 @@
 
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Autocomplete, Box, Button, Chip, Grid, ListItem, ListItemText, TextField, Typography } from '@mui/material';
 
 import { useState } from 'react';
@@ -8,12 +8,15 @@ import { Money } from '../../../components/Formats/FormatNumbers';
 import { useClient } from '../../../hooks/useClients';
 import { OrderTransaction } from '../../../utils/transactions/orderTransaction';
 import { CustomTable } from '../../../components/tables/Table';
+import { useBilling } from '../../../hooks/useBilling';
 
 export function BillingPage () {
   const { clientId } = useParams()
   const { client } = useClient(clientId)
   const [items, setItems] = useState([])
+  const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(false)
+  const { bill } = useBilling()
   const validation = [client?.rfc, client?.email, client?.postal_code]
   if (!validation.every(item => item)) {
     return <h1>Completa los datos del cliente</h1>
@@ -32,6 +35,7 @@ export function BillingPage () {
           <OrderSelector clientId={clientId} onChange={async (orders) => {
             setLoading(true)
             setItems(await getProducts(orders.map(order => order.id)))
+            setOrders(orders)
             setLoading(false)
           }} />
         </Grid>
@@ -41,7 +45,13 @@ export function BillingPage () {
         <Grid item xs={12}>
           <Typography variant="h6">Total</Typography>
           <Typography variant="h4"><Money number={items.reduce((acc, item) => acc + item.total, 0)} /></Typography>
-          <Button variant="contained" color="primary" fullWidth disabled={loading}>{loading ? 'Cargando...' : 'Facturar'}</Button>
+          <Button
+            variant="contained"
+            color="primary" fullWidth
+            onClick={async () => {
+              bill(orders, clientId)
+            }}
+            disabled={loading}>{loading ? 'Cargando...' : 'Facturar'}</Button>
         </Grid>
       </Grid>
     </Box>
