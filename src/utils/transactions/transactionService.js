@@ -24,14 +24,20 @@ export class TransactionService {
     return this._fetch(path, 'delete', parameters)
   }
 
+  async file (path) {
+    // js fetch download file
+    const headers = getHeaders()
+    path = `${this.url}${path}`
+    const resp = await fetch(path, {
+      method: 'GET',
+      headers
+    })
+    const file = await resp.blob()
+    window.location.assign(URL.createObjectURL(file))
+  }
+
   _fetch (path, method, body) {
-    const headers = {
-      'Content-Type': 'application/json'
-    }
-    const access = localStorage.getItem('accessToken')
-    if (access) {
-      headers.Authorization = `Bearer ${JSON.parse(access).jwt}`
-    }
+    const headers = getHeaders()
     path = `${this.url}${path}`
     const data = {
       method,
@@ -50,4 +56,17 @@ export class TransactionService {
         return response.json()
       })
   }
+
+
+}
+
+function getHeaders () {
+  const headers = {
+    'Content-Type': 'application/json'
+  }
+  const access = localStorage.getItem('accessToken')
+  if (access) {
+    headers.Authorization = `Bearer ${JSON.parse(access).jwt}`
+  }
+  return headers
 }

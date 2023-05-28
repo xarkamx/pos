@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Grid, ListItem } from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Button, Grid, ListItem } from '@mui/material';
 import { useOrders } from '../../hooks/useOrders';
 import { QuickFormContainer } from '../../components/Containers/QuickFormContainer';
 import { OrdersTable } from '../../sections/@dashboard/orders/OrdersTable';
@@ -12,13 +12,16 @@ import { localeDate } from '../../core/helpers';
 import { AppWidgetSummary } from '../../sections/@dashboard/app';
 import { PaymentModal } from '../../sections/@dashboard/orders/paymentModal';
 import { Money } from '../../components/Formats/FormatNumbers';
+import { ConditionalWall } from '../../components/FilterWall/ConditionalWall';
 
 export default function SinglePageClient () {
   const { clientId } = useParams();
   const { orders, pay } = useOrders({ clientId });
   const { client, clientResume, setClient } = useClient(clientId);
+  const navigate = useNavigate();
 
   if (!client || !clientResume) return null;
+  const billable = [client.rfc, client.email, client.postal_code].every((item) => item)
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -44,6 +47,13 @@ export default function SinglePageClient () {
       </Grid>
       <Grid item xs={8}>
         <ClientOrders orders={orders} pay={pay} />
+      </Grid>
+      <Grid item xs={12}>
+        <ConditionalWall condition={billable}>
+          <Button variant="contained" color="primary" onClick={() => {
+            navigate(`/dashboard/clientes/${clientId}/factura`)
+          }}>Facturar</Button>
+        </ConditionalWall>
       </Grid>
     </Grid>
   );

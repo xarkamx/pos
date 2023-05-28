@@ -34,6 +34,8 @@ export function localeDate (dateString = null) {
 
 export function localeDateUTFMex (dateString = null) {
   const date = dateString ? new Date(dateString) : new Date();
+  // add 4 hours to the date
+  date.setHours(date.getHours() + 4);
   return date.toLocaleDateString("es-MX", {
     year: "numeric",
     month: "numeric",

@@ -1,28 +1,21 @@
 import { Helmet } from 'react-helmet-async';
-import { faker } from '@faker-js/faker';
 // @mui
-import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
-// components
-import Iconify from '../components/iconify';
 // sections
 import {
-  AppTasks,
-  AppNewsUpdate,
-  AppOrderTimeline,
-  AppCurrentVisits,
-  AppWebsiteVisits,
-  AppTrafficBySite,
   AppWidgetSummary,
-  AppCurrentSubject,
   AppConversionRates,
 } from '../sections/@dashboard/app';
+import { useStats } from '../hooks/useStats';
+import { Money } from '../components/Formats/FormatNumbers';
 
 // ----------------------------------------------------------------------
 
-export default function DashboardAppPage() {
-  const theme = useTheme();
-
+export default function DashboardAppPage () {
+  const { products, summary, debtors } = useStats();
+  if (summary.isLoading) return null;
+  if (products.isLoading) return null;
+  if (debtors.isLoading) return null;
   return (
     <>
       <Helmet>
@@ -31,27 +24,27 @@ export default function DashboardAppPage() {
 
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome back
+          Hola!
         </Typography>
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Weekly Sales" total={714000} icon={'ant-design:android-filled'} />
+            <AppWidgetSummary title="Clientes" total={summary.data.clients} icon={'ant-design:user'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="New Users" total={1352831} color="info" icon={'ant-design:apple-filled'} />
+            <AppWidgetSummary title="Ganancias" total={<Money number={summary.data.earnings} />} color="success" icon={'ant-design:dollar'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Item Orders" total={1723315} color="warning" icon={'ant-design:windows-filled'} />
+            <AppWidgetSummary title="Notas" total={summary.data.orders} color="warning" icon={'ant-design:file-done'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Bug Reports" total={234} color="error" icon={'ant-design:bug-filled'} />
+            <AppWidgetSummary title="Productos" total={summary.data.products} color="error" icon={'ant-design:shopping-cart'} />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={8}>
+          {/* <Grid item xs={12} md={6} lg={8}>
             <AppWebsiteVisits
               title="Website Visits"
               subheader="(+43%) than last year"
@@ -89,9 +82,9 @@ export default function DashboardAppPage() {
                 },
               ]}
             />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12} md={6} lg={4}>
+          {/* <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits
               title="Current Visits"
               chartData={[
@@ -107,28 +100,31 @@ export default function DashboardAppPage() {
                 theme.palette.error.main,
               ]}
             />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
+          </Grid> */}
+          <Grid item xs={12}  >
             <AppConversionRates
-              title="Conversion Rates"
-              subheader="(+43%) than last year"
-              chartData={[
-                { label: 'Italy', value: 400 },
-                { label: 'Japan', value: 430 },
-                { label: 'China', value: 448 },
-                { label: 'Canada', value: 470 },
-                { label: 'France', value: 540 },
-                { label: 'Germany', value: 580 },
-                { label: 'South Korea', value: 690 },
-                { label: 'Netherlands', value: 1100 },
-                { label: 'United States', value: 1200 },
-                { label: 'United Kingdom', value: 1380 },
-              ]}
+              title="Productos mas vendidos"
+              subheader=""
+              chartData={products.data.map((item) => ({ label: item.name, value: item.qty }))}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <AppConversionRates
+              title="Deudores"
+              subheader="Deudas al dia de hoy"
+              chartData={debtors.data.map((item) => ({ label: item.name, value: item.debt }))}
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
+          <Grid item xs={12} md={6} >
+            <AppConversionRates
+              title="Productos mas vendidos"
+              subheader=""
+              chartData={products.data.map((item) => ({ label: item.name, value: item.total }))}
+            />
+          </Grid>
+          {/* 
+          <Grid item xs={12} md={6}>
             <AppCurrentSubject
               title="Current Subject"
               chartLabels={['English', 'History', 'Physics', 'Geography', 'Chinese', 'Math']}
@@ -138,19 +134,6 @@ export default function DashboardAppPage() {
                 { name: 'Series 3', data: [44, 76, 78, 13, 43, 10] },
               ]}
               chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
-            <AppNewsUpdate
-              title="News Update"
-              list={[...Array(5)].map((_, index) => ({
-                id: faker.datatype.uuid(),
-                title: faker.name.jobTitle(),
-                description: faker.name.jobTitle(),
-                image: `/assets/images/covers/cover_${index + 1}.jpg`,
-                postedAt: faker.date.recent(),
-              }))}
             />
           </Grid>
 
@@ -211,7 +194,7 @@ export default function DashboardAppPage() {
                 { id: '5', label: 'Sprint Showcase' },
               ]}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </>

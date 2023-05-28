@@ -3,6 +3,7 @@ import { useClients } from '../hooks/useClients';
 import { ClientsTable } from '../sections/@dashboard/clients/ClientsTable';
 import { QuickClientForm } from '../sections/@dashboard/clients/QuickClientAddForm';
 
+
 export default function ClientsPage () {
   const { clients, addClient, updateClient } = useClients();
   return (
@@ -13,6 +14,7 @@ export default function ClientsPage () {
       <Grid item xs={12} md={8}>
         <ClientsTable clients={clients} onUpdateClient={updateClient} />
       </Grid>
+
     </Grid>
   );
 }
