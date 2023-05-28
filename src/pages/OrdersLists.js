@@ -10,6 +10,7 @@ import { useOrders } from '../hooks/useOrders';
 import { PaymentModal } from '../sections/@dashboard/orders/paymentModal';
 import { DangerModal } from '../components/CustomModal/ConfirmModal';
 import { paymentType } from '../utils/formats';
+import { DownloadBillButton, SendEmail } from '../sections/@dashboard/billing/downloadBillButton';
 
 export function OrdersPage () {
   const { orders, pay, checkIn, isLoading } = useOrders();
@@ -91,9 +92,13 @@ export function OrdersPage () {
             fontWeight: 'bold',
             textTransform: 'capitalize'
           }} />,
-        <BillingButton order={item} key={`billing-${item.id}`} onClick={() => {
-          checkIn(item.id);
-        }} />,
+
+
+        <>
+          <BillingButton order={item} key={`billing-${item.id}`} onClick={() => {
+            checkIn(item.id);
+          }} />
+        </>,
         <Button key={`item2-${item.id}`} onClick={() => {
           history(`/dashboard/ordenes/${item.id}`)
         }}>Ver</Button>
@@ -165,9 +170,13 @@ function BillingButton ({ order, onClick }) {
   const valid = [order.rfc, order.email, order.postalCode]
 
   if (!valid.every(val => val)) return <Typography variant="caption" color="error">Datos incompletos</Typography>;
-  if (order.billed) return <Chip label="Facturado" color="success" sx={{
-    color: 'white',
-  }} />
+  if (order.billed) return <>
+    <Chip label="Facturado" color="success" sx={{
+      color: 'white',
+    }} />
+    <DownloadBillButton billingId={order.billed} />
+    <SendEmail billingId={order.billed} />
+  </>
   return <><Button variant={'contained'} endIcon={<ReceiptLongIcon />}
     onClick={(ev) => {
       ev.stopPropagation();

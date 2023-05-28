@@ -45,7 +45,7 @@ export function QuickPaymentForm ({ onSubmit }) {
         </ListItem>
         <ListItem>
           <PaymentMethodSelect paymentMethod={payment.paymentMethod} onChange={(ev) => {
-            setPayment({ paymentMethod: ev.target.value })
+            setPayment({ paymentMethod: ev.value })
           }} />
         </ListItem>
         <ListItem>

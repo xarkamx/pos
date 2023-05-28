@@ -7,6 +7,7 @@ import { localeDate } from '../../core/helpers';
 import { useBillingList } from '../../hooks/useBilling';
 import { DebounceInput } from '../../components/Inputs/DebounceInput';
 import { BillingButton } from '../orders/billingButton';
+import { DownloadBillButton, SendEmail } from '../../sections/@dashboard/billing/downloadBillButton';
 
 
 
@@ -56,7 +57,11 @@ export function BillingList () {
           methodText[item.payment_method],
           <>{item.status === 'valid' ? <BillingButton billingId={item.id} orderId={item.folio_number} onBilling={() => {
             cancel(item.id)
-          }} /> : ''}</>
+          }} /> : ''}
+
+            {item.status === 'valid' ? <DownloadBillButton billingId={item.id} /> : ''}
+            {item.status === 'valid' ? <SendEmail billingId={item.id} /> : ''}
+          </>
         ]}
       />
     </>

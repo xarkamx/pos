@@ -64,7 +64,7 @@ export function PaymentModal ({ amount, max = Infinity, clientId, onPay, open, o
           </ListItem>
           <ListItem>
             <PaymentMethodSelect paymentMethod={paymentMethod} onChange={(ev) => {
-              setPaymentMethod(ev.target.value)
+              setPaymentMethod(ev.value)
             }} />
           </ListItem>
         </List>

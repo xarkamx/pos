@@ -27,8 +27,8 @@ export function PaymentForm ({ subtotal, total, clientId, send, onDiscount, subm
           </Typography>
         </ListItem>
         <ListItem>
-          <PaymentMethodSelect paymentMethod={paymentMethod} onChange={(ev) => {
-            setPaymentMethod(ev.target.value)
+          <PaymentMethodSelect paymentMethod={paymentMethod} onChange={(resp) => {
+            setPaymentMethod(resp.value)
           }} />
 
         </ListItem>
