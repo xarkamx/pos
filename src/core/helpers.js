@@ -150,7 +150,6 @@ export function getNumberOfWeekOfYear (date) {
 }
 
 export function getDatesByWeekNumber (weekNumber) {
-  console.log(weekNumber);
   const year = new Date().getFullYear();
   const firstDayOfYear = new Date(year, 0, 1);
   const pastDaysOfYear = (weekNumber - 1) * 7;
@@ -180,4 +179,13 @@ export function objectToSerialize (param) {
     values.push(keys[k] + "=" + value);
   }
   return values.join("&");
+}
+
+export function median (data) {
+  // trim mean
+  const trim = 0.2;
+  const sorted = [...data].sort((a, b) => a - b);
+  const trimSize = Math.round(sorted.length * trim);
+  const trimmed = sorted.slice(trimSize, sorted.length - trimSize);
+  return trimmed.reduce((a, b) => a + b) / trimmed.length;
 }

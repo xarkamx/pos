@@ -1,4 +1,4 @@
-import { getDatesByWeekNumber, getNumberOfWeekOfYear } from '../../../core/helpers';
+import { getDatesByWeekNumber, getNumberOfWeekOfYear, median, numberToMoney } from '../../../core/helpers';
 
 import AppWebChart from '../app/AppWebsiteVisits';
 
@@ -8,25 +8,27 @@ export function PaymentChart ({ payments }) {
   }
   const groupedPayments = groupPaymentsPerWeek(payments);
   const dates = groupedPayments.map((group) => group.week.toISOString());
-  const balance = getBalance(groupedPayments)
 
+  const balance = getBalance(groupedPayments)
+  const inflow = getPaymentsTotal(groupedPayments, 'inflow');
+  const outflow = getPaymentsTotal(groupedPayments, 'outflow');
   return (<AppWebChart
     title="Pagos"
     chartLabels={dates}
     chartData={[
       {
-        name: 'Entradas',
+        name: `Entradas (${numberToMoney(median(inflow))})`,
         type: 'area',
         fill: 'gradient',
         color: '#4caf50',
-        data: getPaymentsTotal(groupedPayments, 'inflow'),
+        data: inflow,
       },
       {
-        name: 'Salidas',
+        name: `Salidas (${numberToMoney(median(outflow))})`,
         type: 'area',
         fill: 'gradient',
         color: '#f44336',
-        data: getPaymentsTotal(groupedPayments, 'outflow'),
+        data: outflow,
       },
       {
         name: 'Total',
@@ -36,7 +38,7 @@ export function PaymentChart ({ payments }) {
         data: getTotal(balance),
       },
       {
-        name: 'Balance',
+        name: `Balance (${numberToMoney(median(balance))})`,
         type: 'line',
         fill: 'solid',
         color: '#90caf9',
