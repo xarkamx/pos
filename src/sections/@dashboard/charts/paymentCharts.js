@@ -1,4 +1,3 @@
-import { get } from 'lodash';
 import { getDatesByWeekNumber, getNumberOfWeekOfYear } from '../../../core/helpers';
 
 import AppWebChart from '../app/AppWebsiteVisits';
