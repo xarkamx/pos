@@ -4,6 +4,7 @@ import ReactApexChart from 'react-apexcharts';
 import { Card, CardHeader, Box } from '@mui/material';
 // components
 import { useChart } from '../../../components/chart';
+import { numberToMoney } from '../../../core/helpers';
 
 // ----------------------------------------------------------------------
 
@@ -26,7 +27,7 @@ export default function AppWebChart ({ title, subheader, chartLabels, chartData,
       y: {
         formatter: (y) => {
           if (typeof y !== 'undefined') {
-            return `${y.toFixed(0)} visits`;
+            return `${numberToMoney(y)}`;
           }
           return y;
         },

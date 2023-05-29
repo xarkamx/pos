@@ -1,10 +1,15 @@
+import { get } from 'lodash';
 import { getDatesByWeekNumber, getNumberOfWeekOfYear } from '../../../core/helpers';
 
 import AppWebChart from '../app/AppWebsiteVisits';
 
 export function PaymentChart ({ payments }) {
+  if (!payments) {
+    return null;
+  }
   const groupedPayments = groupPaymentsPerWeek(payments);
   const dates = groupedPayments.map((group) => group.week.toISOString());
+  const balance = getBalance(groupedPayments)
 
   return (<AppWebChart
     title="Pagos"
@@ -25,11 +30,18 @@ export function PaymentChart ({ payments }) {
         data: getPaymentsTotal(groupedPayments, 'outflow'),
       },
       {
+        name: 'Total',
+        type: 'line',
+        fill: 'solid',
+        color: '#f57c00',
+        data: getTotal(balance),
+      },
+      {
         name: 'Balance',
         type: 'line',
         fill: 'solid',
         color: '#90caf9',
-        data: getBalance(groupedPayments),
+        data: balance,
       },
     ]}
   />)
@@ -52,12 +64,12 @@ function groupPaymentsPerWeek (payments) {
   return Object.keys(grouped).map((key) => ({
     week: getDatesByWeekNumber(key.split('/')[0]).firstDayOfWeek,
     payments: grouped[key],
-  }));
+  })).sort((a, b) => a.week - b.week);
 }
 
 function getPaymentsTotal (groupedPayments, flow) {
   return groupedPayments.map((group) => group.payments
-    .filter(payment => (payment.flow === flow))
+    .filter(payment => (payment.flow === flow || flow === 'all'))
     .reduce((acc, payment) => {
       const amount = payment.flow === 'inflow' ? payment.amount : -payment.amount;
       return acc + amount
@@ -70,4 +82,16 @@ function getBalance (groupedPayments) {
       const amount = payment.flow === 'inflow' ? payment.amount : -payment.amount;
       return acc + amount
     }, 0));
+}
+
+function getTotal (balance) {
+  const total = [];
+  balance.forEach((amount, index) => {
+    if (index === 0) {
+      total.push(amount);
+    } else {
+      total.push(total[index - 1] + amount);
+    }
+  });
+  return total
 }
