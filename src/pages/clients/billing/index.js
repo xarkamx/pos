@@ -1,5 +1,5 @@
 
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Autocomplete, Box, Button, Chip, Grid, ListItem, ListItemText, TextField, Typography } from '@mui/material';
 
 import { useState } from 'react';

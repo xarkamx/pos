@@ -142,6 +142,30 @@ export function getEndOfDay (date) {
   return new Date(date).setHours(23, 59, 59, 999);
 }
 
+export function getNumberOfWeekOfYear (date) {
+  const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+  const milisecondsPerDay = 86400000;
+  const pastDaysOfYear = (date - firstDayOfYear) / milisecondsPerDay;
+  return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+}
+
+export function getDatesByWeekNumber (weekNumber) {
+  console.log(weekNumber);
+  const year = new Date().getFullYear();
+  const firstDayOfYear = new Date(year, 0, 1);
+  const pastDaysOfYear = (weekNumber - 1) * 7;
+  const firstDayOfWeek = new Date(
+    firstDayOfYear.setDate(firstDayOfYear.getDate() + pastDaysOfYear)
+  );
+  const lastDayOfWeek = new Date(
+    firstDayOfWeek.setDate(firstDayOfWeek.getDate() + 6)
+  );
+  return {
+    firstDayOfWeek,
+    lastDayOfWeek,
+  };
+}
+
 export function objectToSerialize (param) {
   if (!param) {
     return "";
