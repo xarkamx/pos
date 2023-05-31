@@ -48,7 +48,7 @@ export function QuickClientForm ({ onSubmit }) {
       />
       <TaxSystem
         onChange={(val) => {
-          setClientData({ tax_system: val })
+          setClientData({ tax_system: val.value })
         }}
       />
       <ListItem>
