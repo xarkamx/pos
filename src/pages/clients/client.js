@@ -13,13 +13,13 @@ import { AppWidgetSummary } from '../../sections/@dashboard/app';
 import { PaymentModal } from '../../sections/@dashboard/orders/paymentModal';
 import { Money } from '../../components/Formats/FormatNumbers';
 import { ConditionalWall } from '../../components/FilterWall/ConditionalWall';
+import { TaxSystem } from '../../sections/@dashboard/clients/TaxSystemInput';
 
 export default function SinglePageClient () {
   const { clientId } = useParams();
   const { orders, pay } = useOrders({ clientId });
   const { client, clientResume, setClient } = useClient(clientId);
   const navigate = useNavigate();
-
   if (!client || !clientResume) return null;
   const billable = [client.rfc, client.email, client.postal_code].every((item) => item)
   return (
@@ -40,6 +40,7 @@ export default function SinglePageClient () {
           phones={client.phones}
           legal={client.legal}
           postalCode={client.postal_code}
+          taxSystem={client.tax_system}
           onItemChange={(item) => {
             setClient({ id: client.id, client: { ...item } })
           }}
@@ -60,9 +61,10 @@ export default function SinglePageClient () {
 }
 
 
-function ClientBasicForm ({ rfc, name, email, phones, legal, postalCode, onItemChange }) {
+function ClientBasicForm ({ rfc, name, email, phones, legal, postalCode, taxSystem, onItemChange }) {
   if (!Array.isArray(phones)) phones = [phones]
-  const [vals, setVals] = useCState({ rfc, name, email, phones, legal, postalCode })
+  const [vals, setVals] = useCState({ rfc, name, email, phones, legal, postalCode, taxSystem })
+
   return (
     <QuickFormContainer title={'Cliente'}>
       <QuickDebounceInput label='RFC' value={vals.rfc} onChange={(ev) => {
@@ -86,6 +88,15 @@ function ClientBasicForm ({ rfc, name, email, phones, legal, postalCode, onItemC
         setVals({ postalCode: ev.target.value })
         onItemChange({ postal_code: ev.target.value })
       }} />
+
+
+      <TaxSystem
+        value={vals.taxSystem}
+        onChange={(item) => {
+          setVals({ taxSystem: item.value })
+          onItemChange({ taxSystem: item.value })
+        }}
+      />
     </QuickFormContainer>
   )
 }
@@ -118,6 +129,7 @@ function ClientCards ({ orders, pending, totalPaid, totalDebt }) {
 function ClientOrders ({ orders, pay }) {
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [order, setOrder] = useState({});
+  const total = order.total - order.partialPayment
   return (<>
     <OrdersTable orders={orders} onStatusClick={(order) => {
       setOpenPaymentModal(true);
@@ -125,9 +137,9 @@ function ClientOrders ({ orders, pay }) {
     }} />
     <PaymentModal
       open={openPaymentModal}
-      amount={order.total - order.partialPayment}
+      amount={total}
       clientId={order.clientId}
-      max={order.total}
+      max={total}
       onPay={(clientId, amount, paymentMethod) => {
         pay({ orderId: order.id, clientId, payment: amount, paymentMethod })
         setOpenPaymentModal(false);

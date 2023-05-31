@@ -1,5 +1,6 @@
 import { Card, CardHeader, Collapse, Grid, Button } from '@mui/material';
-
+import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -34,6 +35,7 @@ export default function OrderPage () {
   }));
   const status = translations[order?.order.status] || '';
   const date = localeDate(order?.order.createdAt)
+  const total = order?.order.total - order?.order.partialPayment;
   const colors = {
     'pending': 'orange',
     'paid': 'green',
@@ -61,9 +63,8 @@ export default function OrderPage () {
         <Grid item xs={12}>
           <OrderStatusCard
             discount={order?.order.discount}
-            total={order?.order.total}
             payment={order?.order.partialPayment}
-            subtotal={order?.order.subtotal}
+            total={order?.order.total}
           />
         </Grid>
         <Grid item xs={12} md={4}>
@@ -93,12 +94,16 @@ export default function OrderPage () {
         <Grid item xs={4}>
 
           <ConditionalWall condition={order?.order.status === 'pending'}>
-            <Button variant='contained' color='success' onClick={() => {
-              if (isLoading) return;
-              setOpenPaymentModal(true);
-            }} sx={{
-              color: 'white',
-            }} fullWidth>Pagar</Button>
+            <Button
+              variant='standard'
+              color='success'
+              startIcon={<AttachMoneyIcon />}
+              onClick={() => {
+                if (isLoading) return;
+                setOpenPaymentModal(true);
+              }} sx={{
+                color: 'green',
+              }} fullWidth>Pagar</Button>
 
           </ConditionalWall>
         </Grid>
@@ -128,9 +133,9 @@ export default function OrderPage () {
 
       <PaymentModal
         open={openPaymentModal}
-        amount={order?.order.total - order?.order.partialPayment}
+        amount={total}
         clientId={order?.order.clientId}
-        max={order?.order.total}
+        max={total}
         onPay={(clientId, amount, paymentMethod) => {
           pay({ orderId, clientId, payment: amount, paymentMethod })
           setOpenPaymentModal(false);
@@ -143,8 +148,7 @@ export default function OrderPage () {
   )
 };
 
-function OrderStatusCard ({ discount, total, payment, subtotal }) {
-
+function OrderStatusCard ({ discount, total, payment }) {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={3}>
@@ -154,7 +158,7 @@ function OrderStatusCard ({ discount, total, payment, subtotal }) {
         <AppWidgetSummary title="Descuento" total={<Money number={discount} />} color="warning" icon={'material-symbols:money'} />
       </Grid>
       <Grid item xs={12} md={3}>
-        <AppWidgetSummary title="Subtotal" total={<Money number={subtotal} />} icon={'material-symbols:attach-money'} />
+        <AppWidgetSummary title="Deuda" total={<Money number={total - payment} />} color="error" icon={'material-symbols:attach-money'} />
       </Grid>
       <Grid item xs={12} md={3}>
         <AppWidgetSummary title="Pagado" total={<Money number={payment} />} color="info" icon={'material-symbols:money'} />
@@ -194,7 +198,10 @@ function PrintTicket ({ orderId, products, order }) {
   if (!order.order) return (<></>)
   return (<div>
     <ReactToPrint
-      trigger={() => <Button variant='contained' color='primary' fullWidth>Imprimir</Button>}
+      trigger={() => <Button
+        color='primary'
+        startIcon={<LocalPrintshopIcon />}
+        fullWidth>Imprimir</Button>}
       content={() => componentRef.current}
     />
     <div style={{

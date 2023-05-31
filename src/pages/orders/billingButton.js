@@ -13,6 +13,7 @@ export function BillingButton ({ billingId, orderId, onBilling }) {
   const icon = billingId ? <RemoveIcon /> : <ReceiptLongIcon />;
   return <>
     <Button startIcon={icon} color={color}
+      fullWidth
       onClick={() => {
         setOpen(true);
       }}>{btnMessage}</Button>
