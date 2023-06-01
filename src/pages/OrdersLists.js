@@ -12,6 +12,11 @@ import { DangerModal } from '../components/CustomModal/ConfirmModal';
 import { paymentType } from '../utils/formats';
 import { DownloadBillButton, SendEmail } from '../sections/@dashboard/billing/downloadBillButton';
 
+
+const status = {
+  pending: 'Pendiente',
+  paid: 'Pagado',
+}
 export function OrdersPage () {
   const { orders, pay, checkIn, isLoading } = useOrders();
   const [search, setSearch] = useCState({ from: getLastMonday(new Date()), to: getEndOfDay(new Date()) });
@@ -69,40 +74,45 @@ export function OrdersPage () {
         setSearch(dates);
       }} />
     <CustomTable
-      titles={['ID', 'Cliente', 'Fecha', 'Total', 'Pago', 'Tipo de pago', 'Estatus', 'Facturado', 'Acciones']}
+      titles={['ID', 'Cliente', 'Fecha', 'Total', 'Deuda', 'Tipo de pago', 'Estatus', 'Facturado', 'Acciones']}
       content={ords}
-      format={(item) => [
-        item.id,
-        item.clientName || 'Consumidor final',
-        localeDateUTFMex(item.createdAt),
-        <Money key={`item3-${item.id}`} number={item.total} />,
-        <Money key={`item1-${item.id}`} number={item.partialPayment} />,
-        paymentType(item.paymentType),
-        <Chip key={`chip-${item.id}`}
-          label={item.status}
-          color={color(item.status)}
-          onClick={(ev) => {
-            ev.stopPropagation();
-            if (item.status === 'paid') return;
-            setOrder(item);
-            setOpenPaymentModal(true);
-          }}
-          sx={{
-            color: 'white',
-            fontWeight: 'bold',
-            textTransform: 'capitalize'
+      format={(item) => {
+        const debt = item.total - item.partialPayment;
+        return [
+          item.id,
+          item.clientName || 'Consumidor final',
+          localeDateUTFMex(item.createdAt),
+          <Money key={`item3-${item.id}`} number={item.total} />,
+          <Money key={`item4-${item.id}`} number={debt} style={{
+            color: debt > 0 ? 'red' : 'green'
           }} />,
+          paymentType(item.paymentType),
+          <Chip key={`chip-${item.id}`}
+            label={status[item.status]}
+            color={color(item.status)}
+            onClick={(ev) => {
+              ev.stopPropagation();
+              if (item.status === 'paid') return;
+              setOrder(item);
+              setOpenPaymentModal(true);
+            }}
+            sx={{
+              color: 'white',
+              fontWeight: 'bold',
+              textTransform: 'capitalize'
+            }} />,
 
 
-        <>
-          <BillingButton order={item} key={`billing-${item.id}`} onClick={() => {
-            checkIn(item.id);
-          }} />
-        </>,
-        <Button key={`item2-${item.id}`} onClick={() => {
-          history(`/dashboard/ordenes/${item.id}`)
-        }}>Ver</Button>
-      ]}
+          <>
+            <BillingButton order={item} key={`billing-${item.id}`} onClick={() => {
+              checkIn(item.id);
+            }} />
+          </>,
+          <Button key={`item2-${item.id}`} onClick={() => {
+            history(`/dashboard/ordenes/${item.id}`)
+          }}>Ver</Button>
+        ]
+      }}
     />
     <PaymentModal
       amount={order.total - order.partialPayment}

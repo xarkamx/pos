@@ -13,6 +13,9 @@ export function useOrders (queryString = {}) {
     onSuccess: () => {
       query.refetch();
     },
+    onError: () => {
+      popUpAlert('error', 'Error al registrar el pago');
+    },
   });
 
   const checkIn = useMutation((orderId) => new OrderTransaction().checkIn(orderId), {
