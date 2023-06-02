@@ -29,6 +29,7 @@ import { isObjectEmpty } from './core/helpers';
 import { UsersPage } from './pages/users';
 import { BillingPage } from './pages/clients/billing';
 import { BillingList } from './pages/billing';
+import { SingleProductPage } from './pages/products/SingleProduct';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -66,6 +67,9 @@ export const routes = [
         path: 'productos', element: <ProductsPage />, roles: ['admin', 'storer', 'cashier'],
         icon: <LoyaltyIcon />,
         title: 'Productos'
+      },
+      {
+        path: 'productos/:productId', element: <SingleProductPage />, roles: ['admin', 'storer', 'cashier'],
       },
       {
         path: 'caja', element: <CheckoutPage />, roles: ['admin', 'cashier'],

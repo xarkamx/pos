@@ -10,7 +10,7 @@ export function QuickClientForm ({ onSubmit }) {
     email: '',
     phones: '',
     postal_code: '',
-    tax_system: { value: '612' }
+    tax_system: '612'
   })
   return (
     <QuickFormContainer title={'Registro de clientes'} onSubmit={() => {

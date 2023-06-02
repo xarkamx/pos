@@ -20,4 +20,8 @@ export class InfoTransaction extends TransactionService {
     return this.get('/info/products');
   }
 
+  async getItemsList (id) {
+    return this.get(`/inventory/items/${id}`);
+  }
+
 }
