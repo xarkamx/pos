@@ -46,10 +46,13 @@ export function PaymentModal ({ amount, max = Infinity, clientId, onPay, open, o
             />
           </ListItem>
           <ListItem>
-            <TextField label="Monto" type='number' fullWidth inputProps={{
-              min: 1,
-              max,
-            }} value={payment}
+            <TextField label="Monto" type='number'
+
+              fullWidth inputProps={{
+                min: 1,
+                max,
+                step: 0.01
+              }} value={payment}
               onFocus={(ev) => {
                 ev.target.select()
               }}
@@ -74,7 +77,7 @@ export function PaymentModal ({ amount, max = Infinity, clientId, onPay, open, o
           onClose()
           clear()
         }} type='reset' color='error'>Cerrar</Button>
-        <Button onClick={onClose} type='submit'>Pagar</Button>
+        <Button type='submit'>Pagar</Button>
       </DialogActions>
     </form>
   </Dialog>
