@@ -94,7 +94,7 @@ function ClientBasicForm ({ rfc, name, email, phones, legal, postalCode, taxSyst
         value={vals.taxSystem}
         onChange={(item) => {
           setVals({ taxSystem: item.value })
-          onItemChange({ taxSystem: item.value })
+          onItemChange({ tax_system: item.value })
         }}
       />
     </QuickFormContainer>
