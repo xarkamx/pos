@@ -9,10 +9,10 @@ export function useBilling () {
   const navigate = useNavigate()
   const { popUpAlert } = usePopUp()
   return {
-    async bill (orders, clientId) {
+    async bill (orders, clientId, paymentType) {
       try {
         const service = new OrderTransaction()
-        await service.bill(orders.map(order => order.id))
+        await service.bill(orders.map(order => order.id), paymentType)
         navigate(`/dashboard/clientes/${clientId}`)
       }
       catch (error) {

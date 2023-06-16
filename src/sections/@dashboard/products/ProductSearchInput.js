@@ -1,9 +1,10 @@
 
-import { Autocomplete, Button, Grid, TextField } from '@mui/material';
+import { Autocomplete, Button, Grid, ListItem, ListItemText, TextField } from '@mui/material';
 
 import { useState } from 'react';
 import { useCState } from '../../../hooks/useHooks';
 import { useProducts } from '../../../hooks/useProducts';
+import { Money } from '../../../components/Formats/FormatNumbers';
 
 // propTypes
 export function ProductSearchInput ({ onSubmit }) {
@@ -30,6 +31,7 @@ export function ProductSearchInput ({ onSubmit }) {
             id="combo-box-search-product"
             options={options}
             isOptionEqualToValue={(option, value) => option.id === value.id}
+            renderOption={RenderedListItem}
             onChange={(ev, nv) => {
               if (!nv?.id) return;
               setProduct({
@@ -93,4 +95,17 @@ export function BasicProductSearch ({ onChange }) {
       onChange?.(nv);
     }}
     renderInput={(params) => <TextField {...params} autoFocus label="Productos" />} />
+}
+
+function RenderedListItem (props, option) {
+  return <ListItem {...props} sx={
+    {
+      '&:hover': {
+        backgroundColor: 'lightgray',
+      },
+      cursor: 'pointer',
+    }
+  }>
+    <ListItemText primary={option.label} secondary={<Money number={option.price} />} />
+  </ListItem>
 }

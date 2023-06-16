@@ -9,6 +9,7 @@ import { useClient } from '../../../hooks/useClients';
 import { OrderTransaction } from '../../../utils/transactions/orderTransaction';
 import { CustomTable } from '../../../components/tables/Table';
 import { useBilling } from '../../../hooks/useBilling';
+import { PaymentMethodSelect } from '../../../sections/@dashboard/payments/SelectPaymentMethod';
 
 export function BillingPage () {
   const { clientId } = useParams()
@@ -16,6 +17,7 @@ export function BillingPage () {
   const [items, setItems] = useState([])
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(false)
+  const [paymentType, setPaymentType] = useState(null)
   const { bill } = useBilling()
   const validation = [client?.rfc, client?.email, client?.postal_code]
   if (!validation.every(item => item)) {
@@ -38,6 +40,12 @@ export function BillingPage () {
             setOrders(orders)
             setLoading(false)
           }} />
+          <PaymentMethodSelect
+            paymentMethod={paymentType}
+            onChange={(ev) => {
+              setPaymentType(ev.value);
+            }}
+          />
         </Grid>
         <Grid item xs={12} md={12}>
           <ProductsList products={items} />
@@ -49,7 +57,7 @@ export function BillingPage () {
             variant="contained"
             color="primary" fullWidth
             onClick={async () => {
-              bill(orders, clientId)
+              bill(orders, clientId, paymentType)
             }}
             disabled={loading}>{loading ? 'Cargando...' : 'Facturar'}</Button>
         </Grid>

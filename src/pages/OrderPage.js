@@ -18,6 +18,7 @@ import { DangerModal } from '../components/CustomModal/ConfirmModal';
 import { ClientsSearchInput } from '../sections/@dashboard/clients/SelectClient';
 import { Money } from '../components/Formats/FormatNumbers';
 import { BillingButton } from './orders/billingButton';
+import { PaymentMethodSelect } from '../sections/@dashboard/payments/SelectPaymentMethod';
 
 
 export default function OrderPage () {
@@ -25,6 +26,7 @@ export default function OrderPage () {
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const { order, payments, isLoading, pay, del, update, checkIn, cancelBilling } = useOrder(orderId);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [paymentType, setPaymentType] = useState(null);
   if (isLoading) return <h1>Cargando...</h1>
   const formatOrder = order?.items.map((item) => ({
     id: item.productId,
@@ -82,6 +84,15 @@ export default function OrderPage () {
           />
         </Grid>
         <Grid item xs={12} md={8}>
+          <PaymentMethodSelect
+            paymentMethod={paymentType || order?.order.paymentType}
+            onChange={(ev) => {
+              update({
+                paymentType: ev.value
+              })
+              setPaymentType(ev.value);
+            }}
+          />
           <CollapsableTables payments={payments} products={formatOrder} />
         </Grid>
         <Grid item xs={4}>
