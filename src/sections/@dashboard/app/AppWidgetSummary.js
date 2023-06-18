@@ -36,6 +36,7 @@ export default function AppWidgetSummary ({ title, total, icon, color = 'primary
         py: 5,
         boxShadow: 0,
         textAlign: 'center',
+        cursor: 'pointer',
         color: (theme) => theme.palette[color].darker,
         bgcolor: (theme) => theme.palette[color].lighter,
         ...sx,
@@ -45,6 +46,7 @@ export default function AppWidgetSummary ({ title, total, icon, color = 'primary
       <StyledIcon
         sx={{
           color: (theme) => theme.palette[color].dark,
+
           backgroundImage: (theme) =>
             `linear-gradient(135deg, ${alpha(theme.palette[color].dark, 0)} 0%, ${alpha(
               theme.palette[color].dark,

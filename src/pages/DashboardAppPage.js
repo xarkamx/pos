@@ -1,6 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { Grid, Container, Typography } from '@mui/material';
+
+import { useNavigate } from 'react-router-dom';
 // sections
 import {
   AppWidgetSummary,
@@ -15,6 +17,7 @@ import { PaymentChart } from '../sections/@dashboard/charts/paymentCharts';
 
 export default function DashboardAppPage () {
   const { products, summary, debtors } = useStats();
+  const navigate = useNavigate();
   const { payments } = usePayments();
   if (summary.isLoading) return null;
   if (products.isLoading) return null;
@@ -33,19 +36,33 @@ export default function DashboardAppPage () {
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Clientes" total={summary.data.clients} icon={'ant-design:user'} />
+            <AppWidgetSummary title="Clientes" total={summary.data.clients} icon={'ant-design:user'} onClick={() => {
+              navigate('/dashboard/clientes')
+            }} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Ingresos" total={<Money number={summary.data.earnings} />} color="success" icon={'ant-design:dollar'} />
+            <AppWidgetSummary
+              onClick={() => {
+                navigate('/dashboard/ordenes?filter=paid')
+              }}
+              title="Ingresos" total={<Money number={summary.data.earnings} />} color="success" icon={'ant-design:dollar'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Notas" total={summary.data.orders} color="warning" icon={'ant-design:file-done'} />
+            <AppWidgetSummary
+              onClick={() => {
+                navigate('/dashboard/ordenes')
+              }}
+              title="Notas" total={summary.data.orders} color="warning" icon={'ant-design:file-done'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Productos" total={summary.data.products} color="error" icon={'ant-design:shopping-cart'} />
+            <AppWidgetSummary
+              onClick={() => {
+                navigate('/dashboard/productos')
+              }}
+              title="Productos" total={summary.data.products} color="error" icon={'ant-design:shopping-cart'} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
