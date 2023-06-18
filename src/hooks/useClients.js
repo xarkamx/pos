@@ -23,12 +23,16 @@ export function useClients () {
 }
 
 export function useClient (id) {
+  const { popUpAlert } = usePopUp();
   const query = useQuery(['clientResume', id], () => new ClientsTransaction().getClientResume(id));
   const client = useQuery(['client', id], () => new ClientsTransaction().getClient(id));
   const setClient = useMutation((content) => new ClientsTransaction()
     .updateClient(content.id, content.client), {
     onSuccess: () => {
       client.refetch();
+    },
+    onError: (error) => {
+      popUpAlert('error', error.message);
     }
   });
   return { clientResume: query?.data || {}, client: client?.data, setClient: setClient.mutate }

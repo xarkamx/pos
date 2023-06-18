@@ -37,7 +37,7 @@ const Main = styled('div')(({ theme }) => ({
 export default function DashboardLayout () {
   const { popUp, open, toggle } = usePopUp();
   const [openHeader, setOpen] = useState(false);
-
+  console.log(popUp)
   return (
     <StyledRoot>
       <Header onOpenNav={() => setOpen(true)} />

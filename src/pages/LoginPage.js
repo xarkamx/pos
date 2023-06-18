@@ -47,7 +47,7 @@ export default function LoginPage () {
   return (
     <>
       <Helmet>
-        <title> Login | Minimal UI </title>
+        <title> Login | HG </title>
       </Helmet>
 
       <StyledRoot>
@@ -62,7 +62,7 @@ export default function LoginPage () {
         {mdUp && (
           <StyledSection>
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Hi, Welcome Back
+              Hola, Bienvenido de nuevo
             </Typography>
             <img src="/assets/illustrations/illustration_login.png" alt="login" />
           </StyledSection>

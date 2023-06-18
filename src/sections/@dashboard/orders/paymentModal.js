@@ -30,8 +30,12 @@ export function PaymentModal ({ amount, max = Infinity, clientId, onPay, open, o
     <form onSubmit={(ev) => {
       ev.preventDefault()
       onPay(currentClientId, payment, paymentMethod)
-    }}>
-      <DialogTitle>Cuanto desea pagar?</DialogTitle>
+    }}
+      style={{ minWidth: 300 }}
+    >
+      <DialogTitle>
+        Monto a pagar
+      </DialogTitle>
 
       <DialogContent>
         <Typography variant="subtitle1" sx={{ mb: 1 }} color='darkseagreen'>

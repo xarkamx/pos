@@ -22,9 +22,9 @@ export function useOrders (queryString = {}) {
     onSuccess: () => {
       query.refetch();
     },
-    onError: () => {
-      popUpAlert('error', 'Error al facturar');
-
+    onError: async (e) => {
+      const resp = e;
+      popUpAlert('error', resp.message);
     },
   });
 

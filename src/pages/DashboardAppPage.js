@@ -73,7 +73,7 @@ export default function DashboardAppPage () {
             <AppConversionRates
               title="Deudores"
               subheader="Deudas al dia de hoy"
-              chartData={debtors.data.map((item) => ({ label: item.name, value: item.debt }))}
+              chartData={debtors.data.map((item) => ({ label: item.name, value: item.debt, href: `/dashboard/clientes/${item.clientId}` }))}
             />
           </Grid>
           <Grid item xs={12} md={6}  >

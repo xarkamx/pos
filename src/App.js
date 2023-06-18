@@ -11,7 +11,6 @@ import { StyledChart } from './components/chart';
 import ScrollToTop from './components/scroll-to-top';
 import { PopUpContextProvider } from './context/PopUpContext';
 import { AuthProvider } from './context/authContext';
-
 // ----------------------------------------------------------------------
 const queryClient = new QueryClient()
 export default function App () {

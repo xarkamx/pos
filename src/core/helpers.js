@@ -165,6 +165,10 @@ export function getDatesByWeekNumber (weekNumber) {
   };
 }
 
+export function getFirstDayOfMonth (date) {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
 export function objectToSerialize (param) {
   if (!param) {
     return "";

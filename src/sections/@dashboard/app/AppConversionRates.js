@@ -1,3 +1,5 @@
+
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ReactApexChart from 'react-apexcharts';
 // @mui
@@ -16,7 +18,7 @@ AppConversionRates.propTypes = {
 };
 
 export default function AppConversionRates ({ title, subheader, chartData, ...other }) {
-
+  const navigate = useNavigate();
   chartData.sort((b, a) => a.value - b.value);
 
   // limit 10
@@ -40,7 +42,22 @@ export default function AppConversionRates ({ title, subheader, chartData, ...ot
     },
     xaxis: {
       categories: chartLabels,
+      title: {
+        style: {
+          cssClass: 'chartLabel',
+        }
+      },
     },
+    chart: {
+      events: {
+        xAxisLabelClick (chartContext, seriesIndex, config) {
+          const { href } = chartData[config.labelIndex];
+          if (href) {
+            navigate(href);
+          }
+        }
+      },
+    }
   });
 
   return (

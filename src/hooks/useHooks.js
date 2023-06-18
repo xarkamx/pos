@@ -29,3 +29,8 @@ export function useTimeOutHistory () {
 export function redirect (path, query = {}) {
   window.location.href = `${path}?${new URLSearchParams(query).toString()}`;
 }
+
+export function useQueryString () {
+  const searchParams = new URLSearchParams(window.location.search);
+  return Object.fromEntries(searchParams.entries());
+}

@@ -1,4 +1,5 @@
 import { objectToSerialize } from '../../core/helpers'
+import { ErrorObj } from '../../errors/ErrorObj'
 
 export class TransactionService {
   constructor (url) {
@@ -36,7 +37,7 @@ export class TransactionService {
     window.location.assign(URL.createObjectURL(file))
   }
 
-  _fetch (path, method, body) {
+  async _fetch (path, method, body) {
     const headers = getHeaders()
     path = `${this.url}${path}`
     const data = {
@@ -48,13 +49,11 @@ export class TransactionService {
       data.body = JSON.stringify(body)
     }
 
-    return fetch(path, data)
-      .then(response => {
-        if (response.status >= 400) {
-          throw new Error('Error en la petición')
-        }
-        return response.json()
-      })
+    const resp = await fetch(path, data)
+    if (resp.status >= 400) {
+      throw new ErrorObj(await resp.json())
+    }
+    return resp.json()
   }
 
 

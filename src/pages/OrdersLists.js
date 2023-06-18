@@ -1,11 +1,14 @@
+
+
+import { useNavigate } from 'react-router-dom';
 import { Button, Card, Chip, Grid, TextField, Typography } from '@mui/material';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { useState } from 'react';
 import { Money } from '../components/Formats/FormatNumbers';
 import { SearchDatesInputs } from '../components/Inputs/SearchDateInput';
 import { CustomTable } from '../components/tables/Table';
-import { between, getEndOfDay, getLastMonday, localeDateUTFMex } from '../core/helpers';
-import { useCState, useHistory } from '../hooks/useHooks';
+import { between, getEndOfDay, getFirstDayOfMonth, localeDateUTFMex } from '../core/helpers';
+import { useCState, useHistory, useQueryString } from '../hooks/useHooks';
 import { useOrders } from '../hooks/useOrders';
 import { PaymentModal } from '../sections/@dashboard/orders/paymentModal';
 import { DangerModal } from '../components/CustomModal/ConfirmModal';
@@ -18,8 +21,9 @@ const status = {
   paid: 'Pagado',
 }
 export function OrdersPage () {
+  const { filter } = useQueryString();
   const { orders, pay, checkIn, isLoading } = useOrders();
-  const [search, setSearch] = useCState({ from: getLastMonday(new Date()), to: getEndOfDay(new Date()) });
+  const [search, setSearch] = useCState({ from: getFirstDayOfMonth(new Date()), to: getEndOfDay(new Date()) });
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [order, setOrder] = useCState({});
   const [query, setQuery] = useState('');
@@ -55,6 +59,10 @@ export function OrdersPage () {
       const createdAt = new Date(item.createdAt).getTime();
       return between(createdAt, from || 0, to || Infinity)
     });
+  }
+
+  if (filter) {
+    ords = ords.filter((item) => item.status === filter);
   }
 
   return <Card sx={{
@@ -132,6 +140,7 @@ export function OrdersPage () {
 
 
 function EarninsResume ({ orders = [] }) {
+  const navigate = useNavigate();
   let payment = 0;
   let total = 0;
   const sx = {
@@ -144,10 +153,11 @@ function EarninsResume ({ orders = [] }) {
     color: 'white',
     '& > *': {
       margin: '0.5rem 0',
-    }
+    },
+    cursor: 'pointer',
   }
-  if (!orders.length) return null;
-  orders.forEach((item) => {
+
+  orders?.forEach((item) => {
     payment += item.partialPayment;
     total += item.total;
   });
@@ -155,19 +165,25 @@ function EarninsResume ({ orders = [] }) {
     padding: '1rem',
   }}>
     <Grid item xs={12} md={4}>
-      <Card sx={{ ...sx, backgroundColor: 'darkorchid' }}>
-        <h3>Ingresos reales</h3>
+      <Card sx={{ ...sx, backgroundColor: 'darkorchid' }} onClick={() => {
+        navigate('/dashboard/ordenes?filter=paid')
+      }}>
+        <h3>Pagados</h3>
         <Money number={payment} />
       </Card>
     </Grid>
     <Grid item xs={12} md={4}>
-      <Card sx={{ ...sx, backgroundColor: 'green' }}>
-        <h3>Ingresos Estimados</h3>
+      <Card sx={{ ...sx, backgroundColor: 'green' }} onClick={() => {
+        navigate('/dashboard/ordenes')
+      }}>
+        <h3>Todo</h3>
         <Money number={total} />
       </Card>
     </Grid>
     <Grid item xs={12} md={4}>
-      <Card sx={{ ...sx, backgroundColor: 'red' }}>
+      <Card sx={{ ...sx, backgroundColor: 'red' }} onClick={() => {
+        navigate('/dashboard/ordenes?filter=pending')
+      }}>
         <h3>Por Cobrar</h3>
         <Money number={total - payment} />
       </Card>

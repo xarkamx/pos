@@ -2,7 +2,7 @@ import { Box, Card, Modal, Typography, Button } from '@mui/material';
 
 import Iconify from '../iconify/Iconify';
 
-export function StatusModal ({ status, message, open, onClose }) {
+export function StatusModal ({ status, message, open, onClose, onAccept }) {
   return (
     <Modal open={open} onClose={onClose}>
       <Box sx={{
@@ -28,7 +28,10 @@ export function StatusModal ({ status, message, open, onClose }) {
           <Typography variant="h5" sx={{ textAlign: 'center' }}>
             {message}
           </Typography>
-          <Button variant="contained" sx={{ mt: 2 }} fullWidth onClick={onClose}>
+          <Button variant="contained" sx={{ mt: 2 }} fullWidth onClick={(e) => {
+            onClose(e);
+            onAccept(e);
+          }}>
             Aceptar
           </Button>
         </Card>

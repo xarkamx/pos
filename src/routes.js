@@ -93,7 +93,7 @@ export const routes = [
         path: 'facturas',
         title: 'Facturas',
         element: <BillingList />,
-        roles: ['admin'],
+        roles: ['admin', 'cashier'],
         icon: <ReceiptLongIcon />,
       }
     ],
