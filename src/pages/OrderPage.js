@@ -24,7 +24,7 @@ import { PaymentMethodSelect } from '../sections/@dashboard/payments/SelectPayme
 export default function OrderPage () {
   const { orderId } = useParams();
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
-  const { order, payments, isLoading, pay, del, update, checkIn, cancelBilling } = useOrder(orderId);
+  const { order, payments, isLoading, pay, del, update, checkIn, cancelBilling, onPaymentsCancel } = useOrder(orderId);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [paymentType, setPaymentType] = useState(null);
   if (isLoading) return <h1>Cargando...</h1>
@@ -93,7 +93,9 @@ export default function OrderPage () {
               setPaymentType(ev.value);
             }}
           />
-          <CollapsableTables payments={payments} products={formatOrder} />
+          <CollapsableTables payments={payments} products={formatOrder} onPaymentsCancel={() => {
+            onPaymentsCancel(orderId);
+          }} />
         </Grid>
         <Grid item xs={4}>
           <PrintTicket orderId={orderId} products={
@@ -178,7 +180,7 @@ function OrderStatusCard ({ discount, total, payment }) {
   );
 }
 
-function CollapsableTables ({ payments, products }) {
+function CollapsableTables ({ payments, products, onPaymentsCancel }) {
   const [open, setOpen] = useState(false);
   const style = {
     marginBottom: '1rem',
@@ -195,10 +197,17 @@ function CollapsableTables ({ payments, products }) {
       </Collapse>
     </Card>
     <Card sx={style}>
-      <CardHeader sx={headStyle} title="Pagos" onClick={() => (setOpen(false))} />
-      <Collapse in={!open} timeout="auto" unmountOnExit >
-        <SimplePaymentsTable payments={payments || []} />
-      </Collapse>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        margin: '1rem',
+      }}>
+        <CardHeader sx={headStyle} title="Pagos" onClick={() => (setOpen(false))} />
+        <Button color='error' startIcon={<DeleteForeverIcon />} onClick={() => {
+          onPaymentsCancel();
+        }}>Cancelar Pago</Button>
+      </div>
+      <SimplePaymentsTable payments={payments || []} />
     </Card>
   </>)
 }

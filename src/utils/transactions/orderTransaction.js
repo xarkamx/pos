@@ -63,4 +63,8 @@ export class OrderTransaction extends TransactionService {
   async updateOrder (id, order) {
     return this.put(`/orders/${id}`, order);
   }
+
+  async cancelPayments (orderId) {
+    return this.delete(`/orders/${orderId}/payments`);
+  }
 }

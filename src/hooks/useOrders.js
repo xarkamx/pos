@@ -68,6 +68,15 @@ export function useOrder (orderId) {
     },
   });
 
+  const onPaymentsCancel = useMutation((orderId) => new OrderTransaction().cancelPayments(orderId), {
+    onSuccess: () => {
+      query.refetch();
+    },
+    onError: () => {
+      popUpAlert('error', 'Error al cancelar el pago');
+    },
+  });
+
 
   const checkIn = useMutation((orderId) => new OrderTransaction().checkIn(orderId), {
     onSuccess: () => {
@@ -98,6 +107,7 @@ export function useOrder (orderId) {
     update: updateOrder.mutate,
     checkIn: checkIn.mutate,
     cancelBilling: cancelBilling.mutate,
+    onPaymentsCancel: onPaymentsCancel.mutate,
   }
 }
 
