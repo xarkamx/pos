@@ -1,6 +1,6 @@
 
 
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Button, Card, Chip, Grid, TextField, Typography } from '@mui/material';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { useState } from 'react';
@@ -88,7 +88,7 @@ export function OrdersPage () {
         const debt = item.total - item.partialPayment;
         return [
           item.id,
-          item.clientName || 'Consumidor final',
+          <NavLink to={`/dashboard/clientes/${item.clientId}`}>{item.clientName}</NavLink> || 'Consumidor final',
           localeDateUTFMex(item.createdAt),
           <Money key={`item3-${item.id}`} number={item.total} />,
           <Money key={`item4-${item.id}`} number={debt} style={{
@@ -176,7 +176,7 @@ function EarninsResume ({ orders = [] }) {
       <Card sx={{ ...sx, backgroundColor: 'green' }} onClick={() => {
         navigate('/dashboard/ordenes')
       }}>
-        <h3>Todo</h3>
+        <h3>Total de ventas</h3>
         <Money number={total} />
       </Card>
     </Grid>
@@ -203,7 +203,11 @@ function BillingButton ({ order, onClick }) {
     <DownloadBillButton billingId={order.billed} />
     <SendEmail billingId={order.billed} />
   </>
-  return <><Button variant={'contained'} endIcon={<ReceiptLongIcon />}
+  return <div style={{
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  }}><Button variant={'contained'} endIcon={<ReceiptLongIcon />}
     onClick={(ev) => {
       ev.stopPropagation();
       setOpenConfirm(true);
@@ -221,6 +225,6 @@ function BillingButton ({ order, onClick }) {
         onClick(order.id);
       }}
       open={openConfirm} condition={(input) => parseInt(input, 10) === parseInt(order.id, 10)} icon={ReceiptLongIcon} color='info' />
-  </>
+  </div>
 }
 

@@ -8,10 +8,10 @@ export default function ClientsPage () {
   const { clients, addClient, updateClient } = useClients();
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} md={4}>
+      <Grid item sm={12} md={4}>
         <QuickClientForm onSubmit={addClient} />
       </Grid>
-      <Grid item xs={12} md={8}>
+      <Grid item sm={12} md={8}>
         <ClientsTable clients={clients} onUpdateClient={updateClient} />
       </Grid>
 

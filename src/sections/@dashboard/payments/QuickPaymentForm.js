@@ -65,7 +65,7 @@ export function QuickPaymentForm ({ onSubmit }) {
         </ListItem>
         <ListItem>
           <Button fullWidth type='submit' variant='outlined' >
-            Enviar
+            Registrar Pago
           </Button>
         </ListItem>
       </List>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TablePagination } from '@mui/material';
+import { Chip, TablePagination } from '@mui/material';
 import { Money } from '../../components/Formats/FormatNumbers';
 import { CustomTable } from '../../components/tables/Table';
 import { taxSystem } from '../../config/constants';
@@ -53,15 +53,29 @@ export function BillingList () {
           taxSystem[item.customer.tax_system],
           item.customer.tax_id,
           <Money number={item.total} key={item.id} />,
-          statusText[item.status],
+          <Chip
+            key={`chip-${item.id}-status`}
+            label={statusText[item.status]}
+            color={item.status === 'valid' ? 'success' : 'error'}
+            sx={{
+              color: 'white',
+              fontWeight: 'bold',
+            }}
+          />,
           methodText[item.payment_method],
-          <>{item.status === 'valid' ? <BillingButton billingId={item.id} orderId={item.folio_number} onBilling={() => {
+          <div key='actions' style={
+            {
+              display: 'flex',
+              justifyContent: 'center',
+              flexFlow: 'column'
+            }
+          }>{item.status === 'valid' ? <BillingButton billingId={item.id} orderId={item.folio_number} onBilling={() => {
             cancel(item.id)
           }} /> : ''}
 
             {item.status === 'valid' ? <DownloadBillButton billingId={item.id} /> : ''}
             {item.status === 'valid' ? <SendEmail billingId={item.id} /> : ''}
-          </>
+          </div>
         ]}
       />
     </>

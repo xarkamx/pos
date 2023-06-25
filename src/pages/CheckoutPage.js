@@ -11,6 +11,7 @@ import { PaymentForm } from '../sections/@dashboard/checkout/paymentForm';
 import { StatusModal } from '../components/CustomModal/StatusModal';
 import { ClientsSearchInput } from '../sections/@dashboard/clients/SelectClient';
 import { Ticket } from '../sections/@dashboard/orders/Ticket';
+import { ConditionalWall } from '../components/FilterWall/ConditionalWall';
 
 
 
@@ -83,18 +84,20 @@ export default function CheckoutPage () {
       <div style={{
         display: 'none',
       }}>
-        <Ticket
-          clientId={clientId}
-          ref={ref}
-          products={products}
-          orderId={orderId}
-          subtotal={subtotal}
-          total={total}
-          payment={payment}
-          discount={discount}
-        />
+        <ConditionalWall condition={orderId && open} >
+          <Ticket
+            clientId={clientId}
+            ref={ref}
+            products={products}
+            orderId={orderId}
+            subtotal={subtotal}
+            total={total}
+            payment={payment}
+            discount={discount}
+          />
+        </ConditionalWall>
       </div>
-      <StatusModal open={open}
+      <StatusModal open={open && orderId}
         onClose={() => {
           print();
           setOpen(false);
