@@ -18,7 +18,7 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function Page404() {
+export default function Page404 () {
   return (
     <>
       <Helmet>
@@ -32,8 +32,7 @@ export default function Page404() {
           </Typography>
 
           <Typography sx={{ color: 'text.secondary' }}>
-            Sorry, we couldn’t find the page you’re looking for. Perhaps you’ve mistyped the URL? Be sure to check your
-            spelling.
+            Lo sentimos, no se encontro la pagina que buscas.
           </Typography>
 
           <Box
@@ -43,7 +42,7 @@ export default function Page404() {
           />
 
           <Button to="/" size="large" variant="contained" component={RouterLink}>
-            Go to Home
+            Ir a pagina principal
           </Button>
         </StyledContent>
       </Container>

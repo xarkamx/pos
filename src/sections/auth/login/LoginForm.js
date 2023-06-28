@@ -22,7 +22,8 @@ export default function LoginForm () {
     <form onSubmit={async (ev) => {
       ev.preventDefault();
       await onSubmit();
-      navigate('/', { replace: true });
+      const path = '/';
+      navigate(path, { replace: true });
     }}>
       <Stack spacing={3}>
         <TextField name="email" label="Correo" onChange={(ev) => {
@@ -52,7 +53,7 @@ export default function LoginForm () {
       <LoadingButton loading={loading} fullWidth sx={{
         margin: '16px 0'
       }} size="large" type="submit" variant="contained" >
-        Login
+        Acceder
       </LoadingButton>
     </form>
   );

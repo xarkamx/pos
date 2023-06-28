@@ -108,12 +108,12 @@ export const routes = [
     children: [
       { element: <Navigate to="/dashboard/caja" /> },
       { path: '404', element: <Page404 /> },
-      { path: '*', element: <Navigate to="/404" /> },
+      { path: '*', element: <Navigate to="/" /> },
     ],
   },
   {
     path: '*',
-    element: <Navigate to="/404" replace />,
+    element: <Navigate to="/" replace />,
   },
 ];
 
