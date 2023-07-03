@@ -1,8 +1,11 @@
 
+
+import { useState } from 'react';
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import { Button } from '@mui/material';
 import { OrderTransaction } from '../../../utils/transactions/orderTransaction';
+import { usePopUp } from '../../../context/PopUpContext';
 
 export function DownloadBillButton ({ billingId }) {
   return (
@@ -14,10 +17,16 @@ export function DownloadBillButton ({ billingId }) {
 }
 
 export function SendEmail ({ billingId }) {
+  const { popUpAlert } = usePopUp();
+  const [loading, setLoading] = useState(false);
   return (
-    <Button startIcon={<AlternateEmailIcon />} color={'success'} onClick={() => {
+    <Button startIcon={<AlternateEmailIcon />} color={'success'} disabled={loading} onClick={async () => {
+      setLoading(true);
       const service = new OrderTransaction();
-      service.sendEmail(billingId);
-    }}>Enviar</Button>
+      const resp = await service.sendEmail(billingId);
+      if (resp.ok)
+        popUpAlert("success", "Correo enviado correctamente");
+      setLoading(false);
+    }}>{loading ? "Cargando..." : "Enviar"}</Button>
   )
 }

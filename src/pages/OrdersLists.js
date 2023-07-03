@@ -196,23 +196,30 @@ function BillingButton ({ order, onClick }) {
   const valid = [order.rfc, order.email, order.postalCode]
 
   if (!valid.every(val => val)) return <Typography variant="caption" color="error">Datos incompletos</Typography>;
-  if (order.billed) return <>
+  if (order.billed) return <div style={{
+    display: 'flex',
+    flexDirection: 'column',
+  }}>
     <Chip label="Facturado" color="success" sx={{
       color: 'white',
     }} />
     <DownloadBillButton billingId={order.billed} />
     <SendEmail billingId={order.billed} />
-  </>
-  return <div style={{
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  }}><Button variant={'contained'} endIcon={<ReceiptLongIcon />}
-    onClick={(ev) => {
-      ev.stopPropagation();
-      setOpenConfirm(true);
-    }}
-  >Facturar</Button>
+  </div>
+  return <div
+    style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    }}>
+    <Button
+      variant={'contained'}
+      endIcon={<ReceiptLongIcon />}
+      onClick={(ev) => {
+        ev.stopPropagation();
+        setOpenConfirm(true);
+      }}
+    >Facturar</Button>
 
     <DangerModal
       message={`¿Estás seguro de facturar la orden ${order.id}?`}
