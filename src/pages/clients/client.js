@@ -32,7 +32,7 @@ export default function SinglePageClient () {
           {...clientResume}
         />
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={12} sm={4}>
         <ClientBasicForm
           rfc={client.rfc}
           name={client.name}
@@ -46,7 +46,7 @@ export default function SinglePageClient () {
           }}
         />
       </Grid>
-      <Grid item xs={8}>
+      <Grid item xs={12} sm={8}>
         <ClientOrders orders={orders} pay={pay} />
       </Grid>
       <Grid item xs={12}>

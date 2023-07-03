@@ -17,6 +17,7 @@ const StyledRoot = styled('div')({
   display: 'flex',
   minHeight: '100%',
   overflow: 'hidden',
+  padding: '0rem 1rem'
 });
 
 const Main = styled('div')(({ theme }) => ({

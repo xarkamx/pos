@@ -7,7 +7,9 @@ import { QuickClientForm } from '../sections/@dashboard/clients/QuickClientAddFo
 export default function ClientsPage () {
   const { clients, addClient, updateClient } = useClients();
   return (
-    <Grid container spacing={2}>
+    <Grid container style={{
+      display: 'block',
+    }}>
       <Grid item sm={12} md={4}>
         <QuickClientForm onSubmit={addClient} />
       </Grid>
