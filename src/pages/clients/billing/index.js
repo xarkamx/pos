@@ -18,6 +18,7 @@ export function BillingPage () {
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(false)
   const [paymentType, setPaymentType] = useState(null)
+  const [paymentCode, setPaymentCode] = useState(null)
   const { bill } = useBilling()
   const validation = [client?.rfc, client?.email, client?.postal_code]
   if (!validation.every(item => item)) {
@@ -40,7 +41,16 @@ export function BillingPage () {
             setOrders(orders)
             setLoading(false)
           }} />
+          <PaymentCodeSelector
+            paymentCode={paymentCode}
+            onChange={(code) => {
+              setPaymentCode(code)
+              if (code === 'PPD') {
+                setPaymentType(99)
+              }
+            }} />
           <PaymentMethodSelect
+            disabled={paymentCode === 'PPD'}
             paymentMethod={paymentType}
             onChange={(ev) => {
               setPaymentType(ev.value);
@@ -57,7 +67,7 @@ export function BillingPage () {
             variant="contained"
             color="primary" fullWidth
             onClick={async () => {
-              bill(orders, clientId, paymentType)
+              bill(orders, clientId, paymentType, paymentCode)
             }}
             disabled={loading}>{loading ? 'Cargando...' : 'Facturar'}</Button>
         </Grid>
@@ -112,4 +122,26 @@ async function getProducts (orderIds) {
   const service = new OrderTransaction()
   const orders = await Promise.all(orderIds.map(orderId => service.getOrder(orderId)))
   return orders.map(order => order.items).flat()
+}
+
+function PaymentCodeSelector ({
+  onChange = () => { },
+  value
+}) {
+
+  return <Autocomplete
+    value={value}
+    fullWidth
+    options={
+      [
+        { label: 'Pago en Una sola Exhibición', value: 'PUE' },
+        { label: 'Pago en Parcialidades o Diferido', value: 'PPD' },
+      ]
+    } onChange={(ev, item) => {
+      onChange(item.value)
+    }}
+    renderInput={(params) => (
+      <TextField {...params} label='Codigo de pago' required />
+    )}
+  />
 }

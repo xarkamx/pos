@@ -2,23 +2,24 @@
 import { Autocomplete, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { PAYMENT_TYPE } from '../../../config/constants'
 
-export function PaymentMethodSelect ({ paymentMethod, onChange }) {
+export function PaymentMethodSelect ({ paymentMethod, onChange, ...props }) {
   const paymentMethods = PAYMENT_TYPE.map((item) => ({ label: item.descripcion, value: item.codigo }))
   const val = paymentMethods.find((item) => parseInt(item.value, 10) === parseInt(paymentMethod, 10))
-
   return (<Autocomplete
     fullWidth
+
     renderInput={(params) => <TextField {...params} label="Metodo de pago" />}
     onChange={(ev, value) => {
       onChange(value)
     }}
-    value={val}
+    value={val || null}
     defaultValue={paymentMethod}
-    isOptionEqualToValue={(option, value) => parseInt(option.value, 10) === parseInt(value, 10)}
     options={paymentMethods}
     getOptionLabel={(option) =>
       option.label
-    } />)
+    }
+    {...props}
+  />)
 }
 export function PaymentFlowSelect ({ flow, onChange }) {
   return (<FormControl fullWidth>

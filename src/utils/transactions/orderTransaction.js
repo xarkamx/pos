@@ -36,8 +36,8 @@ export class OrderTransaction extends TransactionService {
     return this.get(`/billing`, query);
   }
 
-  async bill (orderIds, paymentType) {
-    return this.post(`/billing`, { orderIds, paymentType });
+  async bill (orderIds, paymentType, code) {
+    return this.post(`/billing`, { orderIds, paymentType, paymentMethod: code });
   }
 
   async downloadBill (billingId) {
