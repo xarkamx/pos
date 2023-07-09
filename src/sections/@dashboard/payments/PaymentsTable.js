@@ -1,4 +1,4 @@
-import { TablePagination, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
 import { useState } from 'react';
 import { DeleteSmallButton } from '../../../components/Buttons/IconButons';
 import { Money } from '../../../components/Formats/FormatNumbers';
@@ -11,10 +11,9 @@ import { TotalResume } from './PaymentsResume';
 import { paymentType } from '../../../utils/formats';
 
 export default function PaymentTable ({ payments, onDeletePayment }) {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useCState({ from: getLastMonday(new Date()), to: getEndOfDay(new Date()) });
   const [query, setQuery] = useState('');
+  const [filterBy, setFilterBy] = useState('');
   let pays = payments || [];
   if (search) {
     const to = new Date(search.to).getTime();
@@ -30,44 +29,31 @@ export default function PaymentTable ({ payments, onDeletePayment }) {
       return str.toLowerCase().includes(query.toLowerCase());
     });
   }
-  const pages = pays?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) || [];
-  const itemsCount = search || query ? pays?.length : payments?.length;
+
+  if (filterBy) {
+    pays = pays.filter((item) => item.flow === filterBy);
+  }
+
   return (
     <>
 
-      <TotalResume payments={pays} />
+      <TotalResume payments={pays} onClick={(flow) => {
+        setFilterBy(flow);
+      }} />
       <TextField fullWidth label="Buscar" sx={{
         marginBottom: '1rem'
       }} onChange={(ev) => {
         setQuery(ev.target.value);
-        setPage(0);
       }} />
       <SearchDatesInputs
         dfrom={search.from}
         onChange={(dates) => {
           setSearch(dates);
-          setPage(0);
         }}
       />
       <CustomTable
-        pageComponent={
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={itemsCount}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={(ev, pageNumber) => {
-              setPage(pageNumber);
-            }}
-            onRowsPerPageChange={(ev) => {
-              setRowsPerPage(ev.target.value);
-              setPage(0)
-            }}
-          />
-        }
         titles={['', 'ID', 'Fecha', 'Referencia', 'Flujo', 'Descripcion', 'Tipo de pago', 'Pago', 'Método']}
-        content={pages}
+        content={pays}
         format={(item) => [
           <DeleteSmallButton key={`del-${item.id}`} onClick={() => {
             onDeletePayment(item.id);

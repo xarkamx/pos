@@ -1,7 +1,7 @@
 const { Grid, Card } = require('@mui/material');
 const { Money } = require('../../../components/Formats/FormatNumbers');
 
-export function TotalResume ({ payments }) {
+export function TotalResume ({ payments, onClick }) {
   const resume = resumePayments(payments);
   if (!resume) return (<></>);
   return (
@@ -13,13 +13,23 @@ export function TotalResume ({ payments }) {
       }}
     >
       <Grid item xs={12} md={4}>
-        <ResumeCard title="Total" amount={resume.total} color="primary.main" subTypes={resume} />
+        <ResumeCard title="Total" amount={resume.total} color="primary.main" subTypes={resume} onClick={() => {
+          onClick('');
+        }} />
       </Grid>
       <Grid item xs={12} md={4}>
-        <ResumeCard title="Entradas" amount={resume.inflow.total} color="success.main" subTypes={resume.inflow} />
+        <ResumeCard title="Entradas" amount={resume.inflow.total} color="success.main" subTypes={resume.inflow}
+          onClick={() => {
+            onClick('inflow');
+          }}
+        />
       </Grid>
       <Grid item xs={12} md={4}>
-        <ResumeCard title="Salidas" amount={resume.outflow.total} color="error.main" subTypes={resume.outflow} />
+        <ResumeCard title="Salidas" amount={resume.outflow.total} color="error.main" subTypes={resume.outflow}
+          onClick={() => {
+            onClick('outflow');
+          }}
+        />
       </Grid>
     </Grid>
   );
@@ -60,9 +70,11 @@ function ResumeCard ({
     cash: 0,
     deposit: 0,
   },
+  onClick = () => { },
 }) {
   return (
     <Card
+      onClick={onClick}
       sx={{
         padding: '.5rem',
         display: 'flex',
@@ -71,6 +83,7 @@ function ResumeCard ({
         alignItems: 'center',
         textAlign: 'center',
         color: 'white',
+        cursor: 'pointer',
         backgroundColor: color,
         boxShadow: '0 0 10px 0 rgba(0,0,0,0.2)',
         '& > *': {
