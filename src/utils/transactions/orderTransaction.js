@@ -44,9 +44,10 @@ export class OrderTransaction extends TransactionService {
     return this.file(`/billing/${billingId}/download`);
   }
 
-  async sendEmail (billingId) {
-    return this.get(`/billing/${billingId}/send`);
+  async sendEmail (orderId) {
+    return this.get(`/billing/${orderId}/send`);
   }
+
 
   async deleteOrder (orderId) {
     return this.delete(`/orders/${orderId}`);
