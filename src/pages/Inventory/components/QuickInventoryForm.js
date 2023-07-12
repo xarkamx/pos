@@ -10,13 +10,13 @@ import { usePopUp } from '../../../context/PopUpContext'
 export function QuickInventoryForm ({
   onSubmit
 }) {
-  const popUpAlert = usePopUp()
+  const { popUpAlert } = usePopUp()
   const { validate, errors } = useValidate({
     type: 'object',
     required: ['external_id', 'qty'],
     properties: {
       external_id: {
-        type: 'string',
+        type: 'number',
         errorMessage: 'Debe seleccionar un producto',
       },
       qty: {
@@ -49,7 +49,7 @@ export function QuickInventoryForm ({
       fullWidth
       type='number'
       onChange={(ev) => {
-        setInventoryData({ qty: ev.target.value })
+        setInventoryData({ qty: parseInt(ev.target.value, 10) })
       }}
     />
 
