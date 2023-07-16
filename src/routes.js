@@ -9,6 +9,7 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
@@ -30,6 +31,7 @@ import { UsersPage } from './pages/users';
 import { BillingPage } from './pages/clients/billing';
 import { BillingList } from './pages/billing';
 import { SingleProductPage } from './pages/products/SingleProduct';
+import { MyAccount } from './pages/users/me';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -95,6 +97,13 @@ export const routes = [
         element: <BillingList />,
         roles: ['admin', 'cashier'],
         icon: <ReceiptLongIcon />,
+      },
+      {
+        path: 'me',
+        title: 'Mi perfil',
+        element: <MyAccount />,
+        roles: ['admin', 'cashier', 'storer'],
+        icon: <AccountBoxIcon />,
       }
     ],
   },

@@ -14,4 +14,8 @@ export class UsersTransactions extends TransactionService {
   async addUser (user) {
     return this.post('/users', user);
   }
+
+  async changeMyPassword (password) {
+    return this.post('/users/me/password', { password });
+  }
 }

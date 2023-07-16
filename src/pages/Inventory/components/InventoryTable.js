@@ -5,14 +5,13 @@ import { CustomTable } from '../../../components/tables/Table';
 
 export function InventoryTable ({ items = [] }) {
   const [search, setSearch] = useState('');
-
   const filtered = items.filter((item) => {
     const { id, price, quantity } = item;
     const query = search.toLowerCase();
     if (!id) return false;
     return (
       id?.toString().includes(query) ||
-      price.toLowerCase().includes(query) ||
+      price.toString().toLowerCase().includes(query) ||
       quantity.toString().includes(query)
     );
   })
@@ -27,7 +26,9 @@ export function InventoryTable ({ items = [] }) {
         format={(items) => ([
           items.id,
           items.name,
-          items.quantity,
+          <span key={`qty-${items.id}`} style={{
+            color: items.quantity < 0 ? 'red' : 'green'
+          }}>{items.quantity}</span>,
           <Money number={items.price} key={`price-${items.id}`} />,
           <Money number={items.price * items.quantity} key={`projection-${items.id}`} />
 

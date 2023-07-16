@@ -48,8 +48,13 @@ export function QuickInventoryForm ({
     <QuickFormInput label='Cantidad'
       fullWidth
       type='number'
+      inputProps={
+        {
+          step: 0.1,
+        }
+      }
       onChange={(ev) => {
-        setInventoryData({ qty: parseInt(ev.target.value, 10) })
+        setInventoryData({ qty: parseFloat(ev.target.value, 10) })
       }}
     />
 
