@@ -200,3 +200,24 @@ export function monthsSince (date) {
   const months = diff / (60 * 60 * 24 * 30);
   return months;
 }
+
+export function timeSince (date) {
+  date = new Date(date);
+  date.setHours(date.getHours() + 4);
+  const today = new Date();
+  const diff = (today.getTime() - date.getTime()) / 1000;
+  const days = diff / (60 * 60 * 24);
+  const hours = diff / (60 * 60);
+  const minutes = diff / 60;
+  const seconds = diff;
+  if (days > 1) {
+    return `${Math.round(days)} días`;
+  } else if (hours > 1) {
+    return `${Math.round(hours)} horas`;
+  } else if (minutes > 1) {
+    return `${Math.round(minutes)} minutos`;
+  } else if (seconds > 1) {
+    return `${Math.round(seconds)} segundos`;
+  }
+  return "0 segundos";
+}
