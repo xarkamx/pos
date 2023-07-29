@@ -193,3 +193,10 @@ export function median (data) {
   const trimmed = sorted.slice(trimSize, sorted.length - trimSize);
   return trimmed.reduce((a, b) => a + b) / trimmed.length;
 }
+
+export function monthsSince (date) {
+  const today = new Date();
+  const diff = (today.getTime() - date.getTime()) / 1000;
+  const months = diff / (60 * 60 * 24 * 30);
+  return months;
+}

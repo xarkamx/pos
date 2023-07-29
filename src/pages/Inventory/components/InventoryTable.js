@@ -2,9 +2,11 @@ import { TextField } from '@mui/material';
 import { useState } from 'react';
 import { Money } from '../../../components/Formats/FormatNumbers';
 import { CustomTable } from '../../../components/tables/Table';
+import { monthsSince } from '../../../core/helpers';
 
 export function InventoryTable ({ items = [] }) {
   const [search, setSearch] = useState('');
+  const months = monthsSince(new Date('2023-03-01'));
   const filtered = items.filter((item) => {
     const { id, price, quantity } = item;
     const query = search.toLowerCase();
@@ -22,18 +24,23 @@ export function InventoryTable ({ items = [] }) {
       }} />
       <CustomTable
         content={filtered}
-        titles={['Id', 'Nombre', 'Cantidad', 'Precio', 'Proyección']}
+        titles={['Id', 'Nombre', 'Cantidad', 'Precio', 'Ventas/Mes', 'Proyección']}
         format={(items) => ([
           items.id,
           items.name,
           <span key={`qty-${items.id}`} style={{
-            color: items.quantity < 0 ? 'red' : 'green'
-          }}>{items.quantity}</span>,
-          <Money number={items.price} key={`price-${items.id}`} />,
-          <Money number={items.price * items.quantity} key={`projection-${items.id}`} />
+            color: items.inStock <= 0 || refillRatio(items.inStock, Math.ceil(items.soldUnits / months)) < 80 ? 'red' : 'green'
+          }}>{items.inStock}</span>,
+          <Money number={items.unitPrice} key={`price-${items.id}`} />,
+          Math.ceil(items.soldUnits / months),
+          <Money number={items.unitPrice * items.inStock} key={`projection-${items.id}`} />
 
         ])}
       />
     </>
   )
+}
+
+function refillRatio (qty, sold) {
+  return (qty / (sold * 2)) * 100;
 }
