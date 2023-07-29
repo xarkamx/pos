@@ -4,36 +4,36 @@ import { useClient } from '../../../hooks/useClients';
 import { ConditionalWall } from '../../../components/FilterWall/ConditionalWall';
 import { numberPadStart, localeDate } from '../../../core/helpers';
 
-function TicketProduct ({ name, qty, amount }) {
+function TicketProduct ({ name, qty, price, amount }) {
   return (
-    <tr style={{
-      fontSize: '0.5rem',
-      borderBottom: '1px solid #aaa',
-
-    }}>
-      <td >
+    <tr >
+      <td style={{
+        borderBottom: '1px solid #000',
+      }}>
         {qty}
       </td>
       <td
         style={{
-          textAlign: 'left'
-        }}
-      >{name}</td>
+          paddingRight: '3rem',
+          borderBottom: '1px solid #000',
+        }}>{name}</td>
+
       <td
         style={{
-          textAlign: 'right'
-        }}
-      ><Money number={amount} /></td>
+          borderBottom: '1px solid #000',
+        }}><Money number={price} /></td>
+
+
+      <td style={{
+        borderBottom: '1px solid #000',
+      }}><Money number={amount} /></td>
     </tr>
   );
 }
 
 function ClientTicket ({ clientName, clientRfc, orders, latestPurchase, totalDebt }) {
   return (
-    <div style={{
-      fontSize: '0.5rem',
-      fontWeight: 'bold',
-    }}>
+    <div>
       <h4>Detalles del cliente</h4>
       <h5>{`${clientName} (${clientRfc || 'XAXX010101000'})`}</h5>
       <ul style={{
@@ -56,25 +56,30 @@ export const Ticket = React.forwardRef((props, ref) => {
   const { products, orderId, subtotal, discount, total, clientId, payment } = props;
   const { clientResume, client } = useClient(clientId);
   const sectionStyle = {
-    marginTop: '.5rem',
-
-    padding: '0 2%'
+    marginTop: '2rem',
+    borderRadius: '5px',
+    border: '1px solid #000',
+    padding: '1rem'
   }
   return (
     <div ref={ref} style={{
+      padding: '2rem',
+      border: '1px solid #000',
+      borderRadius: '5px',
       height: '100%',
       textAlign: 'justify',
-      fontSize: '0.7rem',
-      fontFamily: 'monospace',
-      color: '#000',
+      fontSize: '0.8rem',
     }}>
       <div style={{
         textAlign: 'center',
+        display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center',
       }}>
-
+        <img src='/assets/logo.svg' alt='logo' style={{
+          width: '80px',
+        }} />
         <h3>Hojalateria Gutierrez</h3>
-
         <h3>NOTA DE VENTA: {numberPadStart(2, orderId)}</h3>
       </div>
       <div style={sectionStyle}>
@@ -85,8 +90,16 @@ export const Ticket = React.forwardRef((props, ref) => {
         <h4>Productos</h4>
         <hr />
         <table style={{
-          width: '100%',
+          width: '100%'
         }}>
+          <thead>
+            <tr>
+              <td>Cantidad</td>
+              <td>Producto</td>
+              <td>Precio</td>
+              <td>Importe</td>
+            </tr>
+          </thead>
           <tbody>
             {products.map((product) => (
               <TicketProduct
@@ -105,9 +118,7 @@ export const Ticket = React.forwardRef((props, ref) => {
           ...sectionStyle,
           // pageBreakBefore: products.length > 5 ? 'always' : 'auto'
         }}>
-        <h4 style={{
-          fontSize: '1rem',
-        }}>Resumen</h4>
+        <h4>Resumen</h4>
         <DetailsTag label={'subtotal'} value={subtotal} />
         <DetailsTag label={'descuento'} value={discount} />
         <DetailsTag label={'total'} value={total} />
@@ -137,9 +148,7 @@ function DetailsTag ({ label, value }) {
       display: 'flex',
       justifyContent: 'space-between',
       padding: '0.5rem 0',
-      borderBottom: '.1rem solid #ccc',
-      fontSize: '0.5rem',
-      fontWeight: 'bold',
+      borderBottom: '1px solid #000',
     }}>
       <span>{label}</span>
       <span><Money number={value} /></span>
