@@ -5,7 +5,7 @@ import { usePopUp } from '../context/PopUpContext';
 
 export function useProducts () {
   const { popUpAlert } = usePopUp();
-  const query = useQuery('products', () => new ProductsTransaction().getProducts());
+  const query = useQuery('products', () => new ProductsTransaction().getProductInventoryList());
   const add = useMutation((product) => new ProductsTransaction().addProduct(product), {
     onSuccess: () => {
       popUpAlert('success', 'Producto agregado correctamente');
@@ -21,7 +21,7 @@ export function useProducts () {
     new ProductsTransaction().updateProduct(id, rest);
   });
   return {
-    products: query.data?.map(item => ({ label: item.name, id: item.id, price: item.price })),
+    products: query.data?.map(item => ({ label: item.name, id: item.id, price: item.unitPrice, quantity: item.inStock })),
     add: add.mutate,
     del: del.mutate,
     update: update.mutate,

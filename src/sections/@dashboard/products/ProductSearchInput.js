@@ -104,8 +104,10 @@ function RenderedListItem (props, option) {
         backgroundColor: 'lightgray',
       },
       cursor: 'pointer',
+      color: option.quantity >= 1 ? 'black' : 'red',
     }
   }>
-    <ListItemText primary={option.label} secondary={<Money number={option.price} />} />
+    <ListItemText primary={option.label} secondary={<Money number={`${option.price}`} />} />
+    <ListItemText secondary={option.quantity} />
   </ListItem>
 }
