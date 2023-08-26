@@ -7,7 +7,7 @@ import { numberPadStart, localeDate } from '../../../core/helpers';
 function TicketProduct ({ name, qty, amount }) {
   return (
     <tr style={{
-      fontSize: '0.5rem',
+      fontSize: '0.6rem',
       borderBottom: '1px solid #aaa',
 
     }}>

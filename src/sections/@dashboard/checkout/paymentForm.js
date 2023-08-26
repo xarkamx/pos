@@ -34,16 +34,7 @@ export function PaymentForm ({ subtotal, total, clientId, send, onDiscount, subm
         </ListItem>
         <ListItem>
           <Grid container spacing={3}>
-            <Grid item xs={6}>
-              <Button variant="contained" disabled={!submitable} fullWidth onClick={
-                () => {
-                  send(clientId, total, paymentMethod)
-                }
-              }>
-                Pago Total
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <PartialPaymentModal send={send} total={total} clientId={clientId} submitable={submitable} paymentMethod={paymentMethod} />
             </Grid>
           </Grid>
@@ -55,14 +46,17 @@ export function PaymentForm ({ subtotal, total, clientId, send, onDiscount, subm
 
 function PartialPaymentModal ({ send, clientId, total, submitable, paymentMethod }) {
   const [open, setOpen] = useState(false)
-  const [payment, setPayment] = useState(0)
-  submitable = submitable ? clientId : false
+  const [payment, setPayment] = useState(total)
   return (
     <>
-      <Button variant="contained" disabled={!submitable} fullWidth color='warning' onClick={() => {
-        setOpen(true)
-      }}>
-        Pago Parcial
+      <Button variant="contained" disabled={!submitable} fullWidth color='success'
+        sx={{
+          color: 'white',
+        }}
+        onClick={() => {
+          setOpen(true)
+        }}>
+        Pagar
       </Button>
       <Modal open={open}>
         <Box sx={{
@@ -79,17 +73,31 @@ function PartialPaymentModal ({ send, clientId, total, submitable, paymentMethod
           }}>
             <form onSubmit={(ev) => {
               ev.preventDefault()
-              send(clientId, payment, paymentMethod)
+              const actualPayment = payment > total ? total : payment
+              send(clientId, actualPayment, paymentMethod)
               setOpen(false)
             }}>
               <Typography variant="h4" sx={{ mb: 5 }}>
-                Pago parcial de <Money number={total} />
+                Pagar <Money number={total} />
               </Typography>
               <Grid container spacing={3}>
                 <Grid item xs={12}>
-                  <TextField label='Pago' sx={{ width: "100%" }} onChange={(ev) => {
-                    setPayment(ev.target.value)
-                  }} />
+                  <TextField
+                    type='number'
+                    inputProps={{
+                      min: 0,
+                      step: 0.01
+                    }}
+                    onFocus={(ev) => {
+                      ev.target.select()
+                    }}
+                    value={payment}
+                    label='Pago' sx={{ width: "100%" }} onChange={(ev) => {
+                      setPayment(ev.target.value)
+                    }} />
+                  <Typography variant="h6" sx={{ color: 'darkgreen', textAlign: 'center' }}>
+                    Cambio <Money number={payment - total} />
+                  </Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <Button variant="contained" fullWidth type='submit'>Pagar</Button>

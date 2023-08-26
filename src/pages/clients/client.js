@@ -24,6 +24,14 @@ export default function SinglePageClient () {
   const billable = [client.rfc, client.email, client.postal_code].every((item) => item)
   return (
     <Grid container spacing={3}>
+
+      <Grid item xs={12}>
+        <ConditionalWall condition={billable}>
+          <Button variant="contained" color="primary" onClick={() => {
+            navigate(`/dashboard/clientes/${clientId}/factura`)
+          }}>Facturar</Button>
+        </ConditionalWall>
+      </Grid>
       <Grid item xs={12}>
         <h1>{client.name} (Ultima Compra - {localeDate(clientResume.latestPurchase)})</h1>
       </Grid>
@@ -48,13 +56,6 @@ export default function SinglePageClient () {
       </Grid>
       <Grid item xs={12} sm={8}>
         <ClientOrders orders={orders} pay={pay} />
-      </Grid>
-      <Grid item xs={12}>
-        <ConditionalWall condition={billable}>
-          <Button variant="contained" color="primary" onClick={() => {
-            navigate(`/dashboard/clientes/${clientId}/factura`)
-          }}>Facturar</Button>
-        </ConditionalWall>
       </Grid>
     </Grid>
   );

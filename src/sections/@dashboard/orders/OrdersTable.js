@@ -1,5 +1,4 @@
-import { Chip, TablePagination } from '@mui/material';
-import { useState } from 'react';
+import { Chip } from '@mui/material';
 import { Money } from '../../../components/Formats/FormatNumbers';
 import { between, localeDate } from '../../../core/helpers';
 import { CustomTable } from '../../../components/tables/Table';
@@ -8,8 +7,6 @@ import { SearchDatesInputs } from '../../../components/Inputs/SearchDateInput';
 
 
 export function OrdersTable ({ orders, onStatusClick }) {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const history = useHistory();
   const [search, setSearch] = useCState(null);
   const color = (status) => {
@@ -24,7 +21,7 @@ export function OrdersTable ({ orders, onStatusClick }) {
         return 'info';
     }
   }
-  let ords = orders?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  let ords = orders;
   if (search) {
     const to = new Date(search.to).getTime();
     const from = new Date(search.from).getTime();
@@ -33,26 +30,12 @@ export function OrdersTable ({ orders, onStatusClick }) {
       return between(createdAt, from || 0, to || Infinity)
     });
   }
-  const itemsCount = search ? ords.length : orders?.length || 0;
   return (
     <>
       <SearchDatesInputs onChange={(dates) => {
         setSearch(dates);
       }} />
       <CustomTable
-        pageComponent={<TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={itemsCount}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={(ev, pageNumber) => {
-            setPage(pageNumber);
-          }}
-          onRowsPerPageChange={(ev) => {
-            setRowsPerPage(ev.target.value);
-          }}
-        />}
         titles={['ID', 'RFC', 'Cliente', 'Fecha', 'subtotal', 'Descuento', 'Total', 'Pago', 'Estatus']}
         content={ords}
         onClick={(item) => {

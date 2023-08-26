@@ -12,7 +12,16 @@ export function ProductSearchInput ({ onSubmit }) {
   let textInput = null;
   const [product, setProduct] = useCState({ quantity: 1 })
   const options = products.products || [];
-
+  // order options by name
+  const sortOpt = [...options].sort((a, b) => {
+    if (a.label < b.label) {
+      return -1;
+    }
+    if (a.label > b.label) {
+      return 1;
+    }
+    return 0;
+  })
   return <form onSubmit={(ev) => {
     ev.preventDefault();
     if (!product.id) return;
@@ -29,7 +38,7 @@ export function ProductSearchInput ({ onSubmit }) {
             value={product.name || ''}
             disablePortal
             id="combo-box-search-product"
-            options={options}
+            options={sortOpt}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             renderOption={RenderedListItem}
             onChange={(ev, nv) => {
