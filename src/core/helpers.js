@@ -191,7 +191,7 @@ export function median (data) {
   const sorted = [...data].sort((a, b) => a - b);
   const trimSize = Math.round(sorted.length * trim);
   const trimmed = sorted.slice(trimSize, sorted.length - trimSize);
-  return trimmed.reduce((a, b) => a + b) / trimmed.length;
+  return trimmed.reduce((a, b) => a + b, 0) / trimmed.length;
 }
 
 export function monthsSince (date) {

@@ -10,6 +10,7 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import EngineeringIcon from '@mui/icons-material/Engineering';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
@@ -32,6 +33,7 @@ import { BillingPage } from './pages/clients/billing';
 import { BillingList } from './pages/billing';
 import { SingleProductPage } from './pages/products/SingleProduct';
 import { MyAccount } from './pages/users/me';
+import { PayrollView } from './pages/payroll/payrollPage';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -84,6 +86,13 @@ export const routes = [
         roles: ['admin', 'storer'],
         icon: <InventoryIcon />,
         title: 'Inventario',
+      },
+      {
+        path: 'Nomina',
+        element: <PayrollView />,
+        roles: ['admin', 'cashier'],
+        icon: <EngineeringIcon />,
+        title: 'Nominas',
       },
       {
         path: 'usuarios',

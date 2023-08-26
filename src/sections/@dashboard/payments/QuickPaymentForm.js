@@ -36,7 +36,7 @@ export function QuickPaymentForm ({ onSubmit }) {
         <ListItem>
           <TextField label='Cantidad' type='number' inputProps={
             {
-              min: 1,
+              min: 0.01,
               step: 0.01,
             }
           } fullWidth value={payment.amount} onChange={(ev) => {
