@@ -13,8 +13,8 @@ export function InventoryTable ({ items = [] }) {
     if (!id) return false;
     return (
       id?.toString().includes(query) ||
-      price.toString().toLowerCase().includes(query) ||
-      quantity.toString().includes(query)
+      price?.toString().toLowerCase().includes(query) ||
+      quantity?.toString().includes(query)
     );
   })
   return (

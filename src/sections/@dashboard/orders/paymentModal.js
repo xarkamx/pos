@@ -53,7 +53,7 @@ export function PaymentModal ({ amount, max = Infinity, clientId, onPay, open, o
             <TextField label="Monto" type='number'
 
               fullWidth inputProps={{
-                min: 1,
+                min: 0.1,
                 max,
                 step: 0.01
               }} value={payment}

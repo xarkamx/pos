@@ -1,24 +1,26 @@
 
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Grid, ListItem } from '@mui/material';
+import { Button, Card, Collapse, Grid, ListItem, Tooltip } from '@mui/material';
 import { useOrders } from '../../hooks/useOrders';
 import { QuickFormContainer } from '../../components/Containers/QuickFormContainer';
 import { OrdersTable } from '../../sections/@dashboard/orders/OrdersTable';
 import { useClient } from '../../hooks/useClients';
 import { useCState } from '../../hooks/useHooks';
 import { DebounceInput } from '../../components/Inputs/DebounceInput';
-import { localeDate } from '../../core/helpers';
+import { localeDate, timeSince } from '../../core/helpers';
 import { AppWidgetSummary } from '../../sections/@dashboard/app';
 import { PaymentModal } from '../../sections/@dashboard/orders/paymentModal';
 import { Money } from '../../components/Formats/FormatNumbers';
 import { ConditionalWall } from '../../components/FilterWall/ConditionalWall';
 import { TaxSystem } from '../../sections/@dashboard/clients/TaxSystemInput';
+import { CustomTable } from '../../components/tables/Table';
+import { paymentType } from '../../utils/formats';
 
 export default function SinglePageClient () {
   const { clientId } = useParams();
   const { orders, pay } = useOrders({ clientId });
-  const { client, clientResume, setClient } = useClient(clientId);
+  const { client, clientResume, setClient, clientPayments } = useClient(clientId);
   const navigate = useNavigate();
   if (!client || !clientResume) return null;
   const billable = [client.rfc, client.email, client.postal_code].every((item) => item)
@@ -55,7 +57,9 @@ export default function SinglePageClient () {
         />
       </Grid>
       <Grid item xs={12} sm={8}>
+        <ClientPayments payments={clientPayments} />
         <ClientOrders orders={orders} pay={pay} />
+
       </Grid>
     </Grid>
   );
@@ -149,5 +153,30 @@ function ClientOrders ({ orders, pay }) {
         setOpenPaymentModal(false);
       }}
     />
+  </>)
+}
+
+function ClientPayments ({ payments }) {
+  const [open, setOpen] = useState(false);
+  const soirtedPayments = payments.sort((a, b) => new Date(b.orderId) - new Date(a.orderId))
+  return (<><Card sx={{
+    margin: '16px 0px',
+    cursor: 'pointer'
+  }}>
+    <Button fullWidth variant='contained' color={'info'} onClick={() => (setOpen(!open))}>Ver Pagos</Button>
+    <Collapse in={open} timeout="auto" unmountOnExit >
+      <CustomTable
+        titles={['Folio', 'Fecha', 'Monto', 'Método']}
+        content={soirtedPayments || []}
+        format={(item) => [
+          item.orderId,
+          <Tooltip key={`tooltip`} title={item.createdAt}><div>{timeSince(item.createdAt)}</div></Tooltip>,
+          <Money number={item.amount} key={`money-${item.orderId}`} />,
+          paymentType(item.paymentMethod),
+
+        ]}
+      />
+    </Collapse>
+  </Card>
   </>)
 }

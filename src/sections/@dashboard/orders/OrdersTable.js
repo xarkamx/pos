@@ -36,7 +36,7 @@ export function OrdersTable ({ orders, onStatusClick }) {
         setSearch(dates);
       }} />
       <CustomTable
-        titles={['ID', 'RFC', 'Cliente', 'Fecha', 'subtotal', 'Descuento', 'Total', 'Pago', 'Estatus']}
+        titles={['ID', 'RFC', 'Cliente', 'Fecha', 'Total', 'Pago', 'Estatus']}
         content={ords}
         onClick={(item) => {
           history(`/dashboard/ordenes/${item.id}`)
@@ -46,8 +46,6 @@ export function OrdersTable ({ orders, onStatusClick }) {
           item.rfc || 'XAXX010101000',
           item.clientName || 'Consumidor final',
           localeDate(item.createdAt),
-          <Money key={`item2-${item.id}`} number={item.subtotal} />,
-          <Money key={`item4-${item.id}`} number={item.discount} />,
           <Money key={`item3-${item.id}`} number={item.total} />,
           <Money key={`item1-${item.id}`} number={item.partialPayment} />,
           <Chip key={`chip-${item.id}`}

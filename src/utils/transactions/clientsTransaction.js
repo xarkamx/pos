@@ -40,4 +40,8 @@ export class ClientsTransaction extends TransactionService {
   async updateClient (id, client) {
     return this.put(`/clients/${id}`, client);
   }
+
+  async getClientPayments (id) {
+    return this.get(`/clients/${id}/resume/payments`);
+  }
 }

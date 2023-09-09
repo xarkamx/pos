@@ -26,6 +26,7 @@ export function useClient (id) {
   const { popUpAlert } = usePopUp();
   const query = useQuery(['clientResume', id], () => new ClientsTransaction().getClientResume(id));
   const client = useQuery(['client', id], () => new ClientsTransaction().getClient(id));
+  const clientPayments = useQuery(['clientPayments', id], () => new ClientsTransaction().getClientPayments(id));
   const setClient = useMutation((content) => new ClientsTransaction()
     .updateClient(content.id, content.client), {
     onSuccess: () => {
@@ -35,5 +36,10 @@ export function useClient (id) {
       popUpAlert('error', error.message);
     }
   });
-  return { clientResume: query?.data || {}, client: client?.data, setClient: setClient.mutate }
+  return {
+    clientResume: query?.data || {},
+    client: client?.data,
+    setClient: setClient.mutate,
+    clientPayments: clientPayments?.data || []
+  }
 }
