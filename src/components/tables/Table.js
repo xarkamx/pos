@@ -77,6 +77,18 @@ function TableContainer ({ children, titles, pageComponent, hook }) {
     </Card>
   );
 }
+
+/**
+ *
+ * @param {
+ *  pageComponent: React.Component,
+ * setDir: string,
+ * titles: Array,
+ * content: Array,
+ * onClick: Function,
+ * format: Function,
+ * } props 
+ */
 export function CustomTable ({
   pageComponent,
   setDir,

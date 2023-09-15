@@ -34,6 +34,7 @@ import { BillingList } from './pages/billing';
 import { SingleProductPage } from './pages/products/SingleProduct';
 import { MyAccount } from './pages/users/me';
 import { PayrollView } from './pages/payroll/payrollPage';
+import { ProcessPage } from './pages/products/ProductProcess';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -71,6 +72,9 @@ export const routes = [
         path: 'productos', element: <ProductsPage />, roles: ['admin', 'storer', 'cashier'],
         icon: <LoyaltyIcon />,
         title: 'Productos'
+      },
+      {
+        path: 'productos/procesos', element: <ProcessPage />, roles: ['admin', 'storer', 'cashier'],
       },
       {
         path: 'productos/:productId', element: <SingleProductPage />, roles: ['admin', 'storer', 'cashier'],

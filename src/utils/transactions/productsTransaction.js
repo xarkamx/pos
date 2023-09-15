@@ -25,6 +25,14 @@ export class ProductsTransaction extends TransactionService {
     return this.delete(`/products/${id}`);
   }
 
+  async getProcessList () {
+    return this.get('/process');
+  }
+
+  async addProcess (process) {
+    return this.post('/process', process);
+  }
+
   async updateProduct (id, product) {
     if (!product) {
       return false;
