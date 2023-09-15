@@ -1,24 +1,14 @@
 import React from 'react';
 
-const { TicketProduct } = require('./sTicket');
-
 export const CheckoutOngoingTicket = React.forwardRef((props, ref) => {
   const { products } = props;
   return <div ref={ref}>
     <p>Pedido en caja:</p>
     <table style={{
-      width: '00%',
+      width: '90%',
       textAlign: 'justify',
-      fontSize: '0.8rem',
+      fontSize: '.8rem',
     }}>
-      <thead>
-        <tr>
-          <td>Cantidad</td>
-          <td>Producto</td>
-          <td>Precio</td>
-          <td>Importe</td>
-        </tr>
-      </thead>
       <tbody>
         {products.map((product) => (
           <TicketProduct
@@ -33,3 +23,21 @@ export const CheckoutOngoingTicket = React.forwardRef((props, ref) => {
     </table>
   </div>
 })
+
+
+function TicketProduct ({ name, qty }) {
+  return (
+    <tr >
+      <td style={{
+        borderBottom: '1px solid #000',
+      }}>
+        {qty}
+      </td>
+      <td
+        style={{
+          textAlign: 'center',
+          borderBottom: '1px solid #000',
+        }}>{name}</td>
+    </tr>
+  );
+}
