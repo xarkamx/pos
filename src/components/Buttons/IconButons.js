@@ -1,6 +1,5 @@
 import { Button, IconButton } from '@mui/material';
 
-import { Link } from 'react-router-dom';
 import Iconify from '../iconify/Iconify';
 
 export function DeleteSmallButton ({ onClick }) {
