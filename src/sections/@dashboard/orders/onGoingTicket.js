@@ -5,7 +5,7 @@ const { TicketProduct } = require('./sTicket');
 export const CheckoutOngoingTicket = React.forwardRef((props, ref) => {
   const { products } = props;
   return <div ref={ref}>
-    <p>Pedido:</p>
+    <p>Pedido en caja:</p>
     <table style={{
       width: '00%',
       textAlign: 'justify',
