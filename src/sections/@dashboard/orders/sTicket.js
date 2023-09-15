@@ -4,7 +4,7 @@ import { useClient } from '../../../hooks/useClients';
 import { ConditionalWall } from '../../../components/FilterWall/ConditionalWall';
 import { numberPadStart, localeDate } from '../../../core/helpers';
 
-function TicketProduct ({ name, qty, price, amount }) {
+export function TicketProduct ({ name, qty, price, amount }) {
   return (
     <tr >
       <td style={{

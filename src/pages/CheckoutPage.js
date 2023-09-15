@@ -1,5 +1,7 @@
-import { Grid, Typography } from '@mui/material';
-import { useReactToPrint } from 'react-to-print';
+import { Button, Grid, Typography } from '@mui/material';
+
+import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
+import ReactToPrint, { useReactToPrint } from 'react-to-print';
 import { Container } from '@mui/system';
 import { useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -12,6 +14,7 @@ import { StatusModal } from '../components/CustomModal/StatusModal';
 import { ClientsSearchInput } from '../sections/@dashboard/clients/SelectClient';
 import { Ticket } from '../sections/@dashboard/orders/Ticket';
 import { ConditionalWall } from '../components/FilterWall/ConditionalWall';
+import { CheckoutOngoingTicket } from '../sections/@dashboard/orders/onGoingTicket';
 
 
 
@@ -56,7 +59,7 @@ export default function CheckoutPage () {
             <ProductSearchInput onSubmit={add} />
           </Grid>
           <Grid item xs={12} sm={6} md={8}>
-
+            <PrintOnGoingTicket products={products} />
             <ItemsList
               products={products}
               onDeleteProduct={onDelete}
@@ -97,6 +100,7 @@ export default function CheckoutPage () {
           />
         </ConditionalWall>
       </div>
+
       <StatusModal open={open && orderId}
         onClose={() => {
           print();
@@ -197,4 +201,28 @@ function sendFn ({ clientId, payment, total, paymentMethod, discount, products, 
     items: products.items.map(({ id, quantity }) => ({ productId: id, quantity }))
   })
 
+}
+
+function PrintOnGoingTicket ({ products }) {
+
+  const componentRef = useRef();
+  return (<div style={{
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginBottom: '0.5rem'
+  }}>
+    <ReactToPrint
+      trigger={() => <Button
+        color='primary'
+        startIcon={<LocalPrintshopIcon />}
+      >Imprimir</Button>}
+      content={() => componentRef.current}
+    />
+    <div style={{
+      display: 'none',
+    }}>
+      <CheckoutOngoingTicket ref={componentRef} products={products} />
+    </div>
+  </div >
+  )
 }
