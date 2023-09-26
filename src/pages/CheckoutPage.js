@@ -191,12 +191,11 @@ function addFn ({ values, setProducts, products }) {
   }
   setProducts({ items: prod });
 }
-function sendFn ({ clientId, payment, total, paymentMethod, discount, products, createOrder }) {
-
+function sendFn ({ clientId, payment,  paymentMethod, discount, products, createOrder }) {
   createOrder({
     clientId,
     discount,
-    partialPayment: payment || total,
+    partialPayment: payment,
     paymentType: paymentMethod,
     items: products.items.map(({ id, quantity }) => ({ productId: id, quantity }))
   })
