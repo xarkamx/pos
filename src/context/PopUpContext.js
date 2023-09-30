@@ -8,7 +8,6 @@ export function PopUpContextProvider ({ children }) {
   const val = useMemo(() => ({
     popUp,
     popUpAlert (status, message, onAccept) {
-      console.log(status, message, onAccept);
       setPopUp({ status, message, onAccept });
       setOpen(true);
     },

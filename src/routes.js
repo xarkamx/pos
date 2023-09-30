@@ -35,6 +35,7 @@ import { SingleProductPage } from './pages/products/SingleProduct';
 import { MyAccount } from './pages/users/me';
 import { PayrollView } from './pages/payroll/payrollPage';
 import { ProcessPage } from './pages/products/ProductProcess';
+import { CustomBillForm } from './pages/billing/customBillForm';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -104,11 +105,19 @@ export const routes = [
         element: <UsersPage />,
         roles: ['admin'],
         icon: <PeopleOutlineIcon />,
-      }, {
+      },
+      {
         path: 'facturas',
         title: 'Facturas',
         element: <BillingList />,
         roles: ['admin', 'cashier'],
+        icon: <ReceiptLongIcon />,
+      },
+      {
+        path: 'factura/custom',
+        title: 'Crear Facturas',
+        element: <CustomBillForm />,
+        roles: ['admin'],
         icon: <ReceiptLongIcon />,
       },
       {

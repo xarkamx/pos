@@ -124,7 +124,7 @@ async function getProducts (orderIds) {
   return orders.map(order => order.items).flat()
 }
 
-function PaymentCodeSelector ({
+export function PaymentCodeSelector ({
   onChange = () => { },
   value
 }) {
