@@ -8,6 +8,7 @@ import { useBillingList } from '../../hooks/useBilling';
 import { DebounceInput } from '../../components/Inputs/DebounceInput';
 import { BillingButton } from '../orders/billingButton';
 import { DownloadBillButton, SendEmail } from '../../sections/@dashboard/billing/downloadBillButton';
+import { AddComplementButton } from '../../sections/@dashboard/billing/complementModal';
 
 
 
@@ -63,21 +64,27 @@ export function BillingList () {
             }}
           />,
           methodText[item.payment_method],
-          <div key='actions' style={
-            {
-              display: 'flex',
-              justifyContent: 'center',
-              flexFlow: 'column'
-            }
-          }>{item.status === 'valid' ? <BillingButton billingId={item.id} orderId={item.folio_number} onBilling={() => {
-            cancel(item.id)
-          }} /> : ''}
-
-            {item.status === 'valid' ? <DownloadBillButton billingId={item.id} /> : ''}
-            {item.status === 'valid' ? <SendEmail billingId={item.id} /> : ''}
-          </div>
+          <ActionsContainer item={item} onCancel={cancel} key={`actions-${item.id}`} />
         ]}
       />
     </>
   )
+}
+
+
+function ActionsContainer ({ item, onCancel }) {
+  return <div style={
+    {
+      display: 'flex',
+      justifyContent: 'center',
+      flexFlow: 'column'
+    }
+  }>{item.status === 'valid' ? <BillingButton billingId={item.id} orderId={item.folio_number} onBilling={() => {
+    onCancel(item.id)
+  }} /> : ''}
+
+    {item.status === 'valid' ? <DownloadBillButton billingId={item.id} /> : ''}
+    {item.status === 'valid' ? <SendEmail billingId={item.id} /> : ''}
+    {item.payment_method === 'PPD' && item.status === 'valid' ? <AddComplementButton total={item.total} billingId={item.id} /> : ''}
+  </div>
 }

@@ -68,4 +68,8 @@ export class OrderTransaction extends TransactionService {
   async cancelPayments (orderId) {
     return this.delete(`/orders/${orderId}/payments`);
   }
+
+  async addComplement (billingId, complement) {
+    return this.post(`/billing/complement`, { billId: billingId, ...complement });
+  }
 }
