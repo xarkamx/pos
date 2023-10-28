@@ -73,7 +73,6 @@ export function BillingList () {
 
 
 function ActionsContainer ({ item, onCancel }) {
-  console.log(item)
   return <div style={
     {
       display: 'flex',
