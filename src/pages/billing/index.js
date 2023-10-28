@@ -73,6 +73,7 @@ export function BillingList () {
 
 
 function ActionsContainer ({ item, onCancel }) {
+  console.log(item)
   return <div style={
     {
       display: 'flex',
@@ -85,6 +86,6 @@ function ActionsContainer ({ item, onCancel }) {
 
     {item.status === 'valid' ? <DownloadBillButton billingId={item.id} /> : ''}
     {item.status === 'valid' ? <SendEmail billingId={item.id} /> : ''}
-    {item.payment_method === 'PPD' && item.status === 'valid' ? <AddComplementButton total={item.total} billingId={item.id} /> : ''}
+    {item.payment_form === '99' && item.status === 'valid' ? <AddComplementButton total={item.total} billingId={item.id} /> : ''}
   </div>
 }
