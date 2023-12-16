@@ -9,11 +9,13 @@ import { between, getEndOfDay, getLastMonday, localeDateUTFMex } from '../../../
 import { useCState } from '../../../hooks/useHooks';
 import { TotalResume } from './PaymentsResume';
 import { paymentType } from '../../../utils/formats';
+import { PaymentMethodSelect } from './SelectPaymentMethod';
 
 export default function PaymentTable ({ payments, onDeletePayment }) {
   const [search, setSearch] = useCState({ from: getLastMonday(new Date()), to: getEndOfDay(new Date()) });
   const [query, setQuery] = useState('');
   const [filterBy, setFilterBy] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState(null);
   let pays = payments || [];
   if (search) {
     const to = new Date(search.to).getTime();
@@ -34,6 +36,12 @@ export default function PaymentTable ({ payments, onDeletePayment }) {
     pays = pays.filter((item) => item.flow === filterBy);
   }
 
+  if (paymentMethod) {
+    pays = pays.filter((item) => {
+      return parseInt(item.paymentMethod, 10) === parseInt(paymentMethod.value, 10);
+    });
+  }
+
   return (
     <>
 
@@ -45,6 +53,13 @@ export default function PaymentTable ({ payments, onDeletePayment }) {
       }} onChange={(ev) => {
         setQuery(ev.target.value);
       }} />
+      <PaymentMethodSelect value={
+        paymentMethod
+      } onChange={(val) => {
+        setPaymentMethod(val);
+      }} sx={
+        { marginBottom: '1rem ' }
+      } />
       <SearchDatesInputs
         dfrom={search.from}
         onChange={(dates) => {
@@ -85,4 +100,5 @@ export function SimplePaymentsTable ({ payments }) {
     ]}
   />
 }
+
 

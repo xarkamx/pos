@@ -13,6 +13,7 @@ import { Money } from '../components/Formats/FormatNumbers';
 import { usePayments } from '../hooks/usePayments';
 import { PaymentChart } from '../sections/@dashboard/charts/paymentCharts';
 import { ConditionalWall } from '../components/FilterWall/ConditionalWall';
+import { SiapaCards } from '../sections/@dashboard/siapa/SiapaCards';
 
 // ----------------------------------------------------------------------
 
@@ -69,7 +70,6 @@ export default function DashboardAppPage () {
                 title="Productos" total={summary.data?.products} color="error" icon={'ant-design:shopping-cart'} />
             </Grid>
           </ConditionalWall>
-
           <Grid item xs={12} md={6} lg={8}>
             <PaymentChart payments={payments} />
           </Grid>
@@ -82,6 +82,8 @@ export default function DashboardAppPage () {
               />
             </ConditionalWall>
           </Grid>
+
+          <SiapaCards />
           <Grid item xs={12} md={6}  >
             <ConditionalWall condition={!products.isLoading} >
               <AppConversionRates
