@@ -1,4 +1,4 @@
-import { getDatesByWeekNumber, getNumberOfWeekOfYear, median, numberToMoney } from '../../../core/helpers';
+import { median, numberToMoney } from '../../../core/helpers';
 
 import AppWebChart from '../app/AppWebsiteVisits';
 
@@ -6,8 +6,8 @@ export function PaymentChart ({ payments }) {
   if (!payments) {
     return null;
   }
-  const groupedPayments = groupPaymentsPerWeek(payments);
-  const dates = groupedPayments.map((group) => group.week.toISOString());
+  const groupedPayments = groupPaymentsPerMonth(payments);
+  const dates = groupedPayments.map((group) => group.createdAt);
 
   const balance = getBalance(groupedPayments)
   const inflow = getPaymentsTotal(groupedPayments, 'inflow');
@@ -49,23 +49,20 @@ export function PaymentChart ({ payments }) {
 }
 
 
-function groupPaymentsPerWeek (payments) {
-  const grouped = payments.reduce((acc, payment) => {
+function groupPaymentsPerMonth (payments) {
+  payments = payments.map((payment) => {
     const date = new Date(payment.createdAt);
-    const week = getNumberOfWeekOfYear(date);
-
-    const year = date.getFullYear();
-    const key = `${week}/${year}`
-    if (!acc[key]) {
-      acc[key] = [];
+    return { ...payment, createdAt: `${date.getFullYear()}/${date.getMonth() + 1}/01` }
+  })
+  return payments.reduce((acc, payment) => {
+    const index = acc.findIndex((group) => group.createdAt === payment.createdAt);
+    if (index === -1) {
+      acc.push({ createdAt: payment.createdAt, payments: [payment] });
+    } else {
+      acc[index].payments.push(payment);
     }
-    acc[key].push(payment);
     return acc;
-  }, {});
-  return Object.keys(grouped).map((key) => ({
-    week: getDatesByWeekNumber(key.split('/')[0]).firstDayOfWeek,
-    payments: grouped[key],
-  })).sort((a, b) => a.week - b.week);
+  }, []);
 }
 
 function getPaymentsTotal (groupedPayments, flow) {

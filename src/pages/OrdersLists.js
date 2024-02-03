@@ -14,11 +14,14 @@ import { PaymentModal } from '../sections/@dashboard/orders/paymentModal';
 import { DangerModal } from '../components/CustomModal/ConfirmModal';
 import { paymentType } from '../utils/formats';
 import { DownloadBillButton, SendEmail } from '../sections/@dashboard/billing/downloadBillButton';
+import { ConditionalWall } from '../components/FilterWall/ConditionalWall';
 
 
 const status = {
   pending: 'Pendiente',
   paid: 'Pagado',
+  requested: 'Solicitado',
+  cancelled: 'Cancelado',
 }
 export function OrdersPage () {
   const { filter } = useQueryString();
@@ -34,7 +37,7 @@ export function OrdersPage () {
         return 'warning';
       case 'paid':
         return 'success';
-      case 'canceled':
+      case 'cancelled':
         return 'error';
       default:
         return 'info';
@@ -88,7 +91,7 @@ export function OrdersPage () {
         const debt = item.total - item.partialPayment;
         return [
           item.id,
-          <NavLink to={`/dashboard/clientes/${item.clientId}`}>{item.clientName}</NavLink> || 'Consumidor final',
+          item.clientName ? <NavLink to={`/dashboard/clientes/${item.clientId}`}>{item.clientName}</NavLink> : 'Publico general',
           <Tooltip key={`time-${item.id}`} title={localeDateUTFMex(item.createdAt)}>
             <div>{timeSince(item.createdAt)}</div>
           </Tooltip>,
@@ -111,13 +114,12 @@ export function OrdersPage () {
               fontWeight: 'bold',
               textTransform: 'capitalize'
             }} />,
-
-
-          <>
-            <BillingButton order={item} key={`billing-${item.id}`} onClick={() => {
+          <ConditionalWall key={`billing-${item.id}`} condition={item.status !== 'requested'}>
+            <BillingButton order={item} onClick={() => {
               checkIn(item.id);
             }} />
-          </>,
+          </ConditionalWall>
+          ,
           <Button key={`item2-${item.id}`} onClick={() => {
             history(`/dashboard/ordenes/${item.id}`)
           }}>Ver</Button>
@@ -160,6 +162,7 @@ function EarninsResume ({ orders = [] }) {
   }
 
   orders?.forEach((item) => {
+    if (item.status === 'cancelled' || item.status === 'requested') return;
     payment += item.partialPayment;
     total += item.total;
   });

@@ -146,7 +146,8 @@ export function getNumberOfWeekOfYear (date) {
   const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
   const milisecondsPerDay = 86400000;
   const pastDaysOfYear = (date - firstDayOfYear) / milisecondsPerDay;
-  return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+  const weekNumber = Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+  return weekNumber;
 }
 
 export function getDatesByWeekNumber (weekNumber) {

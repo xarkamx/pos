@@ -15,7 +15,7 @@ export function OrdersTable ({ orders, onStatusClick }) {
         return 'warning';
       case 'paid':
         return 'success';
-      case 'canceled':
+      case 'cancelled':
         return 'error';
       default:
         return 'info';
