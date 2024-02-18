@@ -1,5 +1,7 @@
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+import { useReactToPrint } from 'react-to-print';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Card, Collapse, Grid, ListItem, Tooltip } from '@mui/material';
 import { useOrders } from '../../hooks/useOrders';
@@ -16,12 +18,29 @@ import { ConditionalWall } from '../../components/FilterWall/ConditionalWall';
 import { TaxSystem } from '../../sections/@dashboard/clients/TaxSystemInput';
 import { CustomTable } from '../../components/tables/Table';
 import { paymentType } from '../../utils/formats';
+import { TicketPayment } from '../../sections/@dashboard/orders/paymentTicket';
 
 export default function SinglePageClient () {
   const { clientId } = useParams();
   const { orders, pay } = useOrders({ clientId });
-  const { client, clientResume, setClient, clientPayments } = useClient(clientId);
+  const { client, clientResume, setClient, clientPayments, payClientDebt, paymentDetails, setPaymentDetails } = useClient(clientId);
   const navigate = useNavigate();
+
+  const ref = useRef();
+  const print = useReactToPrint({
+    content: () => ref.current,
+    onAfterPrint: () => {
+      setPaymentDetails({ printable: false })
+    }
+  })
+
+  useEffect(() => {
+    if (paymentDetails?.printable) {
+      print()
+    }
+  }, [paymentDetails, print])
+
+  const [togglePaymentModal, setTogglePaymentModal] = useState(false);
   if (!client || !clientResume) return null;
   const billable = [client.rfc, client.email, client.postal_code].every((item) => item)
   return (
@@ -39,6 +58,11 @@ export default function SinglePageClient () {
       </Grid>
       <Grid item xs={12}>
         <ClientCards
+          onClick={(item) => {
+            if (item.totalDebt > 0) {
+              setTogglePaymentModal(true)
+            }
+          }}
           {...clientResume}
         />
       </Grid>
@@ -57,14 +81,32 @@ export default function SinglePageClient () {
         />
       </Grid>
       <Grid item xs={12} sm={8}>
+
         <ClientPayments payments={clientPayments} />
         <ClientOrders orders={orders} pay={pay} />
+        <PaymentModal max={clientResume.totalDebt} open={
+          togglePaymentModal
+        }
+          onClose={() => (
+            setTogglePaymentModal(false)
+          )}
+          onPay={async (clientId, payment, method) => {
+            payClientDebt({ amount: payment, method })
+            setTogglePaymentModal(false)
 
+          }} />
+
+        <TicketPayment
+          ref={ref}
+          clientResume={clientResume}
+          amount={paymentDetails?.amount}
+          date={paymentDetails?.date}
+          currentDebt={paymentDetails?.currentDebt?.debt}
+        />
       </Grid>
     </Grid>
   );
 }
-
 
 function ClientBasicForm ({ rfc, name, email, phones, legal, postalCode, taxSystem, onItemChange }) {
   if (!Array.isArray(phones)) phones = [phones]
@@ -112,20 +154,44 @@ function QuickDebounceInput (props) {
   </ListItem>
 }
 
-function ClientCards ({ orders, pending, totalPaid, totalDebt }) {
+function ClientCards ({ orders, pending, totalPaid, totalDebt, onClick }) {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={3}>
-        <AppWidgetSummary title="Notas" total={orders} color="success" icon={'material-symbols:list-alt'} />
+        <AppWidgetSummary title="Notas" total={orders} color="success" icon={'material-symbols:list-alt'}
+          onClick={() => {
+            onClick({
+              orders
+            })
+          }}
+        />
       </Grid>
       <Grid item xs={12} md={3}>
-        <AppWidgetSummary title="Pendientes" total={pending} color="warning" icon={'material-symbols:list-alt'} />
+        <AppWidgetSummary title="Pendientes" total={pending} color="warning" icon={'material-symbols:list-alt'}
+          onClick={() => {
+            onClick({
+              pending
+            })
+          }}
+        />
       </Grid>
       <Grid item xs={12} md={3}>
-        <AppWidgetSummary title="Total Pagado" total={<Money number={totalPaid} />} icon={'material-symbols:attach-money'} />
+        <AppWidgetSummary title="Total Pagado" total={<Money number={totalPaid} />} icon={'material-symbols:attach-money'}
+          onClick={() => {
+            onClick({
+              totalPaid
+            })
+          }}
+        />
       </Grid>
       <Grid item xs={12} md={3}>
-        <AppWidgetSummary title="Deuda Total" total={<Money number={totalDebt} />} color="info" icon={'material-symbols:money'} />
+        <AppWidgetSummary title="Deuda Total" total={<Money number={totalDebt} />} color="info" icon={'material-symbols:money'}
+          onClick={() => {
+            onClick({
+              totalDebt
+            })
+          }}
+        />
       </Grid>
     </Grid>
   )
@@ -180,3 +246,5 @@ function ClientPayments ({ payments }) {
   </Card>
   </>)
 }
+
+

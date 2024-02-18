@@ -1,16 +1,23 @@
 
-
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
 import { OrderTransaction } from '../utils/transactions/orderTransaction';
 import { usePopUp } from '../context/PopUpContext';
+import { useCState } from './useHooks';
 
 export function useOrders (queryString = {}) {
   const { popUpAlert } = usePopUp();
+  const [paymentDetails, setPaymentDetails] = useCState({
+    printable: false,
+    payment: 0,
+    date: new Date(),
+    currentDebt: 0,
+  });
   const query = useQuery('orders', () => new OrderTransaction().getOrders(queryString));
   const mutation = useMutation((order) => new OrderTransaction().createOrder(order));
   const update = useMutation((payment) => new OrderTransaction().pay(payment), {
-    onSuccess: () => {
+    onSuccess: (resp) => {
+      setPaymentDetails({ printable: true, ...resp.data });
       query.refetch();
     },
     onError: () => {
@@ -36,6 +43,8 @@ export function useOrders (queryString = {}) {
     orders: query.data,
     pay: update.mutate,
     checkIn: checkIn.mutate,
+    paymentDetails,
+    setPaymentDetails,
   }
 }
 

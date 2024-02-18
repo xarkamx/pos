@@ -11,7 +11,7 @@ export function PaymentModal ({ amount, max = Infinity, clientId, onPay, open, o
   const [paymentMethod, setPaymentMethod] = useState(1)
   const [currentClientId, setClientId] = useState(clientId)
   const clear = () => {
-    setPayment(amount)
+    setPayment(amount ?? 0)
     setPaymentMethod(1)
     setClientId(clientId)
   }
@@ -24,12 +24,16 @@ export function PaymentModal ({ amount, max = Infinity, clientId, onPay, open, o
     open={open}
     TransitionComponent={Transition}
     keepMounted
-    onClose={onClose}
+    onClose={() => {
+      onClose()
+      clear()
+    }}
     aria-describedby="alert-dialog-slide-description"
   >
     <form onSubmit={(ev) => {
       ev.preventDefault()
       onPay(currentClientId, payment, paymentMethod)
+      clear()
     }}
       style={{ minWidth: 300 }}
     >

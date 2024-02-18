@@ -44,4 +44,12 @@ export class ClientsTransaction extends TransactionService {
   async getClientPayments (id) {
     return this.get(`/clients/${id}/resume/payments`);
   }
+
+  async getClientDebts (id) {
+    return this.get(`/clients/${id}/debt`);
+  }
+
+  async payClientDebt (id, payment, method) {
+    return this.post(`/clients/${id}/debt`, { amount: payment, paymentMethod: method });
+  }
 }

@@ -15,6 +15,7 @@ import { DangerModal } from '../components/CustomModal/ConfirmModal';
 import { paymentType } from '../utils/formats';
 import { DownloadBillButton, SendEmail } from '../sections/@dashboard/billing/downloadBillButton';
 import { ConditionalWall } from '../components/FilterWall/ConditionalWall';
+import { AutoPrintablePaymentTicket } from '../sections/@dashboard/orders/paymentTicket';
 
 
 const status = {
@@ -25,7 +26,7 @@ const status = {
 }
 export function OrdersPage () {
   const { filter } = useQueryString();
-  const { orders, pay, checkIn, isLoading } = useOrders();
+  const { orders, pay, checkIn, isLoading, paymentDetails, setPaymentDetails } = useOrders();
   const [search, setSearch] = useCState({ from: getFirstDayOfMonth(new Date()), to: getEndOfDay(new Date()) });
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [order, setOrder] = useCState({});
@@ -131,6 +132,7 @@ export function OrdersPage () {
       max={order.total - order.partialPayment}
       onPay={(clientId, amount, paymentMethod) => {
         pay({ orderId: order.id, clientId, payment: amount, paymentMethod })
+        setPaymentDetails({ id: clientId });
         setOpenPaymentModal(false);
       }}
       onClose={() => {
@@ -139,6 +141,10 @@ export function OrdersPage () {
       open={
         openPaymentModal
       } />
+    <AutoPrintablePaymentTicket clientId={paymentDetails.id} amount={paymentDetails.payment} currentDebt={paymentDetails.total} printable={paymentDetails.printable} onAfterPrint={() => {
+      setPaymentDetails({ printable: false });
+
+    }} />
   </Card>
 }
 

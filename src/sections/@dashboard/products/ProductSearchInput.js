@@ -33,6 +33,24 @@ export function ProductSearchInput ({ onSubmit }) {
       padding: '10px 0',
     }}>
       <Grid container spacing={3}>
+
+        <Grid item sm={2} xs={12}>
+          <TextField label="Cantidad" fullWidth type='number'
+            InputProps={{
+              inputProps: {
+                min: 1
+              }
+            }}
+            onChange={(ev) => {
+              const qty = parseFloat(ev.target.value)
+              setProduct({
+                ...product,
+                quantity: qty
+              })
+            }}
+            value={product.quantity}
+          />
+        </Grid>
         <Grid item sm={8} xs={12}>
           <Autocomplete
             value={product.name || ''}
@@ -52,23 +70,6 @@ export function ProductSearchInput ({ onSubmit }) {
             renderInput={(params) => <TextField {...params} autoFocus inputRef={input => {
               textInput = input;
             }} label="Productos" />} />
-        </Grid>
-        <Grid item sm={2} xs={12}>
-          <TextField label="Cantidad" fullWidth type='number'
-            InputProps={{
-              inputProps: {
-                min: 1
-              }
-            }}
-            onChange={(ev) => {
-              const qty = parseFloat(ev.target.value)
-              setProduct({
-                ...product,
-                quantity: qty
-              })
-            }}
-            value={product.quantity}
-          />
         </Grid>
         <Grid item sm={2} xs={12} style={
           {

@@ -28,7 +28,7 @@ function TicketProduct ({ name, qty, amount }) {
   );
 }
 
-function ClientTicket ({ clientName, clientRfc, orders, latestPurchase, totalDebt }) {
+export function ClientTicket ({ clientName, clientRfc, orders, latestPurchase }) {
   return (
     <div style={{
       fontSize: '0.5rem',
@@ -41,12 +41,11 @@ function ClientTicket ({ clientName, clientRfc, orders, latestPurchase, totalDeb
       }}>
         <li>Compras realizadas: {orders}</li>
         <li>Ultima compra: {localeDate(latestPurchase)}</li>
-        <li>Adeudo a la fecha: <Money number={totalDebt} /></li>
       </ul>
       <h5>
         Para cualquier duda o aclaración, favor de comunicarse al 3336383996
       </h5>
-      No pierdas tu ticket, es tu comprobante de compra
+      No pierdas tu ticket, es tu comprobante.
     </div>
   );
 }
