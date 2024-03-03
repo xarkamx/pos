@@ -29,6 +29,11 @@ export function useBillingList () {
     return service.getAllBills(searchParams)
   })
 
+  const metadata = useQuery(['metadata', searchParams], async () => {
+    const service = new OrderTransaction()
+    return service.getMetadata()
+  })
+
   const cancel = useMutation((billId) => new OrderTransaction().cancelBilling(billId), {
     onSuccess: () => {
       billing.refetch()
@@ -37,6 +42,7 @@ export function useBillingList () {
   return {
     billing: billing.data,
     search: setSearchParams,
+    metadata: metadata.data,
     cancel: cancel.mutate,
   }
 }

@@ -30,7 +30,7 @@ import { useAuth } from './hooks/useAuth';
 import { isObjectEmpty } from './core/helpers';
 import { UsersPage } from './pages/users';
 import { BillingPage } from './pages/clients/billing';
-import { BillingList } from './pages/billing';
+import { BillingList, ReceivedBillingList } from './pages/billing/emited';
 import { SingleProductPage } from './pages/products/SingleProduct';
 import { MyAccount } from './pages/users/me';
 import { PayrollView } from './pages/payroll/payrollPage';
@@ -110,6 +110,13 @@ export const routes = [
         path: 'facturas',
         title: 'Facturas',
         element: <BillingList />,
+        roles: ['admin', 'cashier'],
+        icon: <ReceiptLongIcon />,
+      },
+      {
+        path: 'facturas/recibidas',
+        title: 'Facturas Recibidas',
+        element: <ReceivedBillingList />,
         roles: ['admin', 'cashier'],
         icon: <ReceiptLongIcon />,
       },

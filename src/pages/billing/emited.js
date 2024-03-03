@@ -15,7 +15,8 @@ import { AddComplementButton } from '../../sections/@dashboard/billing/complemen
 const statusText = {
   "valid": "Valido",
   "invalid": "Invalido",
-  "canceled": "Cancelado"
+  "canceled": "Cancelado",
+  "pending": "Pendiente"
 }
 
 const methodText = {
@@ -68,6 +69,30 @@ export function BillingList () {
         ]}
       />
     </>
+  )
+}
+
+export function ReceivedBillingList () {
+
+  const { metadata } = useBillingList()
+  return (
+    <CustomTable
+      titles={['Folio', 'Fecha', 'Emisor', 'RFC', 'Total', 'Tipo', 'Estado', 'Acciones']}
+      content={metadata}
+      format={(item) => [
+        item.uuid,
+        item.sat_certification_date,
+        item.issuer_name,
+        item.issuer_rfc,
+        <Money number={item.amount} key={item.uuid} />,
+        item.voucher_effect,
+        <Chip
+          key={`chip-${item.uuid}-status`}
+          label={statusText[item.payment_status]}
+        />
+
+      ]}
+    />
   )
 }
 

@@ -72,4 +72,8 @@ export class OrderTransaction extends TransactionService {
   async addComplement (billingId, complement) {
     return this.post(`/billing/complement`, { billId: billingId, ...complement });
   }
+
+  async getMetadata () {
+    return this.get(`/billing/metadata`);
+  }
 }

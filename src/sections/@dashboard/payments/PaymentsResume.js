@@ -62,7 +62,7 @@ function resumePayments (payments) {
   }, init);
 }
 
-function ResumeCard ({
+export function ResumeCard ({
   title = '',
   amount = 0,
   color = 'primary.main',
