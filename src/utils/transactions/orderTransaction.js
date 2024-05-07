@@ -76,4 +76,8 @@ export class OrderTransaction extends TransactionService {
   async getMetadata () {
     return this.get(`/billing/metadata`);
   }
+
+  async getRequestedOrders () {
+    return this.get(`/requested`);
+  }
 }

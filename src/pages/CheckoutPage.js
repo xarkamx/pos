@@ -3,10 +3,8 @@ import { Button, Grid, Typography } from '@mui/material';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import ReactToPrint, { useReactToPrint } from 'react-to-print';
 import { Container } from '@mui/system';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useOrders } from '../hooks/useOrders';
-import { useCState } from '../hooks/useHooks';
 import { ItemsList } from '../sections/@dashboard/checkout/itemsList';
 import { ProductSearchInput } from '../sections/@dashboard/products/ProductSearchInput';
 import { PaymentForm } from '../sections/@dashboard/checkout/paymentForm';
@@ -15,6 +13,8 @@ import { ClientsSearchInput } from '../sections/@dashboard/clients/SelectClient'
 import { Ticket } from '../sections/@dashboard/orders/Ticket';
 import { ConditionalWall } from '../components/FilterWall/ConditionalWall';
 import { CheckoutOngoingTicket } from '../sections/@dashboard/orders/onGoingTicket';
+import { useCheckout } from '../hooks/useCheckout';
+import { useHistory, useQueryString } from '../hooks/useHooks';
 
 
 
@@ -41,9 +41,39 @@ export default function CheckoutPage () {
     }
   })
   const [clientId, setClient] = useState(0);
+  const param = useQueryString();
   const [payment, setPayment] = useState(0);
   const [open, setOpen] = useState(false);
+  const [localId, setLocalId] = useState(param.localId ?? 0);
   const submitable = products.length > 0 && !isLoading;
+  useEffect(() => {
+    if (!localId) {
+      setLocalId(`checkout-${new Date().getTime()}`)
+    }
+    const local = localStorage.getItem(localId);
+    if (local) {
+      const { products, discount, clientId, payment } = JSON.parse(local);
+      setClient(clientId);
+      setPayment(payment);
+      setDiscount(discount);
+      products.forEach((product) => {
+        add(product)
+      })
+    }
+  }, []);
+  useEffect(() => {
+    if (products.length > 0) {
+      localStorage.setItem(localId, JSON.stringify({
+        products,
+        total,
+        subtotal,
+        discount,
+        clientId,
+        payment
+      }))
+    }
+  }, [products, total, subtotal, discount, clientId, payment, localId]);
+  const history = useHistory();
   return (
     <>
       <Helmet>
@@ -51,10 +81,18 @@ export default function CheckoutPage () {
       </Helmet>
 
       <Container maxWidth="xl">
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Caja
-        </Typography>
+
         <Grid container spacing={3}>
+          <Grid item xs={8}>
+            <Typography variant="h4" sx={{ mb: 5 }}>
+              Caja
+            </Typography>
+          </Grid>
+          <Grid item xs={4}>
+            <Button onClick={() => {
+              history(`/dashboard/caja/historial`)
+            }} variant="contained" >Historial</Button>
+          </Grid>
           <Grid item xs={12}>
             <ProductSearchInput onSubmit={add} />
           </Grid>
@@ -104,6 +142,7 @@ export default function CheckoutPage () {
       <StatusModal open={open && orderId}
         onClose={() => {
           print();
+          localStorage.removeItem(localId);
           setOpen(false);
         }}
         message={error ? "Error en registro" : "Completada"} status={error ? "error" : "success"} />
@@ -112,95 +151,7 @@ export default function CheckoutPage () {
 };
 
 
-function useCheckout () {
-  const [products, setProducts] = useCState({ items: [] });
-  const [discount, setDiscount] = useState(0);
-  const { createOrder, isLoading, response, error } = useOrders();
-  const subtotal = products.items.reduce((acc, cur) => acc + cur.amount, 0);
-  const fullDiscount = setDiscountToAbsoluteValue(discount, subtotal)
-  const total = subtotal - fullDiscount;
 
-  const clear = () => {
-    setProducts({ items: [] });
-    setDiscount(0);
-  };
-  // a class for this return would be better
-  return {
-    products: products.items,
-    add: (values) => {
-      addFn({ values, setProducts, products })
-    },
-    update: (id, quantity) => updateFn(id, quantity, setProducts, products),
-    onDelete: (id) => (
-      onDeleteFn(id, setProducts, products)
-    ),
-    total,
-    subtotal,
-    setDiscount,
-    isLoading,
-    response,
-    discount: fullDiscount,
-    orderId: response?.data.orderId,
-    error,
-    send: (clientId, payment, paymentMethod) => {
-      sendFn({ clientId, payment, discount: fullDiscount, paymentMethod, total, products, createOrder, clear })
-    },
-    clear
-  }
-}
-
-function setDiscountToAbsoluteValue (discount, subtotal) {
-  discount = discount || 0;
-  let percentage = 0;
-  if (Number.isNaN(-discount)) {
-    discount = discount.replace(/%/, '')
-    percentage = (discount / 100)
-    discount = subtotal * percentage;
-  }
-  return discount;
-}
-function updateFn (id, quantity, callback, products) {
-
-  const prod = products.items
-  const index = prod.findIndex((product) => product.id === id);
-  if (index !== -1) {
-    prod[index].quantity = quantity;
-    prod[index].amount = prod[index].price * quantity;
-  }
-  if (quantity <= 0 || Number.isNaN(-quantity)) return onDeleteFn(id);
-  callback({ items: prod });
-  return prod;
-}
-function onDeleteFn (id, callback, products) {
-  const prod = products.items
-  const index = prod.findIndex((product) => product.id === id);
-  if (index !== -1) {
-    prod.splice(index, 1);
-  }
-  callback({ items: prod });
-}
-function addFn ({ values, setProducts, products }) {
-  const prod = products.items
-  const index = prod.findIndex((product) => product.id === values.id);
-  if (index !== -1) {
-    prod[index].quantity += values.quantity;
-    prod[index].amount += values.price * values.quantity;
-  }
-  else {
-    prod.push(values);
-  }
-  setProducts({ items: prod });
-}
-function sendFn ({ clientId, payment,  paymentMethod, discount, products, createOrder }) {
-  createOrder({
-    clientId,
-    discount,
-    partialPayment: payment,
-    paymentType: paymentMethod,
-    items: products.items.map(({ id, quantity }) => ({ productId: id, quantity }))
-  })
-
-}
 
 function PrintOnGoingTicket ({ products }) {
 

@@ -37,9 +37,9 @@ export default function PaymentTable ({ payments, onDeletePayment }) {
   }
 
   if (paymentMethod) {
-    pays = pays.filter((item) => {
-      return parseInt(item.paymentMethod, 10) === parseInt(paymentMethod.value, 10);
-    });
+    pays = pays.filter((item) => (
+      parseInt(item.paymentMethod, 10) === parseInt(paymentMethod.value, 10)
+    ));
   }
 
   return (

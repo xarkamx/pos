@@ -1,4 +1,6 @@
-import { Chip } from '@mui/material';
+
+import EditIcon from '@mui/icons-material/Edit';
+import { Chip, IconButton } from '@mui/material';
 import { Money } from '../../../components/Formats/FormatNumbers';
 import { between, localeDate } from '../../../core/helpers';
 import { CustomTable } from '../../../components/tables/Table';
@@ -62,5 +64,29 @@ export function OrdersTable ({ orders, onStatusClick }) {
         ]}
       />
     </>
+  )
+}
+
+export function RequestedOrderTable ({ orders, onEdit, onDelete }) {
+  const navigate = useHistory();
+  return (
+    <CustomTable
+      titles={['ID', 'cliente', 'Fecha', 'Total', 'Pago', 'Acciones']}
+      content={orders}
+      onClick={onEdit}
+      onDelete={onDelete}
+      format={(item) => [
+        item.id,
+        item.clientName ?? 'Publico General',
+        localeDate(item.createdAt),
+        <Money key={`item3-${item.id}`} number={item.total} />,
+        <Money key={`item1-${item.id}`} number={item.partialPayment} />,
+        <IconButton key={`edit-${item.id}`} onClick={() => {
+          navigate(`/dashboard/caja?order=${item.id}`)
+        }} >
+          <EditIcon />
+        </IconButton>
+      ]}
+    />
   )
 }

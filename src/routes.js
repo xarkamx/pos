@@ -36,6 +36,8 @@ import { MyAccount } from './pages/users/me';
 import { PayrollView } from './pages/payroll/payrollPage';
 import { ProcessPage } from './pages/products/ProductProcess';
 import { CustomBillForm } from './pages/billing/customBillForm';
+import { PendingOrders } from './pages/PendingOrders';
+import { CheckoutHistory } from './pages/checkout/CheckoutHistory';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -84,6 +86,14 @@ export const routes = [
         path: 'caja', element: <CheckoutPage />, roles: ['admin', 'cashier'],
         icon: <PointOfSaleIcon />,
         title: 'Caja',
+      },
+      {
+        path: 'pedidos', element: <PendingOrders />, roles: ['admin', 'cashier'], title: 'Pedidos',
+        icon: <ReceiptIcon />,
+      },
+
+      {
+        path: 'caja/historial', element: <CheckoutHistory />, roles: ['admin', 'cashier']
       },
       {
         path: 'inventario',

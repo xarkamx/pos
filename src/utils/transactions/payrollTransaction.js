@@ -8,7 +8,6 @@ export class PayrollTransaction extends TransactionService {
   }
 
   async create (payroll) {
-    console.log(payroll);
     return this.post('/payroll', payroll);
   }
 
