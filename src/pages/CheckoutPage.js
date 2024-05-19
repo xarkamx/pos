@@ -14,7 +14,7 @@ import { Ticket } from '../sections/@dashboard/orders/Ticket';
 import { ConditionalWall } from '../components/FilterWall/ConditionalWall';
 import { CheckoutOngoingTicket } from '../sections/@dashboard/orders/onGoingTicket';
 import { useCheckout } from '../hooks/useCheckout';
-import { useHistory, useQueryString } from '../hooks/useHooks';
+import { useHistory, useMountEffect, useQueryString } from '../hooks/useHooks';
 
 
 
@@ -40,27 +40,27 @@ export default function CheckoutPage () {
       clear()
     }
   })
-  const [clientId, setClient] = useState(0);
+  const [clientId, setClientId] = useState(0);
   const param = useQueryString();
   const [payment, setPayment] = useState(0);
   const [open, setOpen] = useState(false);
   const [localId, setLocalId] = useState(param.localId ?? 0);
   const submitable = products.length > 0 && !isLoading;
-  useEffect(() => {
+  useMountEffect(() => {
     if (!localId) {
       setLocalId(`checkout-${new Date().getTime()}`)
     }
     const local = localStorage.getItem(localId);
     if (local) {
       const { products, discount, clientId, payment } = JSON.parse(local);
-      setClient(clientId);
+      setClientId(clientId);
       setPayment(payment);
       setDiscount(discount);
       products.forEach((product) => {
         add(product)
       })
     }
-  }, []);
+  });
   useEffect(() => {
     if (products.length > 0) {
       localStorage.setItem(localId, JSON.stringify({
@@ -105,7 +105,7 @@ export default function CheckoutPage () {
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <ClientsSearchInput onSubmit={(client) => {
-              setClient(client.id)
+              setClientId(client.id)
             }} />
             <PaymentForm
               subtotal={subtotal}

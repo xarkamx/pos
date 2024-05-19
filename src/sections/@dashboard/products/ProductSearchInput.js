@@ -54,10 +54,10 @@ export function ProductSearchInput ({ onSubmit }) {
         <Grid item sm={8} xs={12}>
           <Autocomplete
             value={product.name || ''}
+            isOptionEqualToValue={(option, value) => option.name === value.name}
             disablePortal
             id="combo-box-search-product"
             options={sortOpt}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
             renderOption={RenderedListItem}
             onChange={(ev, nv) => {
               if (!nv?.id) return;

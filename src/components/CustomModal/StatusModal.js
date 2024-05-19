@@ -4,7 +4,7 @@ import Iconify from '../iconify/Iconify';
 
 export function StatusModal ({ status, message, open, onClose, onAccept }) {
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={Boolean(open)} onClose={onClose}>
       <Box sx={{
         position: 'absolute',
         top: '50%',
@@ -30,7 +30,7 @@ export function StatusModal ({ status, message, open, onClose, onAccept }) {
           </Typography>
           <Button variant="contained" sx={{ mt: 2 }} fullWidth onClick={(e) => {
             onClose(e);
-            onAccept(e);
+            onAccept?.(e);
           }}>
             Aceptar
           </Button>

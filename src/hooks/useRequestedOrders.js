@@ -26,7 +26,7 @@ export function useCheckoutOrder () {
   const addOrder = async (order) => {
     setIsLoading(true);
     const orderTransaction = new OrderTransaction();
-    const orderId = await orderTransaction.createOrder(order);
+    const { orderId } = (await orderTransaction.createOrder(order)).data;
 
     setIsLoading(false);
     setOrderId(orderId);

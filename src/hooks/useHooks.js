@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer, useRef } from "react";
 
 export function useCState (initState = {}) {
   return useReducer((prev, next) => ({ ...prev, ...next }), initState);
@@ -33,4 +33,17 @@ export function redirect (path, query = {}) {
 export function useQueryString () {
   const searchParams = new URLSearchParams(window.location.search);
   return Object.fromEntries(searchParams.entries());
+}
+
+
+// Hook made with the help of copilot use with caution
+export function useMountEffect (callback) {
+  const firstRenderRef = useRef(true);
+
+  useEffect(() => {
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      callback();
+    }
+  }, [callback]);
 }
