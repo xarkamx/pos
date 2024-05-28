@@ -4,17 +4,19 @@ import { useCState } from '../../../hooks/useHooks';
 import { TaxSystem } from './TaxSystemInput';
 
 export function QuickClientForm ({ onSubmit }) {
-  const [clientData, setClientData] = useCState({
+  const defaultContent = {
     rfc: 'XAXX010101000',
     name: '',
     email: '',
     phones: '',
     postal_code: '',
     tax_system: '612'
-  })
+  }
+  const [clientData, setClientData] = useCState(defaultContent)
   return (
-    <QuickFormContainer title={'Registro de clientes'} onSubmit={() => {
+    <QuickFormContainer title={'Registro de clientes'} onSubmit={(ev) => {
       onSubmit(clientData)
+      ev.target.reset()
     }}>
       <QuickFormInput label='RFC'
         fullWidth

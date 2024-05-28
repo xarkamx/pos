@@ -15,13 +15,13 @@ export function ClientsTable ({ clients = [], onUpdateClient }) {
     phones: Array.isArray(client.phones) ? client.phones : [client.phones]
   })).filter((client) => {
     const { id, name, rfc, email, phones } = client;
-    const query = search.toLowerCase();
+    const query = search?.toLowerCase();
     return (
-      id.toString().includes(query) ||
-      name.toLowerCase().includes(query) ||
-      rfc.toLowerCase().includes(query) ||
-      email.toLowerCase().includes(query) ||
-      phones.join(',').toLowerCase().includes(query)
+      id?.toString().includes(query) ||
+      name?.toLowerCase().includes(query) ||
+      rfc?.toLowerCase().includes(query) ||
+      email?.toLowerCase().includes(query) ||
+      phones?.join(',')?.toLowerCase().includes(query)
     );
   })
   return (

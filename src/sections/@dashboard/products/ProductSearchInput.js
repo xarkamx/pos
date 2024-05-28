@@ -36,6 +36,12 @@ export function ProductSearchInput ({ onSubmit }) {
 
         <Grid item sm={2} xs={12}>
           <TextField label="Cantidad" fullWidth type='number'
+            onFocus={(ev) => {
+              ev.target.select();
+            }}
+            autoFocus inputRef={input => {
+              textInput = input;
+            }}
             InputProps={{
               inputProps: {
                 min: 1
@@ -67,9 +73,7 @@ export function ProductSearchInput ({ onSubmit }) {
                 price: nv?.price,
               })
             }}
-            renderInput={(params) => <TextField {...params} autoFocus inputRef={input => {
-              textInput = input;
-            }} label="Productos" />} />
+            renderInput={(params) => <TextField {...params} label="Productos" />} />
         </Grid>
         <Grid item sm={2} xs={12} style={
           {

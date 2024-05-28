@@ -1,21 +1,21 @@
-import { Grid } from '@mui/material';
 import { useClients } from '../hooks/useClients';
 import { ClientsTable } from '../sections/@dashboard/clients/ClientsTable';
 import { QuickClientForm } from '../sections/@dashboard/clients/QuickClientAddForm';
+import { SmartGrid } from '../components/Containers/SmartGrid';
 
 
 export default function ClientsPage () {
   const { clients, addClient, updateClient } = useClients();
   return (
-    <Grid container >
-      <Grid item xs={12} md={4}>
+    <SmartGrid container >
+      <SmartGrid title='Nuevo Cliente' item xs={12} md={4}>
         <QuickClientForm onSubmit={addClient} />
-      </Grid>
-      <Grid item xs={12} md={8}>
+      </SmartGrid>
+      <SmartGrid title='Clientes' item xs={12} md={8}>
         <ClientsTable clients={clients} onUpdateClient={updateClient} />
-      </Grid>
+      </SmartGrid>
 
-    </Grid>
+    </SmartGrid>
   );
 }
 

@@ -8,11 +8,12 @@ export function InventoryTable ({ items = [] }) {
   const [search, setSearch] = useState('');
   const months = monthsSince(new Date('2023-03-01'));
   const filtered = items.filter((item) => {
-    const { id, price, quantity } = item;
+    const { id, price, quantity, name } = item;
     const query = search.toLowerCase();
     if (!id) return false;
     return (
       id?.toString().includes(query) ||
+      name?.toLowerCase().includes(query) ||
       price?.toString().toLowerCase().includes(query) ||
       quantity?.toString().includes(query)
     );

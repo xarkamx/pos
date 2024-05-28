@@ -11,6 +11,7 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import EngineeringIcon from '@mui/icons-material/Engineering';
+import PercentIcon from '@mui/icons-material/Percent';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
@@ -38,6 +39,8 @@ import { ProcessPage } from './pages/products/ProductProcess';
 import { CustomBillForm } from './pages/billing/customBillForm';
 import { PendingOrders } from './pages/PendingOrders';
 import { CheckoutHistory } from './pages/checkout/CheckoutHistory';
+import { MiddlemanPage } from './pages/middleman/middlemanPage';
+import { MiddlemanOverview } from './pages/middleman/SingleMiddleman';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -88,7 +91,7 @@ export const routes = [
         title: 'Caja',
       },
       {
-        path: 'pedidos', element: <PendingOrders />, roles: ['admin', 'cashier'], title: 'Pedidos',
+        path: 'pedidos', element: <PendingOrders />, roles: ['admin'], title: 'Pedidos',
         icon: <ReceiptIcon />,
       },
 
@@ -101,6 +104,19 @@ export const routes = [
         roles: ['admin', 'storer'],
         icon: <InventoryIcon />,
         title: 'Inventario',
+      },
+
+      {
+        path: 'comisionistas',
+        title: 'Comisionistas',
+        element: <MiddlemanPage />,
+        icon: <PercentIcon />,
+        roles: ['admin'],
+      },
+      {
+        path: 'comisionistas/me',
+        element: <MiddlemanOverview />,
+        roles: ['admin', 'middleman'],
       },
       {
         path: 'Nomina',
@@ -141,7 +157,7 @@ export const routes = [
         path: 'me',
         title: 'Mi perfil',
         element: <MyAccount />,
-        roles: ['admin', 'cashier', 'storer'],
+        roles: ['admin', 'cashier', 'storer', 'middleman'],
         icon: <AccountBoxIcon />,
       }
     ],
@@ -207,6 +223,7 @@ export default function Router () {
       admin: '/dashboard/app',
       storer: '/dashboard/inventario',
       master: '/dashboard/app',
+      middleman: '/dashboard/comisionistas/me',
     }
     const mainRole = auth.access.roles[0];
     defaultRoute.element = <Navigate to={mainPages[mainRole]} />;
