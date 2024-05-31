@@ -20,8 +20,10 @@ export function useProducts () {
     const { id, ...rest } = product;
     new ProductsTransaction().updateProduct(id, rest);
   });
+  const productsList = query.data ?? []
   return {
-    products: query.data?.map(item => ({ label: item.name, id: item.id, price: item.unitPrice, quantity: item.inStock })),
+    products: productsList.map(item => ({ label: item.name, id: item.id, price: item.unitPrice, quantity: item.inStock })),
+    data: productsList,
     add: add.mutate,
     del: del.mutate,
     update: update.mutate,

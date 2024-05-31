@@ -3,16 +3,16 @@ import { useState } from 'react';
 import { TextField } from '@mui/material';
 import { CustomTable } from '../../components/tables/Table';
 import { Money } from '../../components/Formats/FormatNumbers';
-import { usePublicInventory } from '../Inventory/hooks/useInventory';
+import { useProducts } from '../../hooks/useProducts';
 
 
 export default function MiddlemanProducts () {
 
-  const { items } = usePublicInventory();
+  const { data } = useProducts();
   return (
     <>
       <h1>Productos</h1>
-      <MiddlemanProductsList products={items} />
+      <MiddlemanProductsList products={data} />
     </>
   );
 }
