@@ -41,6 +41,7 @@ import { PendingOrders } from './pages/PendingOrders';
 import { CheckoutHistory } from './pages/checkout/CheckoutHistory';
 import { MiddlemanPage } from './pages/middleman/middlemanPage';
 import { MiddlemanOverview } from './pages/middleman/SingleMiddleman';
+import MiddlemanProducts from './pages/middleman/MiddlemanProducts';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -116,7 +117,16 @@ export const routes = [
       {
         path: 'comisionistas/me',
         element: <MiddlemanOverview />,
-        roles: ['admin', 'middleman'],
+        roles: ['middleman'],
+        title: 'Comisiones',
+        icon: <PercentIcon />,
+      },
+      {
+        path: 'comisionistas/me/productos',
+        element: <MiddlemanProducts />,
+        roles: ['middleman'],
+        title: 'Productos',
+        icon: <InventoryIcon />,
       },
       {
         path: 'Nomina',

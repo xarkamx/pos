@@ -23,3 +23,9 @@ export function useInventory () {
   });
   return { items: query.data, add: add.mutate, update: updateMutation.mutate }
 }
+
+export function usePublicInventory () {
+  const query = useQuery('publicInventory', () => new InventoryTransaction().getItem());
+  return { items: query.data }
+
+};
