@@ -29,7 +29,7 @@ function SmartTab ({ children = [], ...props }) {
     children = [children]
   }
   console.log(children)
-  const customChilds = children?.filter((child) => child.type.name === 'SmartGrid' && child.props.item)
+  const customChilds = children?.filter((child) => child.props.item)
   if (props.container) return <TabContext value={tab}>
     {customChilds.map((child, index) => <TabPanel key={index} value={`${index}`} >
       {child.props.children}
