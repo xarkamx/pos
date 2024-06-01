@@ -23,11 +23,11 @@ export function SmartGrid ({ children, ...props }) {
   )
 }
 
-function SmartTab ({ children, ...props }) {
-  const [tab, setTab] = React.useState(0)
+function SmartTab ({ children = [], ...props }) {
+  const [tab, setTab] = React.useState('0')
   const customChilds = children?.filter((child) => child.type.name === 'SmartGrid' && child.props.item)
   if (props.container) return <TabContext value={tab}>
-    {customChilds.map((child, index) => <TabPanel key={index} value={index} >
+    {customChilds.map((child, index) => <TabPanel key={index} value={`${index}`} >
       {child.props.children}
     </TabPanel>)}
     <AppBar position="static" color="default"
@@ -47,9 +47,9 @@ function SmartTab ({ children, ...props }) {
         {customChilds.map((child, index) => <Tab
           icon={child.props.icon ?? <LabelImportantIcon />}
           key={`tab-${index}`}
-          value={index} label={child.props.title ?? `Tab-${index + 1}`}
+          value={`${index}`} label={child.props.title ?? `Tab-${index + 1}`}
           onClick={() => {
-            setTab(index)
+            setTab(`${index}`)
           }}
         />)}
       </TabList>
