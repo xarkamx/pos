@@ -25,6 +25,9 @@ export function SmartGrid ({ children, ...props }) {
 
 function SmartTab ({ children = [], ...props }) {
   const [tab, setTab] = React.useState('0')
+  if (!Array.isArray(children)) {
+    children = [children]
+  }
   const customChilds = children?.filter((child) => child.type.name === 'SmartGrid' && child.props.item)
   if (props.container) return <TabContext value={tab}>
     {customChilds.map((child, index) => <TabPanel key={index} value={`${index}`} >
