@@ -28,7 +28,6 @@ function SmartTab ({ children = [], ...props }) {
   if (!Array.isArray(children)) {
     children = [children]
   }
-  console.log(children)
   const customChilds = children?.filter((child) => child.props.item)
   if (props.container) return <TabContext value={tab}>
     {customChilds.map((child, index) => <TabPanel key={index} value={`${index}`} >

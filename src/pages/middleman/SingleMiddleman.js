@@ -18,7 +18,7 @@ export function MiddlemanOverview () {
   const paid = calcPayments(payments)
   const pending = details.amount - paid
   return <SmartGrid container spacing={2}>
-    <SmartGrid item xs={12}>
+    <SmartGrid title='informacion' item xs={12}>
       <MiddlemanResume
         numberOfClients={details.clients}
         earnings={details.amount}
@@ -34,12 +34,12 @@ export function MiddlemanOverview () {
 
       }} />
     </SmartGrid>
-    <SmartGrid item sm={12} md={4} sx={{
+    <SmartGrid title='Registrar Cliente' item sm={12} md={4} sx={{
       margin: 'auto'
     }}>
       <QuickClientForm onSubmit={addClient} />
     </SmartGrid>
-    <SmartGrid item sm={12} md={8}>
+    <SmartGrid item title='Clientes' sm={12} md={8}>
       <MiddlemanOrdersTable clients={orders} />
     </SmartGrid>
   </SmartGrid>

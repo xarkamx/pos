@@ -11,7 +11,7 @@ import {
 import { useStats } from '../hooks/useStats';
 import { Money } from '../components/Formats/FormatNumbers';
 import { usePayments } from '../hooks/usePayments';
-import { PaymentChart } from '../sections/@dashboard/charts/paymentCharts';
+import { PaymentChart, StackChart } from '../sections/@dashboard/charts/paymentCharts';
 import { ConditionalWall } from '../components/FilterWall/ConditionalWall';
 import { SiapaCards } from '../sections/@dashboard/siapa/SiapaCards';
 
@@ -24,7 +24,7 @@ export default function DashboardAppPage () {
   return (
     <>
       <Helmet>
-        <title> Dashboard | Minimal UI </title>
+        <title> Dashboard | HG </title>
       </Helmet>
 
       <Container maxWidth="xl">
@@ -71,7 +71,7 @@ export default function DashboardAppPage () {
             </Grid>
           </ConditionalWall>
           <Grid item xs={12} md={6} lg={8}>
-            <PaymentChart payments={payments} />
+            <StackChart payments={payments} />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <ConditionalWall condition={!debtors.isLoading} >

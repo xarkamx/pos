@@ -4,7 +4,7 @@ import { usePayments } from '../hooks/usePayments';
 
 import PaymentTable from '../sections/@dashboard/payments/PaymentsTable';
 import { QuickPaymentForm } from '../sections/@dashboard/payments/QuickPaymentForm';
-import { PaymentChart } from '../sections/@dashboard/charts/paymentCharts';
+import { StackChart } from '../sections/@dashboard/charts/paymentCharts';
 import { SmartGrid } from '../components/Containers/SmartGrid';
 
 export default function PaymentPages () {
@@ -12,7 +12,7 @@ export default function PaymentPages () {
   return (
     <SmartGrid container spacing={2}>
       <SmartGrid title='Grafica' icon={<BarChartIcon />} item xs={12}>
-        <PaymentChart payments={payments} />
+        <StackChart payments={payments} height='600' />
       </SmartGrid>
       <SmartGrid item title='Registro de pago' icon={<AddIcon />} xs={12} md={4}>
         <QuickPaymentForm onSubmit={addPayment} />
