@@ -80,4 +80,8 @@ export class OrderTransaction extends TransactionService {
   async getRequestedOrders () {
     return this.get(`/requested`);
   }
+
+  async requestOrder ({ items, clientId }) {
+    return this.post(`/orders/request`, { items, clientId });
+  }
 }

@@ -37,11 +37,11 @@ import { MyAccount } from './pages/users/me';
 import { PayrollView } from './pages/payroll/payrollPage';
 import { ProcessPage } from './pages/products/ProductProcess';
 import { CustomBillForm } from './pages/billing/customBillForm';
-import { PendingOrders } from './pages/PendingOrders';
 import { CheckoutHistory } from './pages/checkout/CheckoutHistory';
 import { MiddlemanPage } from './pages/middleman/middlemanPage';
 import { MiddlemanOverview } from './pages/middleman/SingleMiddleman';
 import MiddlemanProducts from './pages/middleman/MiddlemanProducts';
+import MiddlemanCheckoutPage from './pages/checkout/MiddlemanCheckout';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -92,8 +92,9 @@ export const routes = [
         title: 'Caja',
       },
       {
-        path: 'pedidos', element: <PendingOrders />, roles: ['admin'], title: 'Pedidos',
-        icon: <ReceiptIcon />,
+        path: 'comisionista/caja', element: <MiddlemanCheckoutPage />, roles: ['middleman'],
+        icon: <PointOfSaleIcon />,
+        title: 'Caja',
       },
 
       {

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { ClientsTransaction } from '../utils/transactions/clientsTransaction';
 import { usePopUp } from '../context/PopUpContext';
+import { MiddlemanTransaction } from '../utils/transactions/middlemanTransaction';
 
 export function useClients () {
   const { popUpAlert } = usePopUp();
@@ -68,4 +69,9 @@ export function useClient (id) {
     paymentDetails,
     setPaymentDetails
   }
+}
+
+export function useMiddlemanClients () {
+  const query = useQuery('middlemanClients', () => new MiddlemanTransaction().getMyMiddlemanClients());
+  return { clients: query.data }
 }
