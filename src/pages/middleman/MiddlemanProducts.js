@@ -4,6 +4,7 @@ import { TextField } from '@mui/material';
 import { CustomTable } from '../../components/tables/Table';
 import { Money } from '../../components/Formats/FormatNumbers';
 import { useProducts } from '../../hooks/useProducts';
+import { PrintCatalog } from '../../sections/@dashboard/prints/catalog';
 
 
 export default function MiddlemanProducts () {
@@ -31,6 +32,11 @@ function MiddlemanProductsList ({ products }) {
     );
   })
   return <>
+    <PrintCatalog css={{
+      display: "none"
+    }} products={
+      filtered
+    } />
     <TextField label="Buscar" variant="outlined" fullWidth onChange={(event) => {
       setSearch(event.target.value)
     }} />

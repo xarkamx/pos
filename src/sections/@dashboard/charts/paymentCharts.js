@@ -75,9 +75,7 @@ function setSeries (payments, flow = 'all') {
   const paymentsPerYear = groupPaymentsPerYear(payments);
   const series = Object.keys(paymentsPerYear).map((year) => {
     const payments = paymentsPerYear[year];
-    const data = payments.map((group) => {
-      return getPaymentsTotal(group, flow)
-    });
+    const data = payments.map((group) => getPaymentsTotal(group, flow));
     return { data, stack: 'ingresos', label: year }
   });
   return series;
