@@ -18,4 +18,11 @@ export class UsersTransactions extends TransactionService {
   async changeMyPassword (password) {
     return this.post('/users/me/password', { password });
   }
+
+  async activateClient (client = {
+    email: '',
+    password: ''
+  }) {
+    return this.post('/clients/credentials', client);
+  }
 }

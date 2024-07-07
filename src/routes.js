@@ -42,6 +42,7 @@ import { MiddlemanPage } from './pages/middleman/middlemanPage';
 import { MiddlemanOverview } from './pages/middleman/SingleMiddleman';
 import MiddlemanProducts from './pages/middleman/MiddlemanProducts';
 import MiddlemanCheckoutPage from './pages/checkout/MiddlemanCheckout';
+import ClientCredentials from './pages/clientCredentials';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -168,7 +169,7 @@ export const routes = [
         path: 'me',
         title: 'Mi perfil',
         element: <MyAccount />,
-        roles: ['admin', 'cashier', 'storer', 'middleman'],
+        roles: ['admin', 'cashier', 'storer', 'middleman', 'customer'],
         icon: <AccountBoxIcon />,
       }
     ],
@@ -177,6 +178,10 @@ export const routes = [
     path: 'login',
     element: <LoginPage />,
     index: true,
+  },
+  {
+    path: 'client/register',
+    element: <ClientCredentials />
   },
   {
     element: <SimpleLayout />,
@@ -235,6 +240,7 @@ export default function Router () {
       storer: '/dashboard/inventario',
       master: '/dashboard/app',
       middleman: '/dashboard/comisionistas/me',
+      customer: '/dashboard/me',
     }
     const mainRole = auth.access.roles[0];
     defaultRoute.element = <Navigate to={mainPages[mainRole]} />;
