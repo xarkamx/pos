@@ -45,6 +45,7 @@ import MiddlemanCheckoutPage from './pages/checkout/MiddlemanCheckout';
 import ClientCredentials from './pages/clientCredentials';
 import { MyOrders } from './pages/clients/orders/myOrders';
 import ClientOrderPage from './pages/clients/orders/clientOrderPage';
+import ClientCheckoutPage from './pages/clients/checkout';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -91,6 +92,11 @@ export const routes = [
       },
       {
         path: 'caja', element: <CheckoutPage />, roles: ['admin', 'cashier'],
+        icon: <PointOfSaleIcon />,
+        title: 'Caja',
+      },
+      {
+        path: 'caja', element: <ClientCheckoutPage />, roles: ['customer'],
         icon: <PointOfSaleIcon />,
         title: 'Caja',
       },
