@@ -43,6 +43,8 @@ import { MiddlemanOverview } from './pages/middleman/SingleMiddleman';
 import MiddlemanProducts from './pages/middleman/MiddlemanProducts';
 import MiddlemanCheckoutPage from './pages/checkout/MiddlemanCheckout';
 import ClientCredentials from './pages/clientCredentials';
+import { MyOrders } from './pages/clients/orders/myOrders';
+import ClientOrderPage from './pages/clients/orders/clientOrderPage';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -171,7 +173,17 @@ export const routes = [
         element: <MyAccount />,
         roles: ['admin', 'cashier', 'storer', 'middleman', 'customer'],
         icon: <AccountBoxIcon />,
-      }
+      },
+      {
+        path: 'ordenes',
+        title: 'Mis Ordenes',
+        element: <MyOrders />,
+        roles: ['customer'],
+        icon: <ReceiptIcon />,
+      },
+
+      { path: 'ordenes/:orderId', element: <ClientOrderPage />, roles: ['customer'] },
+
     ],
   },
   {
@@ -205,13 +217,13 @@ function filterRoutes (routes, auth) {
     }
     if (route.roles) {
       const valid = route.roles.some((role) => auth.access.roles.includes(role));
-      route.element = valid ? route.element : <Navigate to="/404" />;
+      route.element = valid ? route.element : null;
     }
     if (route.children) route.children = filterRoutes(route.children, auth);
 
     if (route.title) route.element = <HelmetElement title={route.title}>{route.element}</HelmetElement>
     return route;
-  });
+  }).filter((route) => route.roles?.some((role) => auth.access.roles.includes(role)) || !route.roles);
 }
 
 function HelmetElement ({ title, children }) {
@@ -227,7 +239,7 @@ function HelmetElement ({ title, children }) {
 export default function Router () {
   const auth = useAuth();
   const customRoutes = !isObjectEmpty(auth.access) ? filterRoutes(routes, auth) : routes.filter((route) => !route.auth);
-
+  console.log(customRoutes);
   const defaultRoute = {
     path: '/',
     element: <Navigate to="/login" />,

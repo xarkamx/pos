@@ -20,11 +20,13 @@ export function ItemsList ({ products = [], onEditQuantity, onDeleteProduct }) {
           ]
         }
         format={(values) => [
-          <IconButton onClick={() => {
-            onDeleteProduct(values.id)
-          }} key={`b-${values.id}`}>
-            <Iconify icon="eva:close-fill" sx={{ color: 'red' }} />
-          </IconButton>,
+          <ConditionalWall key={`b-${values.id}`} condition={onDeleteProduct}>
+            <IconButton onClick={() => {
+              onDeleteProduct(values.id)
+            }}>
+              <Iconify icon="eva:close-fill" sx={{ color: 'red' }} />
+            </IconButton>,
+          </ConditionalWall>,
           values.name,
           <Money number={values.price} key={`m-${values.id}`} />,
           <ConditionalWall

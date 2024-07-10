@@ -19,6 +19,7 @@ import { ClientsSearchInput } from '../sections/@dashboard/clients/SelectClient'
 import { Money } from '../components/Formats/FormatNumbers';
 import { BillingButton } from './orders/billingButton';
 import { PaymentMethodSelect } from '../sections/@dashboard/payments/SelectPaymentMethod';
+import { translations } from '../utils/translations/translations';
 
 
 export default function OrderPage () {
@@ -161,7 +162,7 @@ export default function OrderPage () {
   )
 };
 
-function OrderStatusCard ({ discount, total, payment }) {
+export function OrderStatusCard ({ discount, total, payment }) {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={3}>
@@ -180,7 +181,7 @@ function OrderStatusCard ({ discount, total, payment }) {
   );
 }
 
-function CollapsableTables ({ payments, products, onPaymentsCancel }) {
+export function CollapsableTables ({ payments, products, onPaymentsCancel }) {
   const [open, setOpen] = useState(false);
   const style = {
     marginBottom: '1rem',
@@ -203,16 +204,18 @@ function CollapsableTables ({ payments, products, onPaymentsCancel }) {
         margin: '1rem',
       }}>
         <CardHeader sx={headStyle} title="Pagos" onClick={() => (setOpen(false))} />
-        <Button color='error' startIcon={<DeleteForeverIcon />} onClick={() => {
-          onPaymentsCancel();
-        }}>Cancelar Pago</Button>
+        <ConditionalWall condition={onPaymentsCancel}>
+          <Button color='error' startIcon={<DeleteForeverIcon />} onClick={() => {
+            onPaymentsCancel();
+          }}>Cancelar Pago</Button>
+        </ConditionalWall>
       </div>
       <SimplePaymentsTable payments={payments || []} />
     </Card>
   </>)
 }
 
-function PrintTicket ({ orderId, products, order }) {
+export function PrintTicket ({ orderId, products, order }) {
 
   const componentRef = useRef();
   if (!order.order) return (<></>)
@@ -239,10 +242,5 @@ function PrintTicket ({ orderId, products, order }) {
     </div>
   </div>
   )
-}
-const translations = {
-  'pending': 'Pendiente',
-  'paid': 'Pagada',
-  'cancelled': 'Cancelada',
 }
 
