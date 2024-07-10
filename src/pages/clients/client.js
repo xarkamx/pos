@@ -108,10 +108,11 @@ export default function SinglePageClient () {
   );
 }
 
-function ClientBasicForm ({ rfc, name, email, phones, legal, postalCode, taxSystem, onItemChange }) {
+export function ClientBasicForm ({ rfc, name, email, phones, legal, postalCode, taxSystem, onItemChange }) {
   if (!Array.isArray(phones)) phones = [phones]
   const [vals, setVals] = useCState({ rfc, name, email, phones, legal, postalCode, taxSystem })
 
+  console.log(vals)
   return (
     <QuickFormContainer title={'Cliente'}>
       <QuickDebounceInput label='RFC' value={vals.rfc} onChange={(ev) => {
@@ -154,7 +155,7 @@ function QuickDebounceInput (props) {
   </ListItem>
 }
 
-function ClientCards ({ orders, pending, totalPaid, totalDebt, onClick }) {
+export function ClientCards ({ orders, pending, totalPaid, totalDebt, onClick }) {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={3}>

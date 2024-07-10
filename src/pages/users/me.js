@@ -17,7 +17,7 @@ export function MyAccount () {
 };
 
 
-function NewPasswordForm () {
+export function NewPasswordForm () {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(false);

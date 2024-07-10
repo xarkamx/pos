@@ -46,6 +46,7 @@ import ClientCredentials from './pages/clientCredentials';
 import { MyOrders } from './pages/clients/orders/myOrders';
 import ClientOrderPage from './pages/clients/orders/clientOrderPage';
 import ClientCheckoutPage from './pages/clients/checkout';
+import { ClientDetails } from './pages/clients/details';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -177,7 +178,14 @@ export const routes = [
         path: 'me',
         title: 'Mi perfil',
         element: <MyAccount />,
-        roles: ['admin', 'cashier', 'storer', 'middleman', 'customer'],
+        roles: ['admin', 'cashier', 'storer', 'middleman'],
+        icon: <AccountBoxIcon />,
+      },
+      {
+        path: 'me',
+        title: 'Mi perfil',
+        element: <ClientDetails />,
+        roles: ['customer'],
         icon: <AccountBoxIcon />,
       },
       {
