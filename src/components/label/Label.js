@@ -2,9 +2,10 @@ import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Box } from '@mui/material';
+import { Box, Tooltip } from '@mui/material';
 //
 import { StyledLabel } from './styles';
+import { localeDateUTFMex, timeSince } from '../../core/helpers';
 
 // ----------------------------------------------------------------------
 
@@ -49,3 +50,12 @@ Label.propTypes = {
 };
 
 export default Label;
+
+
+export function CreatedSinceToolTip ({ date }) {
+  return (
+    <Tooltip title={localeDateUTFMex(date)}>
+      <div>{timeSince(date)}</div>
+    </Tooltip>
+  );
+}

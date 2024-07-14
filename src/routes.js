@@ -214,12 +214,12 @@ export const routes = [
     children: [
       { element: <Navigate to="/dashboard/caja" /> },
       { path: '404', element: <Page404 /> },
-      { path: '*', element: <Navigate to="/" /> },
+      { path: '*', element: <Navigate to="/404" /> },
     ],
   },
   {
     path: '*',
-    element: <Navigate to="/" replace />,
+    element: <Navigate to="/404" replace />,
   },
 ];
 
@@ -253,7 +253,6 @@ function HelmetElement ({ title, children }) {
 export default function Router () {
   const auth = useAuth();
   const customRoutes = !isObjectEmpty(auth.access) ? filterRoutes(routes, auth) : routes.filter((route) => !route.auth);
-  console.log(customRoutes);
   const defaultRoute = {
     path: '/',
     element: <Navigate to="/login" />,

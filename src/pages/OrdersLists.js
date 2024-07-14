@@ -1,13 +1,13 @@
 
 
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Button, Card, Chip, Grid, TextField, Tooltip, Typography } from '@mui/material';
+import { Button, Card, Chip, Grid, TextField, Typography } from '@mui/material';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { useState } from 'react';
 import { Money } from '../components/Formats/FormatNumbers';
 import { SearchDatesInputs } from '../components/Inputs/SearchDateInput';
 import { CustomTable } from '../components/tables/Table';
-import { between, getEndOfDay, getFirstDayOfMonth, localeDateUTFMex, timeSince } from '../core/helpers';
+import { between, getEndOfDay, getFirstDayOfMonth } from '../core/helpers';
 import { useCState, useHistory, useQueryString } from '../hooks/useHooks';
 import { useOrders } from '../hooks/useOrders';
 import { PaymentModal } from '../sections/@dashboard/orders/paymentModal';
@@ -16,6 +16,7 @@ import { paymentType } from '../utils/formats';
 import { DownloadBillButton, SendEmail } from '../sections/@dashboard/billing/downloadBillButton';
 import { ConditionalWall } from '../components/FilterWall/ConditionalWall';
 import { AutoPrintablePaymentTicket } from '../sections/@dashboard/orders/paymentTicket';
+import { CreatedSinceToolTip } from '../components/label/Label';
 
 
 const status = {
@@ -93,9 +94,7 @@ export function OrdersPage () {
         return [
           item.id,
           item.clientName ? <NavLink to={`/dashboard/clientes/${item.clientId}`}>{item.clientName}</NavLink> : 'Publico general',
-          <Tooltip key={`time-${item.id}`} title={localeDateUTFMex(item.createdAt)}>
-            <div>{timeSince(item.createdAt)}</div>
-          </Tooltip>,
+          <CreatedSinceToolTip key={`item1-${item.id}`} date={item.createdAt} />,
           <Money key={`item3-${item.id}`} number={item.total} />,
           <Money key={`item4-${item.id}`} number={debt} style={{
             color: debt > 0 ? 'red' : 'green'

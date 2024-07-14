@@ -222,3 +222,7 @@ export function timeSince (date) {
   }
   return "0 segundos";
 }
+
+export function reverseIva (price) {
+  return price - (price / 1.16);
+}

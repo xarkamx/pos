@@ -32,6 +32,10 @@ export class OrderTransaction extends TransactionService {
     });
   }
 
+  async getClientOrder (orderId) {
+    return this.get(`/clients/me/orders/${orderId}`);
+  }
+
   async getAllBills (query) {
     return this.get(`/billing`, query);
   }
