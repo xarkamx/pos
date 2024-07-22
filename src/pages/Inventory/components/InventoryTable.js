@@ -1,4 +1,6 @@
-import { TextField } from '@mui/material';
+import { IconButton, TextField } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Money } from '../../../components/Formats/FormatNumbers';
 import { CustomTable } from '../../../components/tables/Table';
@@ -6,6 +8,7 @@ import { monthsSince } from '../../../core/helpers';
 
 export function InventoryTable ({ items = [] }) {
   const [search, setSearch] = useState('');
+  const navigate = useNavigate();
   const months = monthsSince(new Date('2023-03-01'));
   const filtered = items.filter((item) => {
     const { id, price, quantity, name } = item;
@@ -33,7 +36,7 @@ export function InventoryTable ({ items = [] }) {
       }} />
       <CustomTable
         content={filtered}
-        titles={['Id', 'Nombre', 'Cantidad', '% de almacen', 'Precio', 'Ventas/Mes', 'Proyección Mensual', 'Proyeccion de Stock']}
+        titles={['Id', 'Nombre', 'Cantidad', '% de almacen', 'Precio', 'Ventas/Mes', 'Proyección Mensual', 'Proyeccion de Stock', 'Acciones']}
         format={(items) => {
 
           const perMonth = Math.ceil(items.soldUnits / months);
@@ -48,7 +51,12 @@ export function InventoryTable ({ items = [] }) {
             <Money number={items.unitPrice} key={`price-${items.id}`} />,
             perMonth,
             <Money number={items.unitPrice * perMonth} key={`projectionMonth-${items.id}`} />,
-            <Money number={items.unitPrice * items.inStock} key={`projection-${items.id}`} />
+            <Money number={items.unitPrice * items.inStock} key={`projection-${items.id}`} />,
+            <IconButton key={`nav-${items.id}`} onClick={() => {
+              navigate(`/dashboard/productos/${items.id}`);
+            }}>
+              <EditIcon />
+            </IconButton>
 
           ]
         }}

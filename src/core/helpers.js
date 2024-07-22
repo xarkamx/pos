@@ -15,6 +15,7 @@ export function numberToMoney (number) {
   });
   return formatter.format(number);
 }
+
 export async function playAudio (url) {
   const audio = new Audio(url);
   return audio.play();
@@ -71,7 +72,7 @@ export function isObjectEmpty (obj) {
  * @param int limit
  * @param function iteration
  */
-export function secuence (limit, iteration = null) {
+export function sequence (limit, iteration = null) {
   const result = [];
   for (let index = 0; index <= limit; index += 1) {
     result.push(optionalFn(iteration)(index, limit) || index);

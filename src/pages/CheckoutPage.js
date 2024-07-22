@@ -83,27 +83,27 @@ export default function CheckoutPage () {
       <Container maxWidth="xl">
 
         <Grid container spacing={3}>
-          <Grid item xs={8}>
+          <Grid item sm={8}>
             <Typography variant="h4" sx={{ mb: 5 }}>
               Caja
             </Typography>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item sm={4}>
             <Button onClick={() => {
               history(`/dashboard/caja/historial`)
             }} variant="contained" >Historial</Button>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item sm={12}>
             <ProductSearchInput onSubmit={add} />
           </Grid>
-          <Grid item xs={12} sm={6} md={8}>
+          <Grid item xs={12} md={8}>
             <PrintOnGoingTicket products={products} />
             <ItemsList
               products={products}
               onDeleteProduct={onDelete}
               onEditQuantity={update} />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} md={4}>
             <ClientsSearchInput onSubmit={(client) => {
               setClientId(client.id)
             }} />

@@ -12,6 +12,7 @@ import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import PercentIcon from '@mui/icons-material/Percent';
+import DatasetIcon from '@mui/icons-material/Dataset';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
@@ -47,6 +48,7 @@ import { MyOrders } from './pages/clients/orders/myOrders';
 import ClientOrderPage from './pages/clients/orders/clientOrderPage';
 import ClientCheckoutPage from './pages/clients/checkout';
 import { ClientDetails } from './pages/clients/details';
+import { MaterialOverview, MaterialsPage } from './pages/materials';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -197,6 +199,8 @@ export const routes = [
       },
 
       { path: 'ordenes/:orderId', element: <ClientOrderPage />, roles: ['customer'] },
+      { path: 'insumos', element: <MaterialsPage />, roles: ['admin', 'storer'], icon: <DatasetIcon />, title: 'Insumos' },
+      { path: 'insumos/:materialId', element: <MaterialOverview />, roles: ['admin', 'storer'] },
 
     ],
   },

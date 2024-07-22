@@ -45,7 +45,7 @@ export default function ProductList ({ products = [], onDeleteProduct, onUpdateP
             <>
               <DeleteSmallButton onClick={() => {
                 onDeleteProduct(product.id);
-              }} key={`del-${product.id}`} />,
+              }} key={`del-${product.id}`} />
 
               <IconButton onClick={() => {
                 navigate(`/dashboard/productos/${product.id}`);

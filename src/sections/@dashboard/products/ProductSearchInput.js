@@ -96,8 +96,8 @@ export function ProductSearchInput ({ onSubmit }) {
 
 export function BasicProductSearch ({ onChange }) {
   const [product, setProduct] = useState({})
-  const products = useProducts();
-  const options = products.products || [];
+  const { products } = useProducts();
+  const options = products || [];
   return <Autocomplete
     value={product.label || ''}
     disablePortal

@@ -11,14 +11,14 @@ export default function PaymentPages () {
   const { payments, addPayment, deletePayment } = usePayments();
   return (
     <SmartGrid container spacing={2}>
-      <SmartGrid title='Grafica' icon={<BarChartIcon />} item xs={12}>
-        <StackChart payments={payments} height='600' />
+      <SmartGrid item xs={12} title='Pagos' md={8}>
+        <PaymentTable payments={payments} onDeletePayment={deletePayment} />
       </SmartGrid>
       <SmartGrid item title='Registro de pago' icon={<AddIcon />} xs={12} md={4}>
         <QuickPaymentForm onSubmit={addPayment} />
       </SmartGrid>
-      <SmartGrid item xs={12} title='Pagos' md={8}>
-        <PaymentTable payments={payments} onDeletePayment={deletePayment} />
+      <SmartGrid title='Grafica' icon={<BarChartIcon />} item xs={12}>
+        <StackChart payments={payments} height='600' />
       </SmartGrid>
     </SmartGrid>
   );
