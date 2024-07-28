@@ -81,7 +81,8 @@ export function InventoryTable ({ items = [] }) {
 function MaterialModal ({ open, handleClose, product }) {
   if (!product) return null;
   const months = monthsSince(new Date('2023-03-01'));
-  const requiredProducts = Math.ceil(product.soldUnits / months) * 2;
+  let requiredProducts = (Math.ceil(product.soldUnits / months) * 2) - product.inStock;
+  if (requiredProducts < 0) requiredProducts = 0;
   let groupedItems = product.materials?.reduce((acc, item) => {
     if (!acc[item.materialId]) {
       acc[item.materialId] = item;
