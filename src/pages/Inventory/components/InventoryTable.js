@@ -1,14 +1,16 @@
-import { IconButton, TextField } from '@mui/material';
+import { Box, Card, CardHeader, IconButton, Modal, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Money } from '../../../components/Formats/FormatNumbers';
 import { CustomTable } from '../../../components/tables/Table';
-import { monthsSince } from '../../../core/helpers';
+import { kValues, monthsSince } from '../../../core/helpers';
 
 export function InventoryTable ({ items = [] }) {
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
+  const [material, setMaterial] = useState(null);
+  const [open, setOpen] = useState(false);
   const months = monthsSince(new Date('2023-03-01'));
   const filtered = items.filter((item) => {
     const { id, price, quantity, name } = item;
@@ -36,6 +38,10 @@ export function InventoryTable ({ items = [] }) {
       }} />
       <CustomTable
         content={filtered}
+        onClick={(item) => {
+          setOpen(true);
+          setMaterial(item);
+        }}
         titles={['Id', 'Nombre', 'Cantidad', '% de almacen', 'Precio', 'Ventas/Mes', 'Proyección Mensual', 'Proyeccion de Stock', 'Acciones']}
         format={(items) => {
 
@@ -61,8 +67,54 @@ export function InventoryTable ({ items = [] }) {
           ]
         }}
       />
+      <MaterialModal open={open}
+        product={material}
+        requiredUnits={material?.requiredUnits}
+        handleClose={() => {
+          setOpen(false);
+          setMaterial(null);
+        }} />
     </>
   )
+}
+
+function MaterialModal ({ open, handleClose, product }) {
+  if (!product) return null;
+  const months = monthsSince(new Date('2023-03-01'));
+  const requiredProducts = Math.ceil(product.soldUnits / months) * 2;
+  let groupedItems = product.materials?.reduce((acc, item) => {
+    if (!acc[item.materialId]) {
+      acc[item.materialId] = item;
+      return acc;
+    }
+    acc[item.materialId] = {
+      ...item,
+      quantity: acc[item.materialId]?.quantity + item.quantity || item.quantity
+    }
+    return acc;
+  }, {});
+  groupedItems = Object.values(groupedItems);
+  return (
+    <Modal open={Boolean(open)} onClose={handleClose}>
+      <Box>
+        <Card sx={{
+          p: 3,
+        }}>
+          <CardHeader title="Lista de materiales" />
+          <CustomTable
+            titles={['Material', 'Cantidad Por Unidad', 'Unidad', 'Material Requerido']}
+            content={groupedItems}
+            format={(item) => [
+              item.name,
+              item.unit,
+              item.quantity,
+              kValues(requiredProducts * item.quantity)
+            ]} />
+        </Card>
+      </Box>
+
+    </Modal>
+  );
 }
 
 function refillRatio (qty, sold) {

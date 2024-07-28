@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useValidate } from '../../../hooks/useValidate';
 import { usePopUp } from '../../../context/PopUpContext';
+import { ProductsTransaction } from '../../../utils/transactions/productsTransaction';
 
 const { useQuery } = require('react-query');
 const { MaterialTransaction } = require('../../../utils/transactions/materialTransaction');
@@ -65,17 +66,39 @@ export function useMaterialProducts (id) {
     const material = materialsTransactions.getMaterialById(id)
     return Promise.all([productMaterials, material])
   });
-  const addProduct = async (materialId, prodcutId, quantity) => {
+  const addProduct = async (materialId, productId, quantity) => {
     try {
-      await materialsTransactions.addProductToMaterial(materialId, prodcutId, quantity);
+      await materialsTransactions.addProductToMaterial(materialId, productId, quantity);
     } catch (e) {
       popUpAlert('Error', e.message);
     }
     resp.refetch();
+    popUpAlert('success', 'Producto agregado');
   }
   return {
     childProducts: resp?.data?.[0] ?? [],
     materialDetails: resp?.data?.[1] ?? {},
+    loading: resp.isLoading,
+    addProduct
+  }
+}
+
+export function useProductsRecipe (productId) {
+  const materialsTransactions = new MaterialTransaction();
+  const productsTransactions = new ProductsTransaction();
+  const { popUpAlert } = usePopUp()
+  const resp = useQuery('materialsPerProduct', () => productsTransactions.getMaterialsByProductId(productId));
+  const addProduct = async (materialId, productId, quantity) => {
+    try {
+      await materialsTransactions.addProductToMaterial(materialId, productId, quantity);
+    } catch (e) {
+      popUpAlert('Error', e.message);
+    }
+    resp.refetch();
+    popUpAlert('success', 'Material agregado');
+  }
+  return {
+    materials: resp.data,
     loading: resp.isLoading,
     addProduct
   }

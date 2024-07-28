@@ -74,7 +74,7 @@ function MaterialForm ({ onSubmit }) {
   </QuickFormContainer>
 }
 
-function MaterialTable ({ materials }) {
+export function MaterialTable ({ materials }) {
   const navigate = useNavigate()
   return <CustomTable
     titles={['Id', 'Nombre', 'Unidad', 'Acciones']}

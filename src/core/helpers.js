@@ -227,3 +227,17 @@ export function timeSince (date) {
 export function reverseIva (price) {
   return price - (price / 1.16);
 }
+
+export function kValues (number) {
+  const k = Math.floor(number / 1000);
+  const m = Math.floor(number / 1000000);
+  const b = Math.floor(number / 1000000000);
+  if (b > 0) {
+    return `${b}B`;
+  } else if (m > 0) {
+    return `${m}M`;
+  } else if (k > 0) {
+    return `${k}K`;
+  }
+  return number;
+}

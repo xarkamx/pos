@@ -1,6 +1,13 @@
+
+import { useState } from 'react';
+
+import GridViewIcon from '@mui/icons-material/GridView';
+import SellIcon from '@mui/icons-material/Sell';
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import { useQuery } from 'react-query';
-import { Grid } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Button, Grid, List } from '@mui/material';
+import { useParams } from 'react-router-dom';
 import { AppWidgetSummary } from '../../sections/@dashboard/app';
 import { ProductsTransaction } from '../../utils/transactions/productsTransaction';
 import { CustomTable } from '../../components/tables/Table';
@@ -8,17 +15,23 @@ import { Money } from '../../components/Formats/FormatNumbers';
 import { CreatedSinceToolTip } from '../../components/label/Label';
 import { numberToMoney, reverseIva } from '../../core/helpers';
 import { SmartGrid } from '../../components/Containers/SmartGrid';
+import { useNav } from '../../hooks/useNav';
+import { BasicMaterialSearch } from '../materials/components/MaterialSelector';
+import { useProductsRecipe } from '../materials/hooks/useMaterial';
+import { QuickFormInput } from '../../components/Containers/QuickFormContainer';
+import { useCState } from '../../hooks/useHooks';
 
 
 
 export function SingleProductPage () {
   const { productId } = useParams();
   const { details, isLoading } = useProductInfo(productId);
-
+  const navigate = useNav();
   if (isLoading) return <h1>Cargando...</h1>
   const { sales, customers, orders, product } = details;
+  if (!product) { navigate('/dashboard/productos'); return <h1>Cargando...</h1> }
   return <SmartGrid container spacing={2}>
-    <SmartGrid title='General' item xs={12}>
+    <SmartGrid title='General' icon={<GridViewIcon />} item xs={12}>
       <ProductHeader
         name={product.name}
         unitPrice={product.price}
@@ -27,11 +40,15 @@ export function SingleProductPage () {
         qty={sales.totalSold}
         total={sales.totalIncome} />
     </SmartGrid>
-    <SmartGrid title='Ordenes' item xs={12} sm={6} >
+    <SmartGrid title='Ordenes' icon={<SellIcon />} item xs={12} sm={6} >
       <OrdersTableList orders={orders} />
     </SmartGrid>
-    <SmartGrid item title='Clientes' xs={12} sm={6} >
+    <SmartGrid item title='Clientes' icon={<PeopleOutlineIcon />} xs={12} sm={6} >
       <ClientTableList clients={customers} />
+    </SmartGrid>
+
+    <SmartGrid item title='Materiales' icon={<AssignmentIcon />} xs={12} >
+      <MaterialsPerProduct productId={productId} />
     </SmartGrid>
   </SmartGrid>
 }
@@ -66,7 +83,7 @@ function useProductInfo (productId) {
 }
 
 function ClientTableList ({ clients }) {
-  const navigation = useNavigate();
+  const navigation = useNav();
   return <CustomTable
     titles={['Nombre', 'RFC', 'Adquiridos', 'Total']}
     content={clients}
@@ -84,7 +101,7 @@ function ClientTableList ({ clients }) {
 }
 
 function OrdersTableList ({ orders }) {
-  const navigation = useNavigate();
+  const navigation = useNav();
   return <CustomTable
     titles={['Folio', 'Fecha', 'Cantidad', 'Total', 'IVA']}
     content={orders}
@@ -100,4 +117,83 @@ function OrdersTableList ({ orders }) {
 
     ]}
   />
+}
+
+function MaterialsPerProduct ({ productId }) {
+  const { materials, addProduct } = useProductsRecipe(productId);
+  return <Grid container spacing={2}>
+    <Grid item xs={12}>
+      <AddMaterialToProduct onSubmit={
+        (materialId, quantity) => {
+          addProduct(materialId, productId, quantity);
+        }
+      } />
+    </Grid>
+    <Grid item xs={12} >
+      <CustomTable titles={['Id', 'Nombre', 'Cantidad', 'Unidad']} content={materials} format={(item) => [
+        item.id,
+        item.name,
+        item.unit,
+        item.requiredQuantity
+      ]} />
+    </Grid>
+  </Grid>
+}
+
+function AddMaterialToProduct ({ onSubmit }) {
+
+  const loading = false
+  const [material, setMaterial] = useState({
+    id: null,
+    name: null,
+    unit: 'g',
+  });
+  const [materialForm, setMaterialForm] = useCState({
+    quantity: 1,
+    materialId: null
+  });
+  return <form title='Agregar Material'
+    onSubmit={(ev) => {
+      ev.preventDefault();
+      onSubmit?.(materialForm.materialId, materialForm.quantity);
+    }}
+    style={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '10px',
+    }}>
+    <Grid container spacing={2}>
+      <Grid item xs={4}>
+        <List>
+          <BasicMaterialSearch onChange={(material) => {
+            setMaterial({
+              id: material.id,
+              name: material.label,
+              unit: material.extras.unit,
+            });
+            setMaterialForm({
+              materialId: material.id
+            })
+          }} />
+        </List>
+      </Grid>
+      <Grid item xs={4}>
+        <QuickFormInput label={`Cantidad en ${material.unit}`} value={setMaterialForm.quantity} onChange={(ev) => {
+          setMaterialForm({
+            quantity: parseFloat(ev.target.value)
+          })
+        }} />
+      </Grid>
+      <Grid item xs={4}>
+        <Button variant="text" type='submit'
+          disabled={loading}
+          style={{
+            backgroundColor: !loading ? '#3f51b5' : '#f50057',
+            color: 'white',
+            height: '100%',
+            width: '100%',
+          }}>{!loading ? 'Agregar' : 'Espera...'}</Button>
+      </Grid>
+    </Grid>
+  </form>
 }

@@ -227,7 +227,7 @@ export const routes = [
   },
 ];
 
-function filterRoutes (routes, auth) {
+export function filterRoutes (routes, auth) {
   if (auth.access.roles.includes('master')) return routes;
   return routes.map((route) => {
     if (route.auth) {
