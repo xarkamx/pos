@@ -29,11 +29,9 @@ function RequiredMaterials ({ items }) {
     return 0;
   });
   return (
-    <CustomTable content={required} titles={['Material', 'Requerido']} format={(item) => {
-      return [
-        item.name,
-        kValues(item.required)];
-    }} />
+    <CustomTable content={required} titles={['Material', 'Requerido']} format={(item) => [
+      item.name,
+      kValues(item.required)]} />
   );
 }
 
