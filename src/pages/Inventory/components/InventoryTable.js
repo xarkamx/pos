@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Money } from '../../../components/Formats/FormatNumbers';
 import { CustomTable } from '../../../components/tables/Table';
 import { kValues, monthsSince } from '../../../core/helpers';
+import { refillRatio } from './utils';
 
 export function InventoryTable ({ items = [] }) {
   const [search, setSearch] = useState('');
@@ -116,11 +117,4 @@ function MaterialModal ({ open, handleClose, product }) {
 
     </Modal>
   );
-}
-
-function refillRatio (qty, sold) {
-  sold = sold || 0;
-  if (sold === 0) return 0;
-  qty = qty || 0;
-  return (qty / (sold * 2)) * 100;
 }
