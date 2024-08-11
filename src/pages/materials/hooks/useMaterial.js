@@ -75,11 +75,22 @@ export function useMaterialProducts (id) {
     resp.refetch();
     popUpAlert('success', 'Producto agregado');
   }
+
+  const delProduct = async (materialId, productId) => {
+    try {
+      await materialsTransactions.delProductToMaterial(materialId, productId);
+    } catch (e) {
+      popUpAlert('Error', e.message);
+    }
+    resp.refetch();
+    popUpAlert('success', 'Producto eliminado');
+  }
   return {
     childProducts: resp?.data?.[0] ?? [],
     materialDetails: resp?.data?.[1] ?? {},
     loading: resp.isLoading,
-    addProduct
+    addProduct,
+    delProduct
   }
 }
 

@@ -17,11 +17,14 @@ export class MaterialTransaction extends TransactionService {
   }
 
   async addProductToMaterial (materialId, productId, qty) {
-    console.log(materialId, productId, qty);
     return this.post(`/materials/${materialId}/products`, [{
       productId,
       quantity: qty
     }]);
+  }
+
+  async delProductToMaterial (materialId, productId) {
+    return this.delete(`/materials/${materialId}/products/${productId}`);
   }
 
   async getMaterialById (id) {

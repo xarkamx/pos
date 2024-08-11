@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Grid, IconButton, ListItem, MenuItem, TextField } from '@mui/material';
 import { QuickFormButton, QuickFormContainer, QuickFormInput } from '../../components/Containers/QuickFormContainer';
@@ -26,10 +27,11 @@ export function MaterialsPage () {
 
 export function MaterialOverview () {
   const { materialId } = useParams()
-  const { childProducts, materialDetails, addProduct } = useMaterialProducts(materialId)
+  const { childProducts, materialDetails, addProduct, delProduct } = useMaterialProducts(materialId)
   return <SmartGrid container spacing={2}>
     <SmartGrid title='Productos' item xs={12} >
       <ProductListForm material={materialDetails}
+        onDelete={delProduct}
         onSubmit={addProduct}
         childProducts={
           childProducts
@@ -62,6 +64,7 @@ function MaterialForm ({ onSubmit }) {
       }}>
         <MenuItem value='kg'>Kilogramos</MenuItem >
         <MenuItem value='g'>Gramos</MenuItem >
+        <MenuItem value='u'>Unidad</MenuItem >
       </TextField>
     </ListItem>
     <QuickFormButton
@@ -97,6 +100,7 @@ function ProductListForm ({
   material,
   childProducts,
   onSubmit,
+  onDelete,
 }) {
   const materialType = material?.unit || 'g'
   const [loading, setLoading] = useState(false)
@@ -145,9 +149,19 @@ function ProductListForm ({
       </Grid>
       <Grid item xs={12}>
         <CustomTable
-          titles={['Producto', 'Cantidad', 'Unidad']}
+          titles={['Producto', 'Cantidad', 'Unidad', 'Acciones']}
           content={childProducts}
-          format={(item) => [item.productName, item.requiredQuantity, item.unit]}
+          format={(item) => [item.productName, item.requiredQuantity, item.unit, <IconButton
+            color='error'
+            key={`del-${item.id}`}
+            disabled={loading}
+            onClick={async () => {
+              setLoading(true)
+              await onDelete(material.id, item.id)
+              setLoading(false)
+            }} >
+            <DeleteIcon />
+          </IconButton>]}
         />
       </Grid>
     </Grid>
