@@ -55,7 +55,7 @@ function requiredMaterialsList (items) {
 }
 function filterMaterials (items) {
   const months = monthsSince(new Date('2023-03-01'));
-  const filtered = items.map((item) => {
+  const filtered = items?.map((item) => {
     const mediamPerMonth = Math.ceil(item.soldUnits / months);
     item.refill = refillRatio(item.inStock, mediamPerMonth);
     item.mediamPerMonth = mediamPerMonth;
@@ -69,6 +69,6 @@ function filterMaterials (items) {
     });
     return item;
   }).filter((item) => item.refill < 100 && item.mediamPerMonth > 0);
-  return filtered;
+  return filtered ?? [];
 }
 
