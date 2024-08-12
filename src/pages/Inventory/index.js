@@ -1,28 +1,33 @@
-import { Grid } from '@mui/material';
+import CategoryIcon from '@mui/icons-material/Category';
 import { QuickInventoryForm } from './components/QuickInventoryForm';
 import { useInventory } from './hooks/useInventory';
 import { InventoryTable } from './components/InventoryTable';
 import { kValues, monthsSince } from '../../core/helpers';
 import { refillRatio } from './components/utils';
 import { CustomTable } from '../../components/tables/Table';
+import { SmartGrid } from '../../components/Containers/SmartGrid';
+import { useNav } from '../../hooks/useNav';
 
 export function InventoryPage () {
   const { add, items } = useInventory();
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} md={4}>
+    <SmartGrid container spacing={2}>
+      <SmartGrid title='Inventario' item xs={12} md={8}>
         <QuickInventoryForm onSubmit={add} />
-        <RequiredMaterials items={items} />
-      </Grid>
-      <Grid item xs={12} md={8}>
         <InventoryTable items={items} />
-      </Grid>
-    </Grid>
+      </SmartGrid>
+      <SmartGrid title='Materiales' icon={<CategoryIcon />} item xs={12} md={4}>
+
+        <RequiredMaterials items={items} />
+      </SmartGrid>
+
+    </SmartGrid>
   );
 };
 
 function RequiredMaterials ({ items }) {
   const required = Object.values(requiredMaterialsList(items));
+  const nav = useNav();
   required.sort((b, a) => {
     if (a.required > b.required) return 1;
     if (a.required < b.required) return -1;
@@ -31,7 +36,11 @@ function RequiredMaterials ({ items }) {
   return (
     <CustomTable content={required} titles={['Material', 'Requerido']} format={(item) => [
       item.name,
-      kValues(item.required)]} />
+      kValues(item.required)]}
+      onClick={(item) => {
+        nav(`/dashboard/insumos/${item.materialId}`);
+      }}
+    />
   );
 }
 

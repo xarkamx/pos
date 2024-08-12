@@ -112,7 +112,6 @@ export function ClientBasicForm ({ rfc, name, email, phones, legal, postalCode, 
   if (!Array.isArray(phones)) phones = [phones]
   const [vals, setVals] = useCState({ rfc, name, email, phones, legal, postalCode, taxSystem })
 
-  console.log(vals)
   return (
     <QuickFormContainer title={'Cliente'}>
       <QuickDebounceInput label='RFC' value={vals.rfc} onChange={(ev) => {

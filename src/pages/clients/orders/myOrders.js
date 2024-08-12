@@ -4,8 +4,6 @@ import { OrdersTable } from '../../../sections/@dashboard/orders/OrdersTable';
 
 export function MyOrders () {
   const data = useMyOrders();
-
-  console.log(data);
   return (
     <OrdersTable orders={data} />
   )
@@ -13,9 +11,7 @@ export function MyOrders () {
 
 function useMyOrders () {
   const transaction = new OrderTransaction();
-  const orders = useQuery('myOrders', async () => {
-    return transaction.getMyOrders();
-  });
+  const orders = useQuery('myOrders', async () => transaction.getMyOrders());
 
   return orders.data;
 

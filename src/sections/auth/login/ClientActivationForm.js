@@ -87,7 +87,6 @@ function useClientActivation () {
       popUpAlert('success', 'Cliente activado correctamente', async () => {
         const login = new LoginTransaction();
         const token = await login.login(client.email, client.password);
-        console.log(token);
         auth.setAccess(token);
         navigate('/');
       });
