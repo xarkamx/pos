@@ -143,6 +143,7 @@ export default function CheckoutPage () {
         onClose={() => {
           print();
           localStorage.removeItem(localId);
+          clear();
           setOpen(false);
         }}
         message={error ? "Error en registro" : "Completada"} status={error ? "error" : "success"} />
