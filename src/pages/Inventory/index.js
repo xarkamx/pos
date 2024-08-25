@@ -68,9 +68,11 @@ function filterMaterials (items) {
     const mediamPerMonth = Math.ceil(item.soldUnits / months);
     item.refill = refillRatio(item.inStock, mediamPerMonth);
     item.mediamPerMonth = mediamPerMonth;
-    const total = (item.inStock / (item.refill / 100)) - item.inStock;
+
+    const total = (item.mediamPerMonth * 2) - item.inStock || 0;
     item.materials = item.materials.map((material) => {
-      const required = Math.ceil(material.quantity * total) * 1.30;
+      const requiredTotal = total < 0 ? 0 : total;
+      const required = Math.ceil(material.quantity * requiredTotal) * 1.30;
       return {
         ...material,
         required,
