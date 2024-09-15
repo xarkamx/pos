@@ -51,4 +51,8 @@ export class ProductsTransaction extends TransactionService {
   async getMaterialsByProductId (id) {
     return this.get(`/products/${id}/materials`);
   }
+
+  async getProductHistory (id) {
+    return this.get(`/inventory/history/${id}`);
+  }
 }

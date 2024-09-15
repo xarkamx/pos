@@ -5,6 +5,7 @@ import GridViewIcon from '@mui/icons-material/GridView';
 import SellIcon from '@mui/icons-material/Sell';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import { useQuery } from 'react-query';
 import { Button, Grid, List } from '@mui/material';
 import { useParams } from 'react-router-dom';
@@ -25,7 +26,7 @@ import { useCState } from '../../hooks/useHooks';
 
 export function SingleProductPage () {
   const { productId } = useParams();
-  const { details, isLoading } = useProductInfo(productId);
+  const { details, isLoading, inventory } = useProductInfo(productId);
   const navigate = useNav();
   if (isLoading) return <h1>Cargando...</h1>
   const { sales, customers, orders, product } = details;
@@ -41,13 +42,20 @@ export function SingleProductPage () {
         total={sales.totalIncome} />
     </SmartGrid>
     <SmartGrid title='Ordenes' icon={<SellIcon />} item xs={12} sm={6} >
+      <h2>Ordenes</h2>
       <OrdersTableList orders={orders} />
     </SmartGrid>
     <SmartGrid item title='Clientes' icon={<PeopleOutlineIcon />} xs={12} sm={6} >
+      <h2>Clientes</h2>
       <ClientTableList clients={customers} />
-    </SmartGrid>
 
-    <SmartGrid item title='Materiales' icon={<AssignmentIcon />} xs={12} >
+
+    </SmartGrid>
+    <SmartGrid item title='Inventario' icon={<InventoryIcon />} xs={6} >
+      <h2>Inventario</h2>
+      <InventoryTable inventory={inventory} />
+    </SmartGrid>
+    <SmartGrid item title='Materiales' icon={<AssignmentIcon />} xs={6} >
       <MaterialsPerProduct productId={productId} />
     </SmartGrid>
   </SmartGrid>
@@ -78,8 +86,9 @@ function ProductHeader ({ qty, total, name, unitPrice, description, image }) {
 function useProductInfo (productId) {
   const service = new ProductsTransaction();
   const resp = useQuery('product', async () => service.getProductInfo(productId));
+  const inventoryReq = useQuery('inventory', async () => service.getProductHistory(productId));
 
-  return { details: resp.data, isLoading: resp.isLoading };
+  return { details: resp.data, isLoading: resp.isLoading, inventory: inventoryReq.data };
 }
 
 function ClientTableList ({ clients }) {
@@ -196,4 +205,21 @@ function AddMaterialToProduct ({ onSubmit }) {
       </Grid>
     </Grid>
   </form>
+}
+
+function InventoryTable ({ inventory }) {
+  return <CustomTable
+    titles={['Cantidad', 'Descripcion', 'Fecha']}
+    content={inventory}
+    format={(item) => [
+      item.quantity,
+      dictionary[item.description],
+      <CreatedSinceToolTip key={`date-${item.id}`} date={item.createdAt} />
+    ]}
+  />
+}
+
+const dictionary = {
+  'purchase': 'Compra',
+  'inventory': 'Inventario',
 }
