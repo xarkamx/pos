@@ -70,7 +70,7 @@ function filterMaterials (items) {
     item.mediamPerMonth = mediamPerMonth;
 
     const total = (item.mediamPerMonth * 2) - item.inStock || 0;
-    item.materials = item.materials.map((material) => {
+    item.materials = item.materials?.map((material) => {
       const requiredTotal = total < 0 ? 0 : total;
       const required = Math.ceil(material.quantity * requiredTotal) * 1.30;
       return {

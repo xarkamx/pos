@@ -6,6 +6,7 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { AppBar, Grid, Tab } from '@mui/material';
 import { ScreenRangeContainer } from '../FilterWall/ConditionalWall';
 
+
 export function SmartGrid ({ children, ...props }) {
   return (
     <>
@@ -23,7 +24,7 @@ export function SmartGrid ({ children, ...props }) {
   )
 }
 
-function SmartTab ({ children = [], ...props }) {
+export function SmartTab ({ children = [], ...props }) {
   const [tab, setTab] = React.useState('0')
   if (!Array.isArray(children)) {
     children = [children]
@@ -34,14 +35,7 @@ function SmartTab ({ children = [], ...props }) {
       {child.props.children}
     </TabPanel>)}
     <AppBar position="static" color="default"
-      style={{
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        width: '100%',
-        backgroundColor: 'white',
-        zIndex: 1000
-      }}
+      style={styles[props.position ?? 'bottom']}
     >
       <TabList style={{
         padding: '0px 10px',
@@ -58,4 +52,28 @@ function SmartTab ({ children = [], ...props }) {
       </TabList>
     </AppBar>
   </TabContext>
+}
+
+const styles = {
+  top: {
+    position: 'fixed',
+    top: '6rem',
+    left: 0,
+    width: '100%',
+    backgroundColor: 'white',
+    zIndex: 1000
+  },
+  bottom: {
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    backgroundColor: 'white',
+    zIndex: 1000
+  },
+  left: {
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'fixed',
+  },
 }

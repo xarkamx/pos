@@ -4,7 +4,6 @@ import { useState } from 'react';
 import GridViewIcon from '@mui/icons-material/GridView';
 import SellIcon from '@mui/icons-material/Sell';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
-import AssignmentIcon from '@mui/icons-material/Assignment';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import { useQuery } from 'react-query';
 import { Button, Grid, List } from '@mui/material';
@@ -15,12 +14,12 @@ import { CustomTable } from '../../components/tables/Table';
 import { Money } from '../../components/Formats/FormatNumbers';
 import { CreatedSinceToolTip } from '../../components/label/Label';
 import { numberToMoney, reverseIva } from '../../core/helpers';
-import { SmartGrid } from '../../components/Containers/SmartGrid';
 import { useNav } from '../../hooks/useNav';
 import { BasicMaterialSearch } from '../materials/components/MaterialSelector';
 import { useProductsRecipe } from '../materials/hooks/useMaterial';
 import { QuickFormInput } from '../../components/Containers/QuickFormContainer';
 import { useCState } from '../../hooks/useHooks';
+import { SmartGrid, SmartTab } from '../../components/Containers/SmartGrid';
 
 
 
@@ -31,7 +30,7 @@ export function SingleProductPage () {
   if (isLoading) return <h1>Cargando...</h1>
   const { sales, customers, orders, product } = details;
   if (!product) { navigate('/dashboard/productos'); return <h1>Cargando...</h1> }
-  return <SmartGrid container spacing={2}>
+  return <SmartTab container>
     <SmartGrid title='General' icon={<GridViewIcon />} item xs={12}>
       <ProductHeader
         name={product.name}
@@ -40,6 +39,7 @@ export function SingleProductPage () {
         image={product.image}
         qty={sales.totalSold}
         total={sales.totalIncome} />
+      <MaterialsPerProduct productId={productId} />
     </SmartGrid>
     <SmartGrid title='Ordenes' icon={<SellIcon />} item xs={12} sm={6} >
       <h2>Ordenes</h2>
@@ -55,10 +55,7 @@ export function SingleProductPage () {
       <h2>Inventario</h2>
       <InventoryTable inventory={inventory} />
     </SmartGrid>
-    <SmartGrid item title='Materiales' icon={<AssignmentIcon />} xs={6} >
-      <MaterialsPerProduct productId={productId} />
-    </SmartGrid>
-  </SmartGrid>
+  </SmartTab>
 }
 
 
@@ -187,7 +184,7 @@ function AddMaterialToProduct ({ onSubmit }) {
         </List>
       </Grid>
       <Grid item xs={4}>
-        <QuickFormInput label={`Cantidad en ${material.unit}`} value={setMaterialForm.quantity} onChange={(ev) => {
+        <QuickFormInput fullWidth label={`Cantidad en ${material.unit}`} value={setMaterialForm.quantity} onChange={(ev) => {
           setMaterialForm({
             quantity: parseFloat(ev.target.value)
           })
