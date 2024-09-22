@@ -49,6 +49,10 @@ export class TransactionService {
       data.body = JSON.stringify(body)
     }
 
+    if (!body) {
+      delete headers['Content-Type']
+    }
+
     const resp = await fetch(path, data)
     if (resp.status >= 400) {
       throw new ErrorObj(await resp.json())

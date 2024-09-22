@@ -6,11 +6,11 @@ import { PayrollTable } from './payrollTable';
 import { usePopUp } from '../../context/PopUpContext';
 
 export function PayrollView () {
-  const { payroll, setPayroll, pay } = usePayroll();
+  const { payroll, setPayroll, pay, loading } = usePayroll();
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={6} lg={3}>
-        <PayrollForm onSubmit={setPayroll} />
+        <PayrollForm onSubmit={setPayroll} loading={loading} />
       </Grid>
       <Grid item xs={12} md={6} lg={9}>
         <PayrollTable items={payroll} onPay={pay} />
@@ -41,6 +41,7 @@ function usePayroll () {
   return {
     payroll: payroll.data || [],
     setPayroll: setPayroll.mutate,
+    loading: setPayroll.isLoading,
     pay: pay.mutate
   };
 }

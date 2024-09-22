@@ -49,6 +49,8 @@ import ClientOrderPage from './pages/clients/orders/clientOrderPage';
 import ClientCheckoutPage from './pages/clients/checkout';
 import { ClientDetails } from './pages/clients/details';
 import { MaterialOverview, MaterialsPage } from './pages/materials';
+import { EmployeeView } from './pages/employees/employeeView';
+import { PTOView } from './pages/employees/pto/ptoView';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -201,6 +203,16 @@ export const routes = [
       { path: 'ordenes/:orderId', element: <ClientOrderPage />, roles: ['customer'] },
       { path: 'insumos', element: <MaterialsPage />, roles: ['admin', 'storer'], icon: <DatasetIcon />, title: 'Insumos' },
       { path: 'insumos/:materialId', element: <MaterialOverview />, roles: ['admin', 'storer'] },
+      {
+        path: 'empleados/:employeeId',
+        element: <EmployeeView />,
+        roles: ['admin'],
+      },
+      {
+        path: 'empleados/:employeeId/pto',
+        element: <PTOView />,
+        roles: ['admin'],
+      }
 
     ],
   },
