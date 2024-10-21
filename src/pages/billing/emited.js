@@ -1,4 +1,6 @@
 import { useState } from 'react';
+
+import { useNavigate } from 'react-router-dom';
 import { Card, Chip, FormControl, Grid, InputLabel, MenuItem, Select, TablePagination } from '@mui/material';
 import { Money } from '../../components/Formats/FormatNumbers';
 import { CustomTable } from '../../components/tables/Table';
@@ -28,7 +30,7 @@ const methodText = {
 export function BillingList () {
   const { billing, search, cancel } = useBillingList()
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
+  const navigate = useNavigate();
   return (
     <>
       <DebounceInput label="Buscar" variant="outlined" fullWidth onChange={(ev) => {
@@ -39,6 +41,9 @@ export function BillingList () {
       }} />
       <CustomTable
         titles={['Folio', 'Fecha', 'Cliente', 'Regimen Fiscal', 'RFC', 'Total', 'Estado', 'Metodo', 'Acciones']}
+        onClick={(item) => {
+          navigate(`/dashboard/facturas/${item.id}/ordenes`)
+        }}
         pageComponent={<TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           onRowsPerPageChange={(ev) => {

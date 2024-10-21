@@ -51,6 +51,7 @@ import { ClientDetails } from './pages/clients/details';
 import { MaterialOverview, MaterialsPage } from './pages/materials';
 import { EmployeeView } from './pages/employees/employeeView';
 import { PTOView } from './pages/employees/pto/ptoView';
+import { BilledOrders } from './pages/billing/billedOrders';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -163,6 +164,11 @@ export const routes = [
         element: <BillingList />,
         roles: ['admin', 'cashier'],
         icon: <ReceiptLongIcon />,
+      },
+      {
+        path: 'facturas/:billingId/ordenes',
+        roles: ['admin', 'cashier'],
+        element: <BilledOrders />,
       },
       {
         path: 'facturas/recibidas',
