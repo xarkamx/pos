@@ -9,7 +9,8 @@ import { usePopUp } from '../../../context/PopUpContext';
 
 export function DownloadBillButton ({ billingId }) {
   return (
-    <Button startIcon={<SimCardDownloadIcon />} onClick={() => {
+    <Button startIcon={<SimCardDownloadIcon />} onClick={(ev) => {
+      ev.stopPropagation();
       const service = new OrderTransaction();
       service.downloadBill(billingId);
     }}>Descargar</Button>
@@ -20,7 +21,8 @@ export function SendEmail ({ billingId }) {
   const { popUpAlert } = usePopUp();
   const [loading, setLoading] = useState(false);
   return (
-    <Button startIcon={<AlternateEmailIcon />} color={'success'} disabled={loading} onClick={async () => {
+    <Button startIcon={<AlternateEmailIcon />} color={'success'} disabled={loading} onClick={async (ev) => {
+      ev.stopPropagation();
       setLoading(true);
       const service = new OrderTransaction();
       const resp = await service.sendEmail(billingId);

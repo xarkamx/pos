@@ -9,6 +9,8 @@ import {
   TableRow,
 } from "@mui/material";
 import React, { useState } from "react";
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { optionalFn } from "../../core/helpers";
 import {
   ConditionalWall,
@@ -25,8 +27,9 @@ function TableHeader ({ values, onClick }) {
       <TableTitle
         title={title}
         key={key}
+        sortable={onClick}
         onClick={(dir) => {
-          optionalFn(onClick)(dir, value);
+          optionalFn(onClick)(dir, title);
         }}
       />
     );
@@ -54,15 +57,14 @@ function TableTitle ({ title, onClick, sortable = false }) {
         setDir(dir);
         return optionalFn(onClick)(direction === "down" ? "desc" : "asc");
       }}>
-      {title}{" "}
+      {title}
       <ConditionalWall condition={Boolean(sortable)}>
-        d
+        {direction === "down" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
       </ConditionalWall>
     </TableCell>
   );
 }
-function TableContainer ({ children, titles, pageComponent, hook }) {
-  const setDir = hook;
+function TableContainer ({ children, titles, pageComponent, onTitleClick }) {
   return (
     <Card>
       <Scrollbar>
@@ -70,7 +72,7 @@ function TableContainer ({ children, titles, pageComponent, hook }) {
           <TableHeader
             values={titles}
             onClick={(dir, key) => {
-              setDir([key, dir]);
+              onTitleClick?.(key, dir);
             }}
           />
           <TableBody>{children}</TableBody>
@@ -94,11 +96,11 @@ function TableContainer ({ children, titles, pageComponent, hook }) {
  */
 export function CustomTable ({
   pageComponent,
-  setDir,
   titles,
   content = [],
   onClick,
   format,
+  onTitleClick,
 }) {
 
   return (<>
@@ -106,7 +108,7 @@ export function CustomTable ({
       <ResponsiveList titles={titles} content={content} onClick={onClick} format={format} />
     </ScreenRangeContainer>
     <ScreenRangeContainer min={601} max={Infinity}>
-      <TableContainer hook={setDir} titles={titles} pageComponent={pageComponent}>
+      <TableContainer titles={titles} onTitleClick={onTitleClick} pageComponent={pageComponent}>
         {content.map((item, key) => [
           <TableRow
             hover

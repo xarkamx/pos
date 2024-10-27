@@ -14,7 +14,8 @@ export function AddComplementButton ({ billingId, total, onAccept }) {
   const [toggle, setToggle] = useState(false);
   return (
     <>
-      <Button startIcon={<ExtensionIcon />} color={'warning'} onClick={async () => {
+      <Button startIcon={<ExtensionIcon />} color={'warning'} onClick={async (ev) => {
+        ev.stopPropagation();
         setToggle(true);
       }}>Complemento</Button>
 
@@ -36,59 +37,58 @@ export function ComplementModalForm ({ billingId, total, open, onClose, onAccept
     amount: total
   });
   return (
-    <>
-      <Modal open={open} onClose={onClose}>
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 400,
+
+    <Modal open={open} onClose={onClose}>
+      <Box sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+      }}>
+        <Card sx={{
+          p: 3,
         }}>
-          <Card sx={{
-            p: 3,
-          }}>
-            <QuickFormContainer
-              title='Agregar complemento'
-              onSubmit={async (ev) => {
-                ev.preventDefault();
-                setLoading(true);
-                const service = new OrderTransaction();
-                try {
-                  const resp = await service.addComplement(billingId, {
-                    paymentForm: complementForm.paymentMethod,
-                    amount: complementForm.amount
-                  });
-                  if (resp.ok) {
-                    popUpAlert("success", "Complemento agregado correctamente");
-                    onAccept?.();
-                  }
-                } catch (e) {
-                  popUpAlert("error", "Ocurrio un error al agregar el complemento");
+          <QuickFormContainer
+            title='Agregar complemento'
+            onSubmit={async (ev) => {
+              ev.preventDefault();
+              setLoading(true);
+              const service = new OrderTransaction();
+              try {
+                const resp = await service.addComplement(billingId, {
+                  paymentForm: complementForm.paymentMethod,
+                  amount: complementForm.amount
+                });
+                if (resp.ok) {
+                  popUpAlert("success", "Complemento agregado correctamente");
+                  onAccept?.();
                 }
-                finally {
-                  onClose();
-                  setLoading(false);
-                }
+              } catch (e) {
+                popUpAlert("error", "Ocurrio un error al agregar el complemento");
+              }
+              finally {
+                onClose();
+                setLoading(false);
+              }
 
-              }}
+            }}
 
-            >
-              <ListItem>
-                <PaymentMethodSelect paymentMethod={complementForm.paymentMethod} onChange={(value) => {
-                  setComplementForm({ paymentMethod: value.value });
-                }} />
-              </ListItem>
-              <Button variant="contained" disabled={loading} sx={{ mt: 2 }} fullWidth type='submit'>
-                {
-                  loading ? "Cargando..." : "Agregar"
-                }
-              </Button>
-            </QuickFormContainer>
-          </Card>
-        </Box>
+          >
+            <ListItem>
+              <PaymentMethodSelect paymentMethod={complementForm.paymentMethod} onChange={(value) => {
+                setComplementForm({ paymentMethod: value.value });
+              }} />
+            </ListItem>
+            <Button variant="contained" disabled={loading} sx={{ mt: 2 }} fullWidth type='submit'>
+              {
+                loading ? "Cargando..." : "Agregar"
+              }
+            </Button>
+          </QuickFormContainer>
+        </Card>
+      </Box>
 
-      </Modal>
-    </>
+    </Modal>
   )
 }

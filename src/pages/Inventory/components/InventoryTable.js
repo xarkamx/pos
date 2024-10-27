@@ -6,9 +6,11 @@ import { Money } from '../../../components/Formats/FormatNumbers';
 import { CustomTable } from '../../../components/tables/Table';
 import { kValues, monthsSince } from '../../../core/helpers';
 import { refillRatio } from './utils';
+import { useCState } from '../../../hooks/useHooks';
 
 export function InventoryTable ({ items = [] }) {
   const [search, setSearch] = useState('');
+  const [sort, setSort] = useCState({ key: '% de almacen', dir: 'asc' });
   const navigate = useNavigate();
   const [material, setMaterial] = useState(null);
   const [open, setOpen] = useState(false);
@@ -25,13 +27,7 @@ export function InventoryTable ({ items = [] }) {
     );
   }).filter((item) => item.soldUnits > 0);
 
-  filtered.sort((a, b) => {
-    const aRatio = refillRatio(a.inStock ?? 0, Math.ceil(a.soldUnits ?? 0 / months))
-    const bRatio = refillRatio(b.inStock ?? 0, Math.ceil(b.soldUnits ?? 0 / months))
-    if (aRatio > bRatio) return 1;
-    if (aRatio < bRatio) return -1;
-    return 0;
-  })
+  filtered.sort(sortByTitle(sort.key, sort.dir, months));
   return (
     <>
       <TextField label="Buscar" variant="outlined" fullWidth onChange={(event) => {
@@ -39,6 +35,10 @@ export function InventoryTable ({ items = [] }) {
       }} />
       <CustomTable
         content={filtered}
+        onTitleClick={(value, dir) => {
+          console.log("Sorting by", value, dir);
+          setSort({ key: value, dir });
+        }}
         onClick={(item) => {
           setOpen(true);
           setMaterial(item);
@@ -118,3 +118,35 @@ function MaterialModal ({ open, handleClose, product }) {
     </Modal>
   );
 }
+
+function sortByTitle (key, dir, months) {
+  const processAsc = {
+    'Id': (a, b) => a.id - b.id,
+    'Nombre': (a, b) => a.name.localeCompare(b.name),
+    'Cantidad': (a, b) => a.inStock - b.inStock,
+    '% de almacen': (a, b) => refillRatio(a.inStock ?? 0, Math.ceil(a.soldUnits ?? 0 / months)) - refillRatio(b.inStock ?? 0, Math.ceil(b.soldUnits ?? 0 / months)),
+    'Precio': (a, b) => a.unitPrice - b.unitPrice,
+    'Ventas/Mes': (a, b) => Math.ceil(a.soldUnits / months) - Math.ceil(b.soldUnits / months),
+    'Proyección Mensual': (a, b) => (a.unitPrice * Math.ceil(a.soldUnits / months)) - (b.unitPrice * Math.ceil(b.soldUnits / months)),
+    'Proyeccion de Stock': (a, b) => (a.unitPrice * a.inStock) - (b.unitPrice * b.inStock),
+  }
+
+  const processDesc = {
+    'Id': (a, b) => b.id - a.id,
+    'Nombre': (a, b) => b.name.localeCompare(a.name),
+    'Cantidad': (a, b) => b.inStock - a.inStock,
+    '% de almacen': (a, b) => refillRatio(b.inStock ?? 0, Math.ceil(b.soldUnits ?? 0 / months)) - refillRatio(a.inStock ?? 0, Math.ceil(a.soldUnits ?? 0 / months)),
+    'Precio': (a, b) => b.unitPrice - a.unitPrice,
+    'Ventas/Mes': (a, b) => Math.ceil(b.soldUnits / months) - Math.ceil(a.soldUnits / months),
+    'Proyección Mensual': (a, b) => (b.unitPrice * Math.ceil(b.soldUnits / months)) - (a.unitPrice * Math.ceil(a.soldUnits / months)),
+    'Proyeccion de Stock': (a, b) => (b.unitPrice * b.inStock) - (a.unitPrice * a.inStock),
+  };
+  return dir === 'asc' ? processAsc[key] : processDesc[key];
+}
+
+// function refilSort(a,b) {
+//   const aRatio = refillRatio(a.inStock ?? 0, Math.ceil(a.soldUnits ?? 0 / months))
+//   const bRatio = refillRatio(b.inStock ?? 0, Math.ceil(b.soldUnits ?? 0 / months))
+//   if (aRatio > bRatio) return 1;
+//   if (aRatio < bRatio) return -1;
+// }
