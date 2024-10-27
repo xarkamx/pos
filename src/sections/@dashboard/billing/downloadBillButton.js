@@ -1,8 +1,11 @@
 
 
 import { useState } from 'react';
+
+import { useNavigate } from 'react-router-dom';
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
+import GradingIcon from '@mui/icons-material/Grading';
 import { Button } from '@mui/material';
 import { OrderTransaction } from '../../../utils/transactions/orderTransaction';
 import { usePopUp } from '../../../context/PopUpContext';
@@ -30,5 +33,15 @@ export function SendEmail ({ billingId }) {
         popUpAlert("success", "Correo enviado correctamente");
       setLoading(false);
     }}>{loading ? "Cargando..." : "Enviar"}</Button>
+  )
+}
+
+export function SeeOrdersButton ({ billingId }) {
+  const navigate = useNavigate();
+  return (
+    <Button startIcon={<GradingIcon />} onClick={(ev) => {
+      ev.stopPropagation();
+      navigate(`/dashboard/facturas/${billingId}/ordenes`)
+    }}>Ver Ordenes</Button>
   )
 }

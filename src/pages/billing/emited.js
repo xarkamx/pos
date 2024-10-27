@@ -9,7 +9,7 @@ import { between, getEndOfDay, getFirstDayOfMonth, localeDate } from '../../core
 import { useBillingList } from '../../hooks/useBilling';
 import { DebounceInput } from '../../components/Inputs/DebounceInput';
 import { BillingButton } from '../orders/billingButton';
-import { DownloadBillButton, SendEmail } from '../../sections/@dashboard/billing/downloadBillButton';
+import { DownloadBillButton, SeeOrdersButton, SendEmail } from '../../sections/@dashboard/billing/downloadBillButton';
 import { AddComplementButton } from '../../sections/@dashboard/billing/complementModal';
 import { SearchDatesInputs } from '../../components/Inputs/SearchDateInput';
 import { useCState } from '../../hooks/useHooks';
@@ -30,7 +30,6 @@ const methodText = {
 export function BillingList () {
   const { billing, search, cancel } = useBillingList()
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const navigate = useNavigate();
   return (
     <>
       <DebounceInput label="Buscar" variant="outlined" fullWidth onChange={(ev) => {
@@ -41,9 +40,6 @@ export function BillingList () {
       }} />
       <CustomTable
         titles={['Folio', 'Fecha', 'Cliente', 'Regimen Fiscal', 'RFC', 'Total', 'Estado', 'Metodo', 'Acciones']}
-        onClick={(item) => {
-          navigate(`/dashboard/facturas/${item.id}/ordenes`)
-        }}
         pageComponent={<TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           onRowsPerPageChange={(ev) => {
@@ -76,7 +72,9 @@ export function BillingList () {
             }}
           />,
           methodText[item.payment_method],
-          <ActionsContainer item={item} onCancel={cancel} key={`actions-${item.id}`} />
+          <>
+            <ActionsContainer item={item} onCancel={cancel} key={`actions-${item.id}`} />
+          </>
         ]}
       />
     </>
@@ -162,6 +160,7 @@ function ActionsContainer ({ item, onCancel }) {
     {item.status === 'valid' ? <DownloadBillButton billingId={item.id} /> : ''}
     {item.status === 'valid' ? <SendEmail billingId={item.id} /> : ''}
     {item.payment_form === '99' && item.status === 'valid' ? <AddComplementButton total={item.total} billingId={item.id} /> : ''}
+    <SeeOrdersButton billingId={item.id} />
   </div>
 }
 
