@@ -76,6 +76,16 @@ export function useMaterialProducts (id) {
     popUpAlert('success', 'Producto agregado');
   }
 
+  const updateMaterial = async (id, material) => {
+    try {
+      await materialsTransactions.updateMaterial(id, material);
+    } catch (e) {
+      popUpAlert('Error', e.message);
+    }
+    resp.refetch();
+    popUpAlert('success', 'Material actualizado');
+  }
+
   const delProduct = async (materialId, productId) => {
     try {
       await materialsTransactions.delProductToMaterial(materialId, productId);
@@ -89,6 +99,7 @@ export function useMaterialProducts (id) {
     childProducts: resp?.data?.[0] ?? [],
     materialDetails: resp?.data?.[1] ?? {},
     loading: resp.isLoading,
+    updateMaterial,
     addProduct,
     delProduct
   }

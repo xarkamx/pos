@@ -3,13 +3,15 @@ import { useState } from 'react';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Grid, IconButton, ListItem, MenuItem, TextField } from '@mui/material';
-import { QuickFormButton, QuickFormContainer, QuickFormInput } from '../../components/Containers/QuickFormContainer';
+import { Button, Grid, IconButton, TextField } from '@mui/material';
+import { QuickFormContainer } from '../../components/Containers/QuickFormContainer';
 import { SmartGrid } from '../../components/Containers/SmartGrid';
 import { CustomTable } from '../../components/tables/Table';
 import { BasicProductSearch } from '../../sections/@dashboard/products/ProductSearchInput';
 import { useMaterial, useMaterialProducts } from './hooks/useMaterial';
 import { useCState } from '../../hooks/useHooks';
+import { MaterialForm } from './components/materialForm';
+import { Money } from '../../components/Formats/FormatNumbers';
 
 export function MaterialsPage () {
   const { materials, addMaterial } = useMaterial()
@@ -27,9 +29,14 @@ export function MaterialsPage () {
 
 export function MaterialOverview () {
   const { materialId } = useParams()
-  const { childProducts, materialDetails, addProduct, delProduct } = useMaterialProducts(materialId)
+  const { childProducts, materialDetails, addProduct, updateMaterial, delProduct } = useMaterialProducts(materialId)
   return <SmartGrid container spacing={2}>
-    <SmartGrid title='Productos' item xs={12} >
+    <SmartGrid title='Detalles' item xs={3} >
+      <MaterialForm {...materialDetails} onSubmit={(values) => {
+        updateMaterial(materialId, values)
+      }} />
+    </SmartGrid>
+    <SmartGrid title='Productos' item xs={9} >
       <ProductListForm material={materialDetails}
         onDelete={delProduct}
         onSubmit={addProduct}
@@ -37,45 +44,13 @@ export function MaterialOverview () {
           childProducts
         } />
     </SmartGrid>
+    <SmartGrid title='Inventario' item xs={9} >
+      Inventario
+    </SmartGrid>
   </SmartGrid>
 
 }
 
-function MaterialForm ({ onSubmit }) {
-  const [loading, setLoading] = useState(false)
-
-  const [material, setMaterial] = useCState({
-    name: '',
-    unit: 'g',
-  })
-
-
-  return <QuickFormContainer title='Insumos' onSubmit={() => {
-    setLoading(true)
-    onSubmit(material)
-    setLoading(false)
-  }}>
-    <QuickFormInput fullWidth label='Nombre' value={material.name} onChange={(ev) => {
-      setMaterial({ name: ev.target.value })
-    }} />
-    <ListItem>
-      <TextField fullWidth label='Unidad' select value={material.unit} onChange={(ev) => {
-        setMaterial({ unit: ev.target.value })
-      }}>
-        <MenuItem value='kg'>Kilogramos</MenuItem >
-        <MenuItem value='g'>Gramos</MenuItem >
-        <MenuItem value='u'>Unidad</MenuItem >
-      </TextField>
-    </ListItem>
-    <QuickFormButton
-      disabled={loading}
-      type='submit'
-      variant='contained'
-      color='primary'
-      fullWidth
-    >Guardar</QuickFormButton>
-  </QuickFormContainer>
-}
 
 export function MaterialTable ({ materials }) {
   const navigate = useNavigate()
@@ -149,19 +124,26 @@ function ProductListForm ({
       </Grid>
       <Grid item xs={12}>
         <CustomTable
-          titles={['Producto', 'Cantidad', 'Unidad', 'Acciones']}
+          titles={['Producto', 'Cantidad', 'Unidad', 'Precio', 'Acciones']}
           content={childProducts}
-          format={(item) => [item.productName, item.requiredQuantity, item.unit, <IconButton
-            color='error'
-            key={`del-${item.id}`}
-            disabled={loading}
-            onClick={async () => {
-              setLoading(true)
-              await onDelete(material.id, item.id)
-              setLoading(false)
-            }} >
-            <DeleteIcon />
-          </IconButton>]}
+          format={(item) => {
+            const amount = item.requiredQuantity * material.price
+            return [
+              item.productName,
+              item.requiredQuantity,
+              item.unit,
+              <Money number={amount} key={`${item.id}-amount`} />, <IconButton
+                color='error'
+                key={`del-${item.id}`}
+                disabled={loading}
+                onClick={async () => {
+                  setLoading(true)
+                  await onDelete(material.id, item.id)
+                  setLoading(false)
+                }} >
+                <DeleteIcon />
+              </IconButton>]
+          }}
         />
       </Grid>
     </Grid>

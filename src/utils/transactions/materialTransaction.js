@@ -40,6 +40,21 @@ export class MaterialTransaction extends TransactionService {
     });
   }
 
+  async getInventory () {
+    return this.get('/inventory/materials');
+  }
+
+  async addMaterialToInventory (materialId, qty) {
+    return this.post('/inventory/materials', {
+      materialId,
+      quantity: qty
+    });
+  }
+
+  async updateMaterial (id, material) {
+    return this.put(`/materials/${id}`, material);
+  }
+
 
 
 }

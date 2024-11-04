@@ -52,6 +52,7 @@ import { MaterialOverview, MaterialsPage } from './pages/materials';
 import { EmployeeView } from './pages/employees/employeeView';
 import { PTOView } from './pages/employees/pto/ptoView';
 import { BilledOrders } from './pages/billing/billedOrders';
+import { MaterialInventory } from './pages/materials/components/materialInventory';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -121,6 +122,13 @@ export const routes = [
         roles: ['admin', 'storer'],
         icon: <InventoryIcon />,
         title: 'Inventario',
+      },
+      {
+        path: 'inventario/materiales',
+        element: <MaterialInventory />,
+        roles: ['admin', 'storer'],
+        icon: <InventoryIcon />,
+        title: 'Inventario de materiales',
       },
 
       {
@@ -208,7 +216,7 @@ export const routes = [
 
       { path: 'ordenes/:orderId', element: <ClientOrderPage />, roles: ['customer'] },
       { path: 'insumos', element: <MaterialsPage />, roles: ['admin', 'storer'], icon: <DatasetIcon />, title: 'Insumos' },
-      { path: 'insumos/:materialId', element: <MaterialOverview />, roles: ['admin', 'storer'] },
+      { path: 'insumos/:materialId', element: <MaterialOverview />, roles: ['admin'] },
       {
         path: 'empleados/:employeeId',
         element: <EmployeeView />,

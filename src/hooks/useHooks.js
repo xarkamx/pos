@@ -1,7 +1,8 @@
 import { useEffect, useReducer, useRef } from "react";
 
 export function useCState (initState = {}) {
-  return useReducer((prev, next) => ({ ...prev, ...next }), initState);
+  const reduced = useReducer((prev, next) => ({ ...prev, ...next }), initState);
+  return reduced;
 }
 
 // Hook made with the help of copilot
