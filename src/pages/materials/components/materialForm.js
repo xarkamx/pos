@@ -42,7 +42,7 @@ export function MaterialForm ({ onSubmit, name = '', unit = 'g', description = '
       label='Precio'
       type='number'
       value={material.price}
-      inputProps={{ step: 0.01, min: 0 }}
+      inputProps={{ step: 0.001, min: 0 }}
       onChange={(ev) => {
         setMaterial({ price: ev.target.value })
       }} />
