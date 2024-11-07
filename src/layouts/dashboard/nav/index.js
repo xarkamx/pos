@@ -36,9 +36,26 @@ export default function Nav ({ openNav, onCloseNav }) {
       return item.roles.some((role) => auth.access?.roles?.includes(role));
     }
     return true;
-  }).sort((a, b) => a.title.localeCompare(b.title));
-  const isDesktop = useResponsive('up', 'lg');
+  }).sort((a, b) => a.title.localeCompare(b.title))
+  let menu = navConfig.filter((item) => {
 
+    const itemPathLevel = item.path.split('/').length + 1;
+    const pathLevel = pathname.split('/').length - 1;
+    const pathPos = item.path.includes(pathname.split('/')[pathLevel])
+    if (pathname.includes('app')) {
+      return itemPathLevel === 2
+    }
+
+    return itemPathLevel > pathLevel && pathPos
+  });
+
+  const isDesktop = useResponsive('up', 'lg');
+  if (menu.length === 0) {
+    menu = navConfig.filter((item) => {
+      const itemPathLevel = item.path.split('/').length + 1;
+      return itemPathLevel === 2
+    })
+  }
   useEffect(() => {
     if (openNav) {
       onCloseNav();
@@ -58,7 +75,7 @@ export default function Nav ({ openNav, onCloseNav }) {
       </Box>
 
 
-      <NavSection data={navConfig} />
+      <NavSection data={menu} />
 
       <Box sx={{ flexGrow: 1 }} />
 

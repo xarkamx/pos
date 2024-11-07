@@ -13,7 +13,7 @@ import { usePopUp } from '../../../context/PopUpContext';
 
 export function MaterialInventory () {
   const { materials, addMaterial, loading } = useMaterialInventory()
-  return <SmartGrid container>
+  return <SmartGrid container spacing={3}>
     <SmartGrid title='Agregar Material' item xs={12} md={4} >
       <AddMaterialToInventoryForm onSubmit={addMaterial} loading={loading} />
     </SmartGrid>
@@ -50,6 +50,7 @@ function AddMaterialToInventoryForm ({ onSubmit, loading }) {
     </List>
     <QuickFormInput fullWidth label='Cantidad' name='qty'
       type='number'
+      inputProps={{ step: 0.001 }}
       value={form.qty}
       onChange={(ev) => {
         setForm({ qty: ev.target.value })
