@@ -35,8 +35,7 @@ export function localeDate (dateString = null) {
 
 export function localeDateUTFMex (dateString = null) {
   const date = dateString ? new Date(dateString) : new Date();
-  // add 4 hours to the date
-  date.setHours(date.getHours() + 4);
+  date.setHours(date.getHours());
   return date.toLocaleDateString("es-MX", {
     year: "numeric",
     month: "numeric",
@@ -205,7 +204,7 @@ export function monthsSince (date) {
 
 export function timeSince (date) {
   date = new Date(date);
-  date.setHours(date.getHours() + 4);
+  date.setHours(date.getHours());
   const today = new Date();
   const diff = (today.getTime() - date.getTime()) / 1000;
   const days = diff / (60 * 60 * 24);

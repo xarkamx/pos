@@ -216,7 +216,7 @@ export const routes = [
 
       { path: 'ordenes/:orderId', element: <ClientOrderPage />, roles: ['customer'] },
       { path: 'inventario/insumos', element: <MaterialsPage />, roles: ['admin', 'storer'], icon: <DatasetIcon />, title: 'Insumos' },
-      { path: 'insumos/:materialId', element: <MaterialOverview />, roles: ['admin'] },
+      { path: 'insumos/:materialId', element: <MaterialOverview />, roles: ['admin', 'storer'] },
       {
         path: 'empleados/:employeeId',
         element: <EmployeeView />,

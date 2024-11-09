@@ -1,4 +1,6 @@
 
+
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { List } from '@mui/material';
@@ -10,9 +12,11 @@ import { BasicMaterialSearch } from './MaterialSelector';
 import { SmartGrid } from '../../../components/Containers/SmartGrid';
 import { useCState } from '../../../hooks/useHooks';
 import { usePopUp } from '../../../context/PopUpContext';
+import { kValues } from '../../../core/helpers';
 
 export function MaterialInventory () {
   const { materials, addMaterial, loading } = useMaterialInventory()
+  const nav = useNavigate()
   return <SmartGrid container spacing={3}>
     <SmartGrid title='Agregar Material' item xs={12} md={4} >
       <AddMaterialToInventoryForm onSubmit={addMaterial} loading={loading} />
@@ -21,10 +25,11 @@ export function MaterialInventory () {
       <CustomTable
         titles={['Id', 'Nombre', 'Cantidad', 'Unidad', 'Precio', 'Inversion']}
         content={materials}
+        onClick={(item) => nav(`/dashboard/insumos/${item.id}`)}
         format={(item) => [
           item.id,
           item.name,
-          item.quantity,
+          kValues(item.quantity),
           item.unit,
           <Money number={item.price} key={`${item.id}-price`} />,
           <Money number={item.quantity * item.price} key={`${item.id}-investment`} />,

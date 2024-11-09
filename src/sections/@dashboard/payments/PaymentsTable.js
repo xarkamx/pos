@@ -5,11 +5,12 @@ import { Money } from '../../../components/Formats/FormatNumbers';
 import { SearchDatesInputs } from '../../../components/Inputs/SearchDateInput';
 import { PaginatedTable } from '../../../components/tables/paginatedTable';
 import { CustomTable } from '../../../components/tables/Table';
-import { between, getEndOfDay, getLastMonday, localeDateUTFMex } from '../../../core/helpers';
+import { between, getEndOfDay, getLastMonday } from '../../../core/helpers';
 import { useCState } from '../../../hooks/useHooks';
 import { TotalResume } from './PaymentsResume';
 import { paymentType } from '../../../utils/formats';
 import { PaymentMethodSelect } from './SelectPaymentMethod';
+import { CreatedSinceToolTip } from '../../../components/label/Label';
 
 export default function PaymentTable ({ payments, onDeletePayment }) {
   const [search, setSearch] = useCState({ from: getLastMonday(new Date()), to: getEndOfDay(new Date()) });
@@ -74,7 +75,7 @@ export default function PaymentTable ({ payments, onDeletePayment }) {
             onDeletePayment(item.id);
           }} />,
           item.id,
-          localeDateUTFMex(item.createdAt),
+          <CreatedSinceToolTip date={item.createdAt} key={`date-${item.id}`} />,
           item.externalId,
           item.flow === 'inflow' ? 'Entrada' : 'Salida',
           item.description,

@@ -2,16 +2,20 @@
 import { useState } from 'react';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Grid, IconButton, TextField } from '@mui/material';
 import { QuickFormContainer } from '../../components/Containers/QuickFormContainer';
-import { SmartGrid } from '../../components/Containers/SmartGrid';
+import { SmartGrid, SmartTab } from '../../components/Containers/SmartGrid';
 import { CustomTable } from '../../components/tables/Table';
 import { BasicProductSearch } from '../../sections/@dashboard/products/ProductSearchInput';
 import { useMaterial, useMaterialProducts } from './hooks/useMaterial';
 import { useCState } from '../../hooks/useHooks';
 import { MaterialForm } from './components/materialForm';
 import { Money } from '../../components/Formats/FormatNumbers';
+import { CreatedSinceToolTip } from '../../components/label/Label';
+import { kValues } from '../../core/helpers';
 
 export function MaterialsPage () {
   const { materials, addMaterial } = useMaterial()
@@ -30,24 +34,34 @@ export function MaterialsPage () {
 export function MaterialOverview () {
   const { materialId } = useParams()
   const { childProducts, materialDetails, addProduct, updateMaterial, delProduct } = useMaterialProducts(materialId)
-  return <SmartGrid container spacing={2}>
-    <SmartGrid title='Detalles' item xs={3} >
+  return <SmartTab container spacing={2}>
+    <SmartTab title='Detalles' item xs={4} >
       <MaterialForm {...materialDetails} onSubmit={(values) => {
         updateMaterial(materialId, values)
       }} />
-    </SmartGrid>
-    <SmartGrid title='Productos' item xs={9} >
+    </SmartTab>
+
+    <SmartTab
+      title='Inventario'
+      icon={<InventoryIcon />}
+      item xs={8} >
+      <CustomTable titles={['Fecha', 'Cantidad']} content={materialDetails.inventory} format={(i) => [
+        <CreatedSinceToolTip date={i.createdAt} key={`${i.id}-date`} />,
+        kValues(i.quantity),
+      ]} />
+    </SmartTab>
+    <SmartTab
+      title='Productos'
+      icon={<DashboardIcon />}
+      item xs={12} >
       <ProductListForm material={materialDetails}
         onDelete={delProduct}
         onSubmit={addProduct}
         childProducts={
           childProducts
         } />
-    </SmartGrid>
-    <SmartGrid title='Inventario' item xs={9} >
-      Inventario
-    </SmartGrid>
-  </SmartGrid>
+    </SmartTab>
+  </SmartTab>
 
 }
 

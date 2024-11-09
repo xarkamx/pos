@@ -17,7 +17,13 @@ export function MaterialForm ({ onSubmit, name = '', unit = 'g', description = '
   }, [name, unit, description, price, setMaterial])
 
 
-  return <QuickFormContainer title='Material' onSubmit={() => {
+  return <QuickFormContainer sx={{
+    padding: '1rem',
+    gap: '1rem',
+    maxWidth: '80%',
+    with: '600px',
+    margin: 'auto',
+  }} title='Material' onSubmit={() => {
     setLoading(true)
     onSubmit(material)
     setLoading(false)

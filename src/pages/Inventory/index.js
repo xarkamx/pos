@@ -7,6 +7,7 @@ import { refillRatio } from './components/utils';
 import { CustomTable } from '../../components/tables/Table';
 import { SmartGrid } from '../../components/Containers/SmartGrid';
 import { useNav } from '../../hooks/useNav';
+import { Money } from '../../components/Formats/FormatNumbers';
 
 export function InventoryPage () {
   const { add, items } = useInventory();
@@ -34,9 +35,11 @@ function RequiredMaterials ({ items }) {
     return 0;
   });
   return (
-    <CustomTable content={required} titles={['Material', 'Requerido']} format={(item) => [
+    <CustomTable content={required} titles={['Material', 'Requerido', 'Precio']} format={(item) => [
       item.name,
-      kValues(item.required)]}
+      kValues(item.required),
+      <Money number={item.price} key={`price-${item.name}`} />
+    ]}
       onClick={(item) => {
         nav(`/dashboard/insumos/${item.materialId}`);
       }}
@@ -48,7 +51,7 @@ function requiredMaterialsList (items) {
   const filtered = filterMaterials(items);
   return filtered.reduce((acc, item) => {
     item.materials.forEach((material) => {
-      const { materialId, name, required } = material;
+      const { materialId, name, required, price } = material;
       if (acc[materialId]) {
         acc[materialId].required += required;
       } else {
@@ -56,6 +59,7 @@ function requiredMaterialsList (items) {
           materialId,
           name,
           required,
+          price: price * required,
         };
       }
     });
