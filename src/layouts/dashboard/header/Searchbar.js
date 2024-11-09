@@ -1,16 +1,16 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Input, Slide, Button, IconButton, InputAdornment, ClickAwayListener } from '@mui/material';
+import { Input, Slide, Button, IconButton, InputAdornment, ClickAwayListener, Grid } from '@mui/material';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 // component
 import Iconify from '../../../components/iconify';
+import { routes } from '../../../routes';
 
 // ----------------------------------------------------------------------
 
-const HEADER_MOBILE = 64;
-const HEADER_DESKTOP = 92;
 
 const StyledSearchbar = styled('div')(({ theme }) => ({
   ...bgBlur({ color: theme.palette.background.default }),
@@ -21,18 +21,17 @@ const StyledSearchbar = styled('div')(({ theme }) => ({
   display: 'flex',
   position: 'absolute',
   alignItems: 'center',
-  height: HEADER_MOBILE,
   padding: theme.spacing(0, 3),
   boxShadow: theme.customShadows.z8,
   [theme.breakpoints.up('md')]: {
-    height: HEADER_DESKTOP,
     padding: theme.spacing(0, 5),
+    height: "100vh"
   },
 }));
 
 // ----------------------------------------------------------------------
 
-export default function Searchbar() {
+export default function Searchbar () {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -45,7 +44,9 @@ export default function Searchbar() {
 
   return (
     <ClickAwayListener onClickAway={handleClose}>
-      <div>
+      <div role="button" tabIndex={0} onKeyUp={(ev) => {
+        if (ev.key === "Escape") handleClose();
+      }}>
         {!open && (
           <IconButton onClick={handleOpen}>
             <Iconify icon="eva:search-fill" />
@@ -54,24 +55,53 @@ export default function Searchbar() {
 
         <Slide direction="down" in={open} mountOnEnter unmountOnExit>
           <StyledSearchbar>
-            <Input
-              autoFocus
-              fullWidth
-              disableUnderline
-              placeholder="Search…"
-              startAdornment={
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />
-                </InputAdornment>
-              }
-              sx={{ mr: 1, fontWeight: 'fontWeightBold' }}
-            />
-            <Button variant="contained" onClick={handleClose}>
-              Search
-            </Button>
+            <MenuGrid handleClose={handleClose} />
           </StyledSearchbar>
         </Slide>
       </div>
-    </ClickAwayListener>
+    </ClickAwayListener >
   );
+}
+
+function MenuGrid ({ handleClose }) {
+  const [search, setSearch] = useState('');
+  return (
+    <Grid container>
+      <Grid item xs={12}>
+        <Input
+          onChange={(e) => setSearch(e.target.value)}
+          autoFocus
+          fullWidth
+          disableUnderline
+          placeholder="Search…"
+          startAdornment={
+            <InputAdornment position="start">
+              <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />
+            </InputAdornment>
+          }
+          sx={{ mr: 1, fontWeight: 'fontWeightBold' }}
+        /></Grid>
+      <Grid item xs={12}>
+        <NavItems searchVal={search} onClose={handleClose} />
+      </Grid>
+    </Grid>
+  );
+}
+
+function NavItems ({ searchVal, onClose }) {
+  const nav = useNavigate();
+  const navConfig = routes[0].children.filter((item) => item.title?.includes(searchVal) || (item.title && item.path.includes(searchVal)));
+  return <Grid container sx={{ color: "#333", maxHeight: "80vh", overflow: "auto" }}>
+    {navConfig.map((item) => (
+      <Grid item key={item.title} xs={4}>
+        <Button startIcon={item.icon}
+          onClick={() => {
+            nav(`/dashboard/${item.path}`);
+            onClose();
+          }}
+          fullWidth sx={{ textTransform: 'none', aspectRatio: "16/9", backgroundColor: "#eeeeee55" }}>
+          {item.title}
+        </Button>
+      </Grid>))}
+  </Grid>
 }
