@@ -1,6 +1,6 @@
 
 
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Button, Card, Chip, Grid, TextField, Typography } from '@mui/material';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { useState } from 'react';
@@ -8,7 +8,7 @@ import { Money } from '../components/Formats/FormatNumbers';
 import { SearchDatesInputs } from '../components/Inputs/SearchDateInput';
 import { CustomTable } from '../components/tables/Table';
 import { between, getEndOfDay, getFirstDayOfMonth } from '../core/helpers';
-import { useCState, useHistory, useQueryString } from '../hooks/useHooks';
+import { useCState, useHistory } from '../hooks/useHooks';
 import { useOrders } from '../hooks/useOrders';
 import { PaymentModal } from '../sections/@dashboard/orders/paymentModal';
 import { DangerModal } from '../components/CustomModal/ConfirmModal';
@@ -17,6 +17,7 @@ import { DownloadBillButton, SendEmail } from '../sections/@dashboard/billing/do
 import { ConditionalWall } from '../components/FilterWall/ConditionalWall';
 import { AutoPrintablePaymentTicket } from '../sections/@dashboard/orders/paymentTicket';
 import { CreatedSinceToolTip } from '../components/label/Label';
+import { useQueryParams } from '../hooks/useQueryParams';
 
 
 const status = {
@@ -26,9 +27,8 @@ const status = {
   cancelled: 'Cancelado',
 }
 export function OrdersPage () {
-  const { filter } = useQueryString();
   const { orders, pay, checkIn, isLoading, paymentDetails, setPaymentDetails } = useOrders();
-  const [search, setSearch] = useCState({ from: getFirstDayOfMonth(new Date()), to: getEndOfDay(new Date()) });
+  const [search, setSearch] = useQueryParams({ from: getFirstDayOfMonth(new Date()), to: getEndOfDay(new Date()) });
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [order, setOrder] = useCState({});
   const [query, setQuery] = useState('');
@@ -57,6 +57,7 @@ export function OrdersPage () {
       return queryList.some((q) => searchableString.includes(q.toLowerCase()));
     });
   }
+
   if (search) {
     const to = new Date(search.to).getTime();
     const from = new Date(search.from).getTime();
@@ -65,9 +66,8 @@ export function OrdersPage () {
       return between(createdAt, from || 0, to || Infinity)
     });
   }
-
-  if (filter) {
-    ords = ords.filter((item) => item.status === filter);
+  if (search?.filter) {
+    ords = ords.filter((item) => item.status === search?.filter);
   }
 
   return <Card sx={{
@@ -149,7 +149,7 @@ export function OrdersPage () {
 
 
 function EarninsResume ({ orders = [] }) {
-  const navigate = useNavigate();
+  const [, setSearch] = useQueryParams();
   let payment = 0;
   let total = 0;
   const sx = {
@@ -176,7 +176,7 @@ function EarninsResume ({ orders = [] }) {
   }}>
     <Grid item xs={12} md={4}>
       <Card sx={{ ...sx, backgroundColor: 'darkorchid' }} onClick={() => {
-        navigate('/dashboard/ordenes?filter=paid')
+        setSearch({ filter: 'paid' });
       }}>
         <h3>Pagados</h3>
         <Money number={payment} />
@@ -184,7 +184,7 @@ function EarninsResume ({ orders = [] }) {
     </Grid>
     <Grid item xs={12} md={4}>
       <Card sx={{ ...sx, backgroundColor: 'green' }} onClick={() => {
-        navigate('/dashboard/ordenes')
+        setSearch({ filter: null });
       }}>
         <h3>Total de ventas</h3>
         <Money number={total} />
@@ -192,7 +192,7 @@ function EarninsResume ({ orders = [] }) {
     </Grid>
     <Grid item xs={12} md={4}>
       <Card sx={{ ...sx, backgroundColor: 'red' }} onClick={() => {
-        navigate('/dashboard/ordenes?filter=pending')
+        setSearch({ filter: 'pending' });
       }}>
         <h3>Por Cobrar</h3>
         <Money number={total - payment} />

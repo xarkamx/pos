@@ -11,6 +11,7 @@ import { StyledChart } from './components/chart';
 import ScrollToTop from './components/scroll-to-top';
 import { PopUpContextProvider } from './context/PopUpContext';
 import { AuthProvider } from './context/authContext';
+import { UrlQueryProvider } from './context/queryContext';
 // ----------------------------------------------------------------------
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,16 +27,18 @@ export default function App () {
     <HelmetProvider>
       <AuthProvider>
         <BrowserRouter>
-          <PopUpContextProvider>
-            <ThemeProvider>
-              <ScrollToTop />
-              <StyledChart />
-              <QueryClientProvider client={queryClient}>
-                <Router />
-                <ReactQueryDevtools initialIsOpen />
-              </QueryClientProvider>
-            </ThemeProvider>
-          </PopUpContextProvider>
+          <UrlQueryProvider>
+            <PopUpContextProvider>
+              <ThemeProvider>
+                <ScrollToTop />
+                <StyledChart />
+                <QueryClientProvider client={queryClient}>
+                  <Router />
+                  <ReactQueryDevtools initialIsOpen />
+                </QueryClientProvider>
+              </ThemeProvider>
+            </PopUpContextProvider>
+          </UrlQueryProvider>
         </BrowserRouter>
       </AuthProvider>
     </HelmetProvider>

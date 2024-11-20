@@ -191,7 +191,7 @@ export const routes = [
         icon: <ReceiptLongIcon />,
       },
       {
-        path: 'factura/custom',
+        path: 'facturas/custom',
         title: 'Crear Facturas',
         element: <CustomBillForm />,
         roles: ['admin'],
