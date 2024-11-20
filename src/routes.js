@@ -1,18 +1,23 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 
 import { Helmet } from 'react-helmet-async';
-import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
-import LoyaltyIcon from '@mui/icons-material/Loyalty';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import PercentIcon from '@mui/icons-material/Percent';
 import DatasetIcon from '@mui/icons-material/Dataset';
+import PeopleIcon from '@mui/icons-material/People';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import PaymentIcon from '@mui/icons-material/Payment';
+import CategoryIcon from '@mui/icons-material/Category';
+import SettingsIcon from '@mui/icons-material/Settings';
+import Inventory2Icon from '@mui/icons-material/Inventory2';
+import BuildCircleIcon from '@mui/icons-material/BuildCircle';
+import GroupIcon from '@mui/icons-material/Group';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
@@ -66,7 +71,7 @@ export const routes = [
         path: 'clientes',
         element: <ClientsPage />,
         roles: ['admin', 'cashier'],
-        icon: <SupervisedUserCircleIcon />,
+        icon: <PeopleIcon />,
         title: 'Clientes',
       },
       { path: 'clientes/:clientId', element: <SinglePageClient />, roles: ['admin', 'cashier'] },
@@ -77,22 +82,22 @@ export const routes = [
       },
       {
         path: 'ordenes', element: <OrdersPage />, roles: ['admin', 'cashier'],
-        icon: <ReceiptIcon />,
+        icon: <ShoppingCartIcon />,
         title: 'Notas de venta'
       },
       { path: 'ordenes/:orderId', element: <OrderPage />, roles: ['admin', 'cashier'] },
       {
         path: 'pagos', element: <PaymentPages />, roles: ['admin', 'cashier'],
-        icon: <MonetizationOnIcon />,
+        icon: <PaymentIcon />,
         title: 'Pagos'
       },
       {
         path: 'productos', element: <ProductsPage />, roles: ['admin', 'storer', 'cashier'],
-        icon: <LoyaltyIcon />,
+        icon: <CategoryIcon />,
         title: 'Productos'
       },
       {
-        path: 'productos/procesos', element: <ProcessPage />, roles: ['admin', 'storer', 'cashier'],
+        path: 'procesos', title: "Procesos", icon: <SettingsIcon />, element: <ProcessPage />, roles: ['admin', 'cashier'],
       },
       {
         path: 'productos/:productId', element: <SingleProductPage />, roles: ['admin', 'storer', 'cashier'],
@@ -120,14 +125,14 @@ export const routes = [
         path: 'inventario',
         element: <InventoryPage />,
         roles: ['admin', 'storer'],
-        icon: <InventoryIcon />,
+        icon: <Inventory2Icon />,
         title: 'Inventario',
       },
       {
         path: 'inventario/materiales',
         element: <MaterialInventory />,
         roles: ['admin', 'storer'],
-        icon: <InventoryIcon />,
+        icon: <BuildCircleIcon />,
         title: 'Inventario de materiales',
       },
 
@@ -135,7 +140,7 @@ export const routes = [
         path: 'comisionistas',
         title: 'Comisionistas',
         element: <MiddlemanPage />,
-        icon: <PercentIcon />,
+        icon: <GroupIcon />,
         roles: ['admin'],
       },
       {
@@ -303,4 +308,3 @@ export default function Router () {
 
   return useRoutes([...customRoutes, defaultRoute]);
 }
-

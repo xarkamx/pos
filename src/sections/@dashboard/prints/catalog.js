@@ -102,7 +102,6 @@ export const PrintableCatalog = React.forwardRef(({ products, css }, ref) => (
 )
 
 export function PrintCatalog ({ products }) {
-
   const componentRef = useRef();
   return (<div style={{
     display: 'flex',

@@ -24,6 +24,7 @@ export default function ProductList ({ products = [], onDeleteProduct, onUpdateP
   });
   return (
     <>
+
       <TextField fullWidth label="Buscar" value={search} onChange={(ev) => setSearch(ev.target.value)} />
       <CustomTable
         content={filteredProducts}
