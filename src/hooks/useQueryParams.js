@@ -7,6 +7,7 @@ import { isObjectEmpty } from '../core/helpers';
 
 export function useQueryParams (obj) {
   const { entries, set } = useUrlQuery();
+  console.log(entries, set)
   useEffect(() => {
     if (isObjectEmpty(entries) && obj) {
       set(obj)

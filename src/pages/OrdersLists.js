@@ -59,8 +59,8 @@ export function OrdersPage () {
   }
 
   if (search) {
-    const to = new Date(search.to).getTime();
-    const from = new Date(search.from).getTime();
+    const to = new Date(parseInt(search.to, 10)).getTime();
+    const from = new Date(parseInt(search.from, 10)).getTime();
     ords = ords.filter((item) => {
       const createdAt = new Date(item.createdAt).getTime();
       return between(createdAt, from || 0, to || Infinity)
@@ -82,7 +82,7 @@ export function OrdersPage () {
       }}
     />
     <SearchDatesInputs
-      dfrom={search.from}
+      dfrom={parseInt(search.from, 10)}
       onChange={(dates) => {
         setSearch(dates);
       }} />
