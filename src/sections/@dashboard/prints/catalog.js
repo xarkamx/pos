@@ -2,11 +2,21 @@ import { Button } from '@mui/material';
 import React, { useRef } from 'react'
 import ReactToPrint from 'react-to-print';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
+import { Money } from '../../../components/Formats/FormatNumbers';
 
 export const PrintableCatalog = React.forwardRef(({ products, css }, ref) => (
   <div style={css} className='catalog1' ref={ref}>
     <style>
       {`
+
+        .contact{
+          text-align: center;
+          margin: 1rem;
+          display: flex;
+          p{
+            margin: 0.5rem;
+          }
+        }
         .catalog1 {
           margin: 1in auto;
           padding: 1in;
@@ -42,10 +52,10 @@ export const PrintableCatalog = React.forwardRef(({ products, css }, ref) => (
           transform: translateY(0.3in);
         }
         .flexTitle h1 {
-          margin: 1in;
+          margin: .8in;
           font-size: .3in;
         }
-
+    
         img::before {
     content: '';
     position: relative;
@@ -54,7 +64,6 @@ export const PrintableCatalog = React.forwardRef(({ products, css }, ref) => (
     bottom: 0;
     right: 0;
     line-height: 200px;
-    background-image: url('https://surtidoraferreteramexicana.com/wp-content/uploads/2023/11/logoFilled.png');
     background-size: contain;
     color: currentColor;
     text-align: center;
@@ -71,28 +80,29 @@ export const PrintableCatalog = React.forwardRef(({ products, css }, ref) => (
       <img src='https://surtidoraferreteramexicana.com/wp-content/uploads/2023/11/logoFilled.png' alt='logo' />
       <h1>Surtidora Ferretera Mexicana</h1>
     </div>
+    <div className='contact'>
+      <p><b>Contáctanos en</b>: 33-36-38-39-96</p>
+      <p><b>Correo:</b> hojalateriagutierrez@gmail.com</p>
+
+    </div>
+    <p><b>Direccion:</b> Opalo 715 colonia San Marcos, Guadalajara, Jalisco</p>
     <h2>Catálogo de productos</h2>
     <p>Conoce nuestro catálogo de productos</p>
+
     <table>
       <thead>
         <tr>
-          <td>Imagen</td>
           <td>Producto</td>
+          <td>Descripcion</td>
           <td>Precio</td>
-          <td>Existencia</td>
         </tr>
       </thead>
       {products.map((product) => (
         <tbody key={`tbody-${product.id}`}>
           <tr>
-            <td><img src={product.image} style={{
-              width: '50px',
-              height: '50px'
-            }} alt={product.name}
-            /></td>
             <td>{product.name}</td>
-            <td>{product.unitPrice}</td>
-            <td>{product.inStock}</td>
+            <td>{product.shortDescription}</td>
+            <td><Money number={product.unitPrice} /></td>
           </tr>
         </tbody>
       ))}
