@@ -36,7 +36,6 @@ export function InventoryTable ({ items = [] }) {
       <CustomTable
         content={filtered}
         onTitleClick={(value, dir) => {
-          console.log("Sorting by", value, dir);
           setSort({ key: value, dir });
         }}
         onClick={(item) => {
