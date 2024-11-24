@@ -8,21 +8,23 @@ export const PrintableCatalog = React.forwardRef(({ products, css }, ref) => (
   <div style={css} className='catalog1' ref={ref}>
     <style>
       {`
+       @page  
+{ 
+    size: auto;   /* auto is the initial value */ 
 
+    /* this affects the margin in the printer settings */ 
+    margin: 5mm 10mm;  
+} 
         .contact{
           text-align: center;
-          margin: 1rem;
+          margin: 0 auto;
           display: flex;
+          justify-content: space-around;
           p{
             margin: 0.5rem;
           }
         }
         .catalog1 {
-          margin: 1in auto;
-          padding: 1in;
-        h1 {
-          text-align: center;
-        }
         h2 {
           text-align: center;
         }
@@ -32,35 +34,34 @@ export const PrintableCatalog = React.forwardRef(({ products, css }, ref) => (
         table {
           width: 100%;
           border-collapse: collapse;
+          padding: 1rem;
         }
         th, td {
           border: 1px solid black;
           padding: 8px;
           text-align: left;
-        }
-        img{
-          margin: 0 auto;
+          font-size: 11px;
         }
         .flexTitle {
-          display: inline;
+          display: flex;
           align-items: left;
           justify-content: left;
         }
         .flexTitle img {
-          width: 1in;
-          height: 1in;
-          transform: translateY(0.3in);
+          width: .8in;
+          height: .8in;
+          transform: translateY(0.5in) translateX(0.5in);
         }
         .flexTitle h1 {
-          margin: .8in;
-          font-size: .3in;
+          margin: .8in .8in;
+          font-size: .2in;
         }
-    
+        margin: 1rem;
         img::before {
     content: '';
     position: relative;
     top: 0;
-    left: 0;
+    left: 1rem;
     bottom: 0;
     right: 0;
     line-height: 200px;
@@ -81,13 +82,11 @@ export const PrintableCatalog = React.forwardRef(({ products, css }, ref) => (
       <h1>Surtidora Ferretera Mexicana</h1>
     </div>
     <div className='contact'>
-      <p><b>Contáctanos en</b>: 33-36-38-39-96</p>
+      <p><b>Contáctanos en</b>: 33-36383996</p>
       <p><b>Correo:</b> hojalateriagutierrez@gmail.com</p>
 
     </div>
     <p><b>Direccion:</b> Opalo 715 colonia San Marcos, Guadalajara, Jalisco</p>
-    <h2>Catálogo de productos</h2>
-    <p>Conoce nuestro catálogo de productos</p>
 
     <table>
       <thead>
