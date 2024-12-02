@@ -219,4 +219,5 @@ function InventoryTable ({ inventory }) {
 const dictionary = {
   'purchase': 'Compra',
   'inventory': 'Inventario',
+  'cancel': 'Cancelado',
 }

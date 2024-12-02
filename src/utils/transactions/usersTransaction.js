@@ -19,6 +19,10 @@ export class UsersTransactions extends TransactionService {
     return this.post('/users/me/password', { password });
   }
 
+  async deleteUser (id) {
+    return this.delete(`/users/${id}`);
+  }
+
   async activateClient (client = {
     email: '',
     password: ''

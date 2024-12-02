@@ -15,9 +15,15 @@ export function useUsers () {
     },
   });
 
+  const deleteUser = async (id) => {
+    await transaction.deleteUser(id);
+    userList.refetch();
+  }
+
   return {
     userList,
     addUser: addUser.mutate,
     updateUser,
+    deleteUser
   }
 }

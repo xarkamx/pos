@@ -1,9 +1,9 @@
-
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from 'react';
-import { TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { CustomTable } from '../../../components/tables/Table';
 
-export function UsersTable ({ users = [] }) {
+export function UsersTable ({ users = [], onDelete }) {
   const [search, setSearch] = useState('')
   if (search) {
     users = users.filter(user => {
@@ -21,9 +21,13 @@ export function UsersTable ({ users = [] }) {
       format={(user) => [
         user.name,
         user.email,
-        <>
-
-        </>
+        <Button
+          key={`edit-${user.id}`}
+          startIcon={< DeleteIcon />}
+          color='error'
+          variant="text" onClick={async () => {
+            await onDelete(user.id)
+          }}>Eliminar</Button>
       ]}
     />
   </>
