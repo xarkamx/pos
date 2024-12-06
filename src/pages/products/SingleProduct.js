@@ -20,6 +20,7 @@ import { useProductsRecipe } from '../materials/hooks/useMaterial';
 import { QuickFormInput } from '../../components/Containers/QuickFormContainer';
 import { useCState } from '../../hooks/useHooks';
 import { SmartGrid, SmartTab } from '../../components/Containers/SmartGrid';
+import { EditableContainer } from '../../components/Containers/editableContainer';
 
 
 
@@ -36,9 +37,14 @@ export function SingleProductPage () {
         name={product.name}
         unitPrice={product.price}
         description={product.description}
+        shortDescription={product.short_description}
         image={product.image}
         qty={sales.totalSold}
-        total={sales.totalIncome} />
+        total={sales.totalIncome}
+        onChange={(data) => {
+          console.log(data);
+        }}
+      />
       <MaterialsPerProduct productId={productId} />
     </SmartGrid>
     <SmartGrid title='Ordenes' icon={<SellIcon />} item xs={12} sm={6} >
@@ -59,7 +65,7 @@ export function SingleProductPage () {
 }
 
 
-function ProductHeader ({ qty, total, name, unitPrice, description, image }) {
+function ProductHeader ({ qty, total, name, unitPrice, description, shortDescription, image, onChange }) {
   return <Grid container>
     <Grid item xs={12} md={3}>
       <img src={image} alt={name} style={{ width: '300px' }} />
@@ -67,6 +73,11 @@ function ProductHeader ({ qty, total, name, unitPrice, description, image }) {
     <Grid item xs={12} md={9}>
       <h1>{name}</h1>
       <p>{description}</p>
+      <EditableContainer value={shortDescription} onChange={(value) => {
+        onChange({
+          shortDescription: value
+        })
+      }} />
     </Grid>
     <Grid item xs={12} sm={4}>
       <AppWidgetSummary title="Precio Unitario" total={numberToMoney(unitPrice)} icon={'ant-design:dollar'} color="info" />

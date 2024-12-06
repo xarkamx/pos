@@ -49,31 +49,42 @@ export function BillingList () {
           rowsPerPage={rowsPerPage}
           page={billing?.page || 0}
           onPageChange={(ev, pageNumber) => {
+            if (pageNumber < 1) pageNumber = 1;
             search({ page: pageNumber })
           }}
         />}
         content={billing?.data}
-        format={(item) => [
-          item.folio_number,
-          localeDate(item.created_at),
-          item.customer.legal_name,
-          taxSystem[item.customer.tax_system],
-          item.customer.tax_id,
-          <Money number={item.total} key={item.id} />,
-          <Chip
-            key={`chip-${item.id}-status`}
-            label={statusText[item.status]}
-            color={item.status === 'valid' ? 'success' : 'error'}
-            sx={{
-              color: 'white',
-              fontWeight: 'bold',
-            }}
-          />,
-          methodText[item.payment_method],
-          <>
+        format={(item) => {
+          let { total } = item.total;
+
+          if (item.complements) {
+            total = item.complements[0].data[0].related_documents[0].amount
+          }
+
+          if (item.cancellation_status !== 'none') {
+            item.status = 'canceled'
+          }
+          return [
+            item.folio_number,
+            localeDate(item.created_at),
+            item.customer.legal_name,
+            taxSystem[item.customer.tax_system],
+            item.customer.tax_id,
+            <Money number={total} key={`money-${item.id}`} />,
+            <Chip
+              key={`chip-${item.id}-status`}
+              label={statusText[item.status]}
+              color={item.status === 'valid' ? 'success' : 'error'}
+              sx={{
+                color: 'white',
+                fontWeight: 'bold',
+              }}
+            />,
+            methodText[item.payment_method],
             <ActionsContainer item={item} onCancel={cancel} key={`actions-${item.id}`} />
-          </>
-        ]}
+
+          ]
+        }}
       />
     </>
   )
