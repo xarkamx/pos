@@ -55,7 +55,7 @@ export function BillingList () {
         />}
         content={billing?.data}
         format={(item) => {
-          let { total } = item.total;
+          let { total } = item;
 
           if (item.complements) {
             total = item.complements[0].data[0].related_documents[0].amount
