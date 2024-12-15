@@ -38,7 +38,7 @@ function RequiredMaterials ({ items }) {
     <CustomTable content={required} titles={['Material', 'Requerido', 'Precio']} format={(item) => [
       item.name,
       kValues(item.required),
-      <Money number={item.price} key={`price-${item.name}`} />
+      <Money number={(item.price * item.required)} key={`price-${item.name}`} />
     ]}
       onClick={(item) => {
         nav(`/dashboard/insumos/${item.materialId}`);
@@ -52,6 +52,7 @@ function requiredMaterialsList (items) {
   return filtered.reduce((acc, item) => {
     item.materials.forEach((material) => {
       const { materialId, name, required, price } = material;
+
       if (acc[materialId]) {
         acc[materialId].required += required;
       } else {
@@ -59,7 +60,7 @@ function requiredMaterialsList (items) {
           materialId,
           name,
           required,
-          price: price * required,
+          price,
         };
       }
     });
