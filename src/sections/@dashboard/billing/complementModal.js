@@ -2,7 +2,7 @@ import { useState } from 'react';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import { Box, Card, Modal, ListItem, Button } from '@mui/material';
 import { usePopUp } from '../../../context/PopUpContext';
-import { QuickFormContainer } from '../../../components/Containers/QuickFormContainer';
+import { QuickFormContainer, QuickFormInput } from '../../../components/Containers/QuickFormContainer';
 import { useCState } from '../../../hooks/useHooks';
 import { PaymentMethodSelect } from '../payments/SelectPaymentMethod';
 import { OrderTransaction } from '../../../utils/transactions/orderTransaction';
@@ -34,7 +34,8 @@ export function ComplementModalForm ({ billingId, total, open, onClose, onAccept
   const [loading, setLoading] = useState(false);
   const [complementForm, setComplementForm] = useCState({
     paymentMethod: '01',
-    amount: total
+    amount: total,
+    date: new Date().toISOString().split('T')[0]
   });
   return (
 
@@ -58,7 +59,8 @@ export function ComplementModalForm ({ billingId, total, open, onClose, onAccept
               try {
                 const resp = await service.addComplement(billingId, {
                   paymentForm: complementForm.paymentMethod,
-                  amount: complementForm.amount
+                  amount: complementForm.amount,
+                  paymentDate: complementForm.date
                 });
                 if (resp.ok) {
                   popUpAlert("success", "Complemento agregado correctamente");
@@ -80,6 +82,11 @@ export function ComplementModalForm ({ billingId, total, open, onClose, onAccept
                 setComplementForm({ paymentMethod: value.value });
               }} />
             </ListItem>
+            <QuickFormInput fullWidth
+              label='Fecha de pago'
+              type='date' value={complementForm.date} onChange={(ev) => {
+                setComplementForm({ date: ev.target.value });
+              }} />
             <Button variant="contained" disabled={loading} sx={{ mt: 2 }} fullWidth type='submit'>
               {
                 loading ? "Cargando..." : "Agregar"
