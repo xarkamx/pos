@@ -66,7 +66,7 @@ export const routes = [
     element: <DashboardLayout />,
     auth: true,
     children: [
-      { path: 'app', element: <DashboardAppPage />, roles: ['admin', 'cashier'] },
+      { path: 'app', element: <DashboardAppPage />, roles: ['admin', 'cashier', 'storer'] },
       {
         path: 'clientes',
         element: <ClientsPage />,
@@ -81,7 +81,7 @@ export const routes = [
         roles: ['admin', 'cashier'],
       },
       {
-        path: 'ordenes', element: <OrdersPage />, roles: ['admin', 'cashier'],
+        path: 'ordenes', element: <OrdersPage />, roles: ['admin', 'cashier', 'storer'],
         icon: <ShoppingCartIcon />,
         title: 'Notas de venta'
       },
@@ -97,13 +97,13 @@ export const routes = [
         title: 'Productos'
       },
       {
-        path: 'procesos', title: "Procesos", icon: <SettingsIcon />, element: <ProcessPage />, roles: ['admin', 'cashier'],
+        path: 'procesos', title: "Procesos", icon: <SettingsIcon />, element: <ProcessPage />, roles: ['admin', 'cashier', 'storer'],
       },
       {
         path: 'productos/:productId', element: <SingleProductPage />, roles: ['admin', 'storer', 'cashier'],
       },
       {
-        path: 'caja', element: <CheckoutPage />, roles: ['admin', 'cashier'],
+        path: 'caja', element: <CheckoutPage />, roles: ['admin', 'cashier', 'storer'],
         icon: <PointOfSaleIcon />,
         title: 'Caja',
       },
@@ -119,7 +119,7 @@ export const routes = [
       },
 
       {
-        path: 'caja/historial', element: <CheckoutHistory />, roles: ['admin', 'cashier']
+        path: 'caja/historial', element: <CheckoutHistory />, roles: ['admin', 'cashier', 'storer']
       },
       {
         path: 'inventario',
@@ -297,7 +297,7 @@ export default function Router () {
     const mainPages = {
       cashier: '/dashboard/caja',
       admin: '/dashboard/app',
-      storer: '/dashboard/inventario',
+      storer: '/dashboard/caja',
       master: '/dashboard/app',
       middleman: '/dashboard/comisionistas/me',
       customer: '/dashboard/me',
