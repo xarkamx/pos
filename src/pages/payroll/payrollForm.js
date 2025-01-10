@@ -11,7 +11,8 @@ export function PayrollForm ({ onSubmit, employee = {}, loading, btnText = 'Agre
     rfc: '',
     salaryPerDay: 0,
     bankName: '',
-    accountNumber: ''
+    accountNumber: '',
+    workWeek: 5
   })
   useEffect(() => {
     if (employee.id) {
@@ -55,6 +56,14 @@ export function PayrollForm ({ onSubmit, employee = {}, loading, btnText = 'Agre
         value={payroll.salaryPerDay}
         fullWidth label="Salario por dia" type='text' onChange={(ev) => {
           setPayroll({ salaryPerDay: ev.target.value })
+        }} />
+
+      <QuickFormInput
+        value={payroll.workWeek}
+        fullWidth label="Semana laboral" type='number'
+        max={6}
+        onChange={(ev) => {
+          setPayroll({ workWeek: ev.target.value })
         }} />
       <QuickFormInput
         value={payroll.bankName}

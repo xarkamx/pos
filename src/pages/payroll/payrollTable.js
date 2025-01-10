@@ -36,13 +36,13 @@ export function PayrollTable ({ items = [], onPay }) {
           max={6}
           type='number'
           onFocus={(ev) => ev.target.select()}
-          value={item.daysWorked || 6}
+          value={item.workWeek}
           onChange={(ev) => {
             let days = ev.target.value
             if (days > 6) days = 6
-            setPayroll(payroll.map(pay => pay.id === item.id ? { ...pay, daysWorked: days } : pay))
+            setPayroll(payroll.map(pay => pay.id === item.id ? { ...pay, workWeek: days } : pay))
           }} />,
-        Math.ceil(item.salaryPerDay * item.daysWorked) || Math.ceil(item.salaryPerDay * 6),
+        Math.ceil(item.salaryPerDay * item.workWeek) || Math.ceil(item.salaryPerDay * 6),
         <IconButton onClick={() => {
           navigate(`/dashboard/empleados/${item.id}`)
         }} key={`employee-edit-${item.id}`}>

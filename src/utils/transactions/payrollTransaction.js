@@ -18,7 +18,7 @@ export class PayrollTransaction extends TransactionService {
   async pay (payroll) {
     return this.post('/payroll/pay', {
       payrollEmployees: payroll.map(pay => ({
-        workedDays: pay.daysWorked,
+        workedDays: pay.workWeek,
         payrollId: pay.id
       }))
     });
