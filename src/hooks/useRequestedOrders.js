@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { OrderTransaction } from '../utils/transactions/orderTransaction';
+import { usePopUp } from '../context/PopUpContext';
 
 export function useRequestedOrders () {
   const query = useQuery('requestedOrders', () => {
@@ -19,7 +20,7 @@ export function useCheckoutOrder () {
 
   const [orderId, setOrderId] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-
+  const { popUpAlert } = usePopUp();
 
   // create order mutation
 
@@ -29,6 +30,10 @@ export function useCheckoutOrder () {
     const { orderId } = (await orderTransaction.createOrder(order)).data;
 
     setIsLoading(false);
+    if (!orderId) {
+      popUpAlert('error', 'Error en registro de orden');
+      return 0;
+    }
     setOrderId(orderId);
     return orderId;
   };
@@ -41,10 +46,15 @@ export function useCheckoutOrder () {
     return nOrderId;
   };
 
+  const clearOrder = () => {
+    setOrderId(0);
+  };
+
   return {
     addOrder,
     addRequestedOrder,
     orderId,
-    isLoading
+    isLoading,
+    clearOrder
   };
 }

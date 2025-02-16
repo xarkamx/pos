@@ -10,6 +10,6 @@ keys.filter(key => {
 }).forEach(k => {
   env[k] = process.env[k]
 })
-console.log('generating JSON env')
+
 
 fs.writeFileSync('./src/env.json', JSON.stringify(env))
