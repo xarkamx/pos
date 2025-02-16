@@ -41,8 +41,8 @@ export function SingleProductPage () {
         image={product.image}
         qty={sales.totalSold}
         total={sales.totalIncome}
-        onChange={(data) => {
-          console.log(data);
+        onChange={() => {
+          // updateProduct(productId, data)
         }}
       />
       <MaterialsPerProduct productId={productId} />

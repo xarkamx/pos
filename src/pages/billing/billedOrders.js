@@ -9,7 +9,7 @@ export function BilledOrders () {
   const { orders } = useBilledOrders(billingId);
   return (
     <OrdersTable orders={orders} onStatusClick={() => {
-      console.log('status clicked')
+      // do something
     }} />
   )
 }
