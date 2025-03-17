@@ -16,17 +16,18 @@ export function useProducts () {
     onSuccess: () => query.refetch()
   });
 
-  const update = useMutation((product) => {
+  const update = async (product) => {
+    const transaction = new ProductsTransaction();
     const { id, ...rest } = product;
-    new ProductsTransaction().updateProduct(id, rest);
-  });
+    await transaction.updateProduct(id, rest);
+  };
   const productsList = query.data ?? []
   return {
     products: productsList.map(item => ({ label: item.name, id: item.id, price: item.unitPrice, quantity: item.inStock })),
     data: productsList,
     add: add.mutate,
     del: del.mutate,
-    update: update.mutate,
+    update,
     refresh: query.refetch
   }
 }

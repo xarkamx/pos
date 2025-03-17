@@ -1,5 +1,6 @@
 
 import { useNavigate } from 'react-router-dom';
+import CheckIcon from '@mui/icons-material/Check';
 import EditIcon from '@mui/icons-material/Edit';
 import { IconButton, TextField } from '@mui/material';
 import PropTypes from 'prop-types';
@@ -7,6 +8,7 @@ import { useState } from 'react';
 import { DeleteSmallButton } from '../../../components/Buttons/IconButons';
 import { DebounceInput } from '../../../components/Inputs/DebounceInput';
 import { CustomTable } from '../../../components/tables/Table';
+import { usePopUp } from '../../../context/PopUpContext';
 
 
 // ----------------------------------------------------------------------
@@ -22,6 +24,7 @@ export default function ProductList ({ products = [], onDeleteProduct, onUpdateP
     const searchValues = search.split(' ');
     return searchValues.some((value) => product.label?.toLowerCase().includes(value.toLowerCase()));
   });
+  const { popUpAlert } = usePopUp();
   return (
     <>
 
@@ -38,10 +41,11 @@ export default function ProductList ({ products = [], onDeleteProduct, onUpdateP
                 if (!ev.target.value) return;
                 onUpdateProduct({ id: product.id, name: ev.target.value });
               }} />,
-            <DebounceInput
-              value={product.price} key={`val-${product.id}`} onChange={(ev) => {
-                if (!ev.target.value) return;
-                onUpdateProduct({ id: product.id, price: ev.target.value });
+            <PriceForm
+              value={product.price} key={`val-${product.id}`} onChange={async (value) => {
+                if (!value) return;
+                await onUpdateProduct({ id: product.id, price: value });
+                popUpAlert('success', 'Precio actualizado');
               }} />,
             <>
               <DeleteSmallButton onClick={() => {
@@ -61,4 +65,27 @@ export default function ProductList ({ products = [], onDeleteProduct, onUpdateP
   );
 }
 
+function PriceForm ({ value, onChange }) {
+  const [val, setVal] = useState(value);
+  return (
+    <form
+      onSubmit={(ev) => {
+        ev.preventDefault();
+        onChange(val);
+      }}
+      className='priceForm'>
+      <TextField
+        variant='standard'
+        value={val}
+        onChange={(ev) => {
+          if (!ev.target.value) return;
+          setVal(ev.target.value);
+        }}
+      />
+      <IconButton type='submit'>
+        <CheckIcon />
+      </IconButton>
+    </form>
+  );
+}
 

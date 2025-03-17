@@ -1,11 +1,11 @@
 import { config } from '../../config';
 
-const { TransactionService } = require('./transactionService');
+import { TransactionService } from './transactionService';
 
 export class LoginTransaction extends TransactionService {
   constructor () {
     super(config.apis.bos);
-    this.products = [];
+    console.log('LoginTransaction', config.apis.bos);
   }
 
   async login (email, password) {

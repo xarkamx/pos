@@ -39,8 +39,8 @@ export function SingleProductPage () {
         description={product.description}
         shortDescription={product.short_description}
         image={product.image}
-        qty={sales.totalSold}
-        total={sales.totalIncome}
+        qty={sales?.totalSold}
+        total={sales?.totalIncome}
         onChange={() => {
           // updateProduct(productId, data)
         }}
@@ -65,7 +65,7 @@ export function SingleProductPage () {
 }
 
 
-function ProductHeader ({ qty, total, name, unitPrice, description, shortDescription, image, onChange }) {
+function ProductHeader ({ qty = 0, total = 0, name, unitPrice = 0, description, shortDescription, image, onChange }) {
   return <Grid container>
     <Grid item xs={12} md={3}>
       <img src={image} alt={name} style={{ width: '300px' }} />
@@ -96,7 +96,7 @@ function useProductInfo (productId) {
   const resp = useQuery('product', async () => service.getProductInfo(productId));
   const inventoryReq = useQuery('inventory', async () => service.getProductHistory(productId));
 
-  return { details: resp.data, isLoading: resp.isLoading, inventory: inventoryReq.data };
+  return { details: resp.data ?? {}, isLoading: resp.isLoading, inventory: inventoryReq.data };
 }
 
 function ClientTableList ({ clients }) {

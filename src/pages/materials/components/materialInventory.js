@@ -1,9 +1,10 @@
 
 
 import { useNavigate } from 'react-router-dom';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
-import { List } from '@mui/material';
+import { IconButton, List } from '@mui/material';
 import { CustomTable } from '../../../components/tables/Table';
 import { MaterialTransaction } from '../../../utils/transactions/materialTransaction';
 import { Money } from '../../../components/Formats/FormatNumbers';
@@ -23,9 +24,8 @@ export function MaterialInventory () {
     </SmartGrid>
     <SmartGrid title='Lista de materiales' item xs={12} md={8} >
       <CustomTable
-        titles={['Id', 'Nombre', 'Cantidad', 'Unidad', 'Precio', 'Inversion']}
+        titles={['Id', 'Nombre', 'Cantidad', 'Unidad', 'Precio', 'Inversion', 'Acciones']}
         content={materials}
-        onClick={(item) => nav(`/dashboard/insumos/${item.id}`)}
         format={(item) => [
           item.id,
           item.name,
@@ -33,6 +33,8 @@ export function MaterialInventory () {
           item.unit,
           <Money number={item.price} key={`${item.id}-price`} />,
           <Money number={item.quantity * item.price} key={`${item.id}-investment`} />,
+          <IconButton onClick={() => nav(`/dashboard/insumos/${item.id}`)} key={`${item.id}-edit`}><VisibilityIcon /></IconButton>
+
         ]} />
     </SmartGrid>
   </SmartGrid>
