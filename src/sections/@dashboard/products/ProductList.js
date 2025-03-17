@@ -69,12 +69,17 @@ function PriceForm ({ value, onChange }) {
   const [val, setVal] = useState(value);
   return (
     <form
+      style={{
+        display: 'flex',
+        gap: '5px',
+      }}
       onSubmit={(ev) => {
         ev.preventDefault();
         onChange(val);
       }}
       className='priceForm'>
       <TextField
+        fullWidth
         variant='standard'
         value={val}
         onChange={(ev) => {
