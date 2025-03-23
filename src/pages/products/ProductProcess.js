@@ -7,6 +7,7 @@ import { BasicProductSearch } from '../../sections/@dashboard/products/ProductSe
 import { CustomTable } from '../../components/tables/Table';
 import { useCState } from '../../hooks/useHooks';
 import { ProductsTransaction } from '../../utils/transactions/productsTransaction';
+import { usePopUp } from '../../context/PopUpContext';
 
 export function ProcessPage () {
   const process = useProcess()
@@ -106,6 +107,7 @@ function ProccessInflow ({ maxQty, onSubmit }) {
 
 function useProcess () {
   const [process, setProcess] = useState([])
+  const { popUpAlert } = usePopUp()
   const transaction = new ProductsTransaction()
   const processQuery = useQuery('process', async () => {
     const res = await transaction.getProcessList()
@@ -120,6 +122,10 @@ function useProcess () {
     return res
   })
   const addProcess = async (prod) => {
+    if (!prod.product.id) {
+      popUpAlert('error', 'Debe seleccionar un producto')
+      return false
+    }
     const index = process.findIndex(item => item.id === prod.product.id)
     if (index !== -1) {
       const newProcess = [...process]
@@ -142,7 +148,9 @@ function useProcess () {
       "unit": "kg",
       "flow": "outflow"
     })
+    popUpAlert('success', 'Producto agregado correctamente')
     processQuery.refetch()
+    return process
   }
 
   const updateProcess = async (prod, qty) => {
@@ -156,6 +164,7 @@ function useProcess () {
       "unit": "kg",
       "flow": "inflow"
     })
+    popUpAlert('success', 'Cantidad actualizada correctamente')
     processQuery.refetch()
   }
 
