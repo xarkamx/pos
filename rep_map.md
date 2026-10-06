@@ -7,6 +7,9 @@ Cross-project architecture (reviewed 2026-09-30): [../projects_overview.md](../p
 
 ## Start here
 
+- Public invoicing: `/facturas/:uuid` -> `src/pages/PublicOrderInvoicesPage.js`. No login/dashboard wrapper. Reads BOS GET `/public/orders/:uuid` to display order status and customer name/RFC/postal code/tax system; only an explicit button click calls `/public/orders/:uuid/invoices.zip` (may issue). `publicOrderTransaction.js` omits credentials/Authorization, validates UUID v4, disables cache/referrer, handles JSON errors and downloads ZIP through an object URL. No React Query polling/retries of issuance. Loading/error/retry/download states; noindex and no-referrer metadata. Page/transport tests mock BOS. BOS must deploy its public details endpoint before this page is used.
+- Public invoice verification: all 10 POS tests passed (3 suites), production build succeeded, new page/transport ESLint passed. BOS typecheck and 37 public-order tests passed. No real invoices were issued or deployment performed; production build reports existing large-bundle/outdated Browserslist notices.
+
 | Task | First files to open |
 | --- | --- |
 | Startup/providers/query defaults | `src/index.js`, `src/App.js` |
@@ -123,6 +126,9 @@ In this table, hook paths are under `src/`; transaction filenames are under `src
 | Dashboard statistics/SIAPA | `hooks/useStats.js`, `sections/@dashboard/app/`, `sections/@dashboard/siapa/SiapaCards.js` | `infoTransaction.js`: `/info`, `/info/debtors`, `/info/products`, `/inventory/items/:id`; `SiapaTransaction.js`: `/info/siapa` |
 
 ## Checkout persistence and print output
+
+- Ticket invoice QR: `sections/@dashboard/orders/InvoiceQr.js` uses local `qrcode.react` SVG generation with a four-module quiet zone and 42mm black/white print size. Appended to `Ticket.js` only for valid UUID v4; links to the current POS origin + `/facturas/:uuid` (no invoice issuance on render). `OrderPage.PrintTicket` passes `order.publicUuid`; checkout carries creation response `data.publicUuid` through `useCheckoutOrder` -> `useCheckout` -> `CheckoutPage`, resetting it on clear/new creation. Historical orders without UUID show no QR. Print from the public POS domain so the encoded origin is reachable by customers.
+- QR verification: 16 tests passed across 4 suites, including SVG payload/quiet zone, missing UUID and placement at ticket end. Production build succeeded and InvoiceQr ESLint passed. Physical printer/scanner verification remains untested.
 
 - Order invoice table (2026-10-05): `sections/@dashboard/billing/OrderInvoicesTable.js` is rendered in the existing `pages/OrderPage.js` (`/dashboard/ordenes/:orderId`). Query key `['orderInvoices', orderId]` calls `OrderTransaction.getBillsByOrder` -> existing BOS GET `/orders/:orderId/billing` (raw billing rows, including linked invoices). Columns: folio, created_at, type, recorded status, download. Downloads use `external_id`, not the internal row `id`; empty/loading/error states are explicit. `DownloadBillButton` handles pending/failure state; `TransactionService.file` checks HTTP success and downloads a named ZIP via a temporary anchor without navigating away. These consume existing BOS contracts; no backend changes.
 

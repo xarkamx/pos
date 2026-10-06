@@ -7,7 +7,7 @@ import { useCheckoutOrder } from './useRequestedOrders';
 export function useCheckout () {
   const [products, setProducts] = useCState({ items: [] });
   const [discount, setDiscount] = useState(0);
-  const { addOrder, isLoading, orderId, error, clearOrder } = useCheckoutOrder();
+  const { addOrder, isLoading, orderId, publicUuid, error, clearOrder } = useCheckoutOrder();
   const subtotal = products.items.reduce((acc, cur) => acc + cur.amount, 0);
   const fullDiscount = setDiscountToAbsoluteValue(discount, subtotal)
   const total = subtotal - fullDiscount;
@@ -33,6 +33,7 @@ export function useCheckout () {
     isLoading,
     discount: fullDiscount,
     orderId,
+    publicUuid,
     error,
     send: (clientId, payment, paymentMethod) => {
       sendFn({ clientId, payment, discount: fullDiscount, paymentMethod, total, products, createOrder: addOrder, clear })

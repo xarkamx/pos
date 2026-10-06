@@ -58,6 +58,7 @@ import { EmployeeView } from './pages/employees/employeeView';
 import { PTOView } from './pages/employees/pto/ptoView';
 import { BilledOrders } from './pages/billing/billedOrders';
 import { MaterialInventory } from './pages/materials/components/materialInventory';
+import PublicOrderInvoicesPage from './pages/PublicOrderInvoicesPage';
 
 // ----------------------------------------------------------------------
 export const routes = [
@@ -244,6 +245,7 @@ export const routes = [
     path: 'client/register',
     element: <ClientCredentials />
   },
+  { path: 'facturas/:uuid', element: <PublicOrderInvoicesPage /> },
   {
     element: <SimpleLayout />,
     children: [

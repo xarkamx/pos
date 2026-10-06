@@ -1,4 +1,5 @@
 import React from 'react';
+import { InvoiceQr } from './InvoiceQr';
 import { Money } from '../../../components/Formats/FormatNumbers';
 import { useClient } from '../../../hooks/useClients';
 import { ConditionalWall } from '../../../components/FilterWall/ConditionalWall';
@@ -126,6 +127,7 @@ export const Ticket = React.forwardRef((props, ref) => {
           />
         </div>
       </ConditionalWall>
+      <InvoiceQr publicUuid={props.publicUuid} />
     </div>
   );
 });

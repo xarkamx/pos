@@ -235,6 +235,7 @@ export function PrintTicket ({ orderId, products, order }) {
       display: 'none',
     }}>
       <Ticket
+        publicUuid={order?.order.publicUuid}
         clientId={order?.order.clientId}
         ref={componentRef}
         orderId={orderId}

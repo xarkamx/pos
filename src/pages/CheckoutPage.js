@@ -30,6 +30,7 @@ export default function CheckoutPage () {
     send,
     isLoading,
     orderId,
+    publicUuid,
     discount,
     clear
   } = useCheckout();
@@ -127,6 +128,7 @@ export default function CheckoutPage () {
       }}>
         <ConditionalWall condition={orderId && open} >
           <Ticket
+            publicUuid={publicUuid}
             clientId={clientId}
             ref={ref}
             products={products}

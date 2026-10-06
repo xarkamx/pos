@@ -19,15 +19,17 @@ export function useCheckoutOrder () {
   // if param order is given, load requested order
 
   const [orderId, setOrderId] = useState(0);
+  const [publicUuid, setPublicUuid] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { popUpAlert } = usePopUp();
 
   // create order mutation
 
   const addOrder = async (order) => {
+    setPublicUuid(null);
     setIsLoading(true);
     const orderTransaction = new OrderTransaction();
-    const { orderId } = (await orderTransaction.createOrder(order)).data;
+    const { orderId, publicUuid } = (await orderTransaction.createOrder(order)).data;
 
     setIsLoading(false);
     if (!orderId) {
@@ -35,6 +37,7 @@ export function useCheckoutOrder () {
       return 0;
     }
     setOrderId(orderId);
+    setPublicUuid(publicUuid ?? null);
     return orderId;
   };
   // create requested order mutation
@@ -48,11 +51,13 @@ export function useCheckoutOrder () {
 
   const clearOrder = () => {
     setOrderId(0);
+    setPublicUuid(null);
   };
 
   return {
     addOrder,
     addRequestedOrder,
+    publicUuid,
     orderId,
     isLoading,
     clearOrder
