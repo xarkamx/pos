@@ -11,12 +11,20 @@ import { OrderTransaction } from '../../../utils/transactions/orderTransaction';
 import { usePopUp } from '../../../context/PopUpContext';
 
 export function DownloadBillButton ({ billingId }) {
+  const [loading, setLoading] = useState(false);
+  const { popUpAlert } = usePopUp();
   return (
-    <Button startIcon={<SimCardDownloadIcon />} onClick={(ev) => {
+    <Button disabled={loading || !billingId} startIcon={<SimCardDownloadIcon />} onClick={async (ev) => {
       ev.stopPropagation();
-      const service = new OrderTransaction();
-      service.downloadBill(billingId);
-    }}>Descargar</Button>
+      setLoading(true);
+      try {
+        await new OrderTransaction().downloadBill(billingId);
+      } catch (error) {
+        popUpAlert('error', 'No se pudo descargar la factura. Intenta nuevamente.');
+      } finally {
+        setLoading(false);
+      }
+    }}>{loading ? 'Descargando...' : 'Descargar'}</Button>
   )
 }
 

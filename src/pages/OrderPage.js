@@ -20,6 +20,7 @@ import { Money } from '../components/Formats/FormatNumbers';
 import { BillingButton } from './orders/billingButton';
 import { PaymentMethodSelect } from '../sections/@dashboard/payments/SelectPaymentMethod';
 import { translations } from '../utils/translations/translations';
+import { OrderInvoicesTable } from '../sections/@dashboard/billing/OrderInvoicesTable';
 
 
 export default function OrderPage () {
@@ -131,6 +132,9 @@ export default function OrderPage () {
             }
           }}
           />
+        </Grid>
+        <Grid item xs={12}>
+          <OrderInvoicesTable orderId={orderId} />
         </Grid>
         <DangerModal open={openDeleteModal}
           condition={(val) => val === orderId}

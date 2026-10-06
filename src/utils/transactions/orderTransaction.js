@@ -49,7 +49,11 @@ export class OrderTransaction extends TransactionService {
   }
 
   async downloadBill (billingId) {
-    return this.file(`/billing/${billingId}/download`);
+    return this.file(`/billing/${encodeURIComponent(billingId)}/download`, `factura-${billingId}.zip`);
+  }
+
+  async getBillsByOrder (orderId) {
+    return this.get(`/orders/${encodeURIComponent(orderId)}/billing`);
   }
 
   async sendEmail (orderId) {

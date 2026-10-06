@@ -25,7 +25,7 @@ export class TransactionService {
     return this._fetch(path, 'delete', parameters)
   }
 
-  async file (path) {
+  async file (path, filename = 'download') {
     // js fetch download file
     const headers = getHeaders()
     path = `${this.url}${path}`
@@ -33,8 +33,21 @@ export class TransactionService {
       method: 'GET',
       headers
     })
+    if (!resp.ok) {
+      throw new Error('No se pudo descargar el archivo')
+    }
     const file = await resp.blob()
-    window.location.assign(URL.createObjectURL(file))
+    const url = URL.createObjectURL(file)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = filename
+    document.body.appendChild(link)
+    try {
+      link.click()
+    } finally {
+      link.remove()
+      setTimeout(() => URL.revokeObjectURL(url), 1000)
+    }
   }
 
   async _fetch (path, method, body) {
