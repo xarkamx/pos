@@ -4,13 +4,13 @@ import { Helmet } from 'react-helmet-async';
 import { Alert, Box, Button, CircularProgress, Container, Divider, Paper, Stack, Typography } from '@mui/material';
 import { downloadPublicInvoices, getPublicOrder } from '../utils/transactions/publicOrderTransaction';
 
-export default function PublicOrderInvoicesPage() {
+export default function PublicOrderInvoicesPage () {
   const { uuid } = useParams();
   // A new UUID gets its own state; no previous customer's details can remain visible.
   return <PublicInvoiceContent key={uuid} uuid={uuid} />;
 }
 
-export function PublicInvoiceContent({ uuid }) {
+export function PublicInvoiceContent ({ uuid }) {
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
@@ -75,7 +75,7 @@ export function PublicInvoiceContent({ uuid }) {
                 ].map(([label, value]) => <Box key={label}><Typography component="dt" variant="body2">{label}</Typography><Typography component="dd">{value || 'No registrado'}</Typography></Box>)}
               </Box>
             </Box>
-            <Alert severity="info">Si la orden aún no está facturada, al descargar se validará que esté pagada y que sus datos fiscales sean válidos para emitirla. Si ya tiene facturas, se descargarán las existentes.</Alert>
+            <Alert severity="info">Si la orden aún no está facturada, al descargar se validará que sus datos fiscales sean válidos para emitirla. Si ya tiene facturas, se descargarán las existentes.</Alert>
             {downloadError && <Alert severity="error">{downloadError}</Alert>}
             {success && <Alert severity="success">La descarga del ZIP se ha iniciado.</Alert>}
             <Button variant="contained" size="large" disabled={downloading} onClick={download}>
