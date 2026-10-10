@@ -21,9 +21,11 @@ import { BillingButton } from './orders/billingButton';
 import { PaymentMethodSelect } from '../sections/@dashboard/payments/SelectPaymentMethod';
 import { translations } from '../utils/translations/translations';
 import { OrderInvoicesTable } from '../sections/@dashboard/billing/OrderInvoicesTable';
+import { useClientPermissions } from '../hooks/useClientPermissions';
 
 
 export default function OrderPage () {
+  const { canEditClients } = useClientPermissions();
   const { orderId } = useParams();
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const { order, payments, isLoading, pay, del, update, checkIn, cancelBilling, onPaymentsCancel } = useOrder(orderId);
@@ -72,11 +74,11 @@ export default function OrderPage () {
           />
         </Grid>
         <Grid item xs={12} md={4}>
-          <ClientsSearchInput onSubmit={(ev) => {
+          {canEditClients && <ClientsSearchInput onSubmit={(ev) => {
             update({
               clientId: ev.id
             })
-          }} />
+          }} />}
           <ClientCard
             id={order?.order.clientId}
             rfc={order?.order.rfc}

@@ -19,8 +19,11 @@ import { TaxSystem } from '../../sections/@dashboard/clients/TaxSystemInput';
 import { CustomTable } from '../../components/tables/Table';
 import { paymentType } from '../../utils/formats';
 import { TicketPayment } from '../../sections/@dashboard/orders/paymentTicket';
+import { useClientPermissions } from '../../hooks/useClientPermissions';
+import { ClientReadOnlyDetails } from '../../sections/@dashboard/clients/ClientReadOnlyDetails';
 
 export default function SinglePageClient () {
+  const { canEditClients } = useClientPermissions();
   const { clientId } = useParams();
   const { orders, pay } = useOrders({ clientId });
   const { client, clientResume, setClient, clientPayments, payClientDebt, paymentDetails, setPaymentDetails } = useClient(clientId);
@@ -68,6 +71,7 @@ export default function SinglePageClient () {
       </Grid>
       <Grid item xs={12} sm={4}>
         <ClientBasicForm
+          readOnly={!canEditClients}
           rfc={client.rfc}
           name={client.name}
           email={client.email}
@@ -108,9 +112,10 @@ export default function SinglePageClient () {
   );
 }
 
-export function ClientBasicForm ({ rfc, name, email, phones, legal, postalCode, taxSystem, onItemChange }) {
+export function ClientBasicForm ({ rfc, name, email, phones, legal, postalCode, taxSystem, onItemChange, readOnly = false }) {
   if (!Array.isArray(phones)) phones = [phones]
   const [vals, setVals] = useCState({ rfc, name, email, phones, legal, postalCode, taxSystem })
+  if (readOnly) return <ClientReadOnlyDetails {...{ rfc, name, email, phones, postalCode, taxSystem }} />;
 
   return (
     <QuickFormContainer title={'Cliente'}>

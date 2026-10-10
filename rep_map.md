@@ -7,6 +7,8 @@ Cross-project architecture (reviewed 2026-09-30): [../projects_overview.md](../p
 
 ## Start here
 
+- Public invoice download policy (2026-10-10): orders with payment_type 99 can download linked documents before payment, without provider metadata filtering. Pending type-99 orders without invoices issue PPD/form 99 after fiscal validation and a durable claim. Other forms require paid status. PublicOrderInvoicesPage explains this; no transport changes.
+
 - Public invoicing: `/facturas/:uuid` -> `src/pages/PublicOrderInvoicesPage.js`. No login/dashboard wrapper. Reads BOS GET `/public/orders/:uuid` to display order status and customer name/RFC/postal code/tax system; only an explicit button click calls `/public/orders/:uuid/invoices.zip` (may issue). `publicOrderTransaction.js` omits credentials/Authorization, validates UUID v4, disables cache/referrer, handles JSON errors and downloads ZIP through an object URL. No React Query polling/retries of issuance. Loading/error/retry/download states; noindex and no-referrer metadata. Page/transport tests mock BOS. BOS must deploy its public details endpoint before this page is used.
 - Public invoice verification: all 10 POS tests passed (3 suites), production build succeeded, new page/transport ESLint passed. BOS typecheck and 37 public-order tests passed. No real invoices were issued or deployment performed; production build reports existing large-bundle/outdated Browserslist notices.
 
@@ -101,7 +103,7 @@ All paths below are under `/dashboard/` unless marked public. Role shorthand: A=
 | `me` | `users/me.js` / `clients/details.js` | A,C,S,M / U |
 | `facturas`; `facturas/recibidas` | `billing/emited.js` (`BillingList`, `ReceivedBillingList`) | A,C |
 | `facturas/:billingId/ordenes` | `billing/billedOrders.js` | A,C |
-| `facturas/custom` | `billing/customBillForm.js` | A |
+| `facturas/custom` | `billing/customBillForm.js` | A,C |
 | Public `/login`; `/client/register` | `LoginPage.js`; `clientCredentials.js` | Public |
 | Public `/404`, wildcard redirects | `Page404.js`, `src/layouts/simple/SimpleLayout.js` | Public |
 
@@ -197,3 +199,11 @@ git diff --stat
 ```
 
 Prefer paths and exported symbols over line numbers, which drift. Exclude `node_modules/`, `build/`, lockfile content, and binary assets from broad indexing. Re-read the relevant source before implementation; update this map with verified facts only.
+
+## Cashier permissions
+
+- Cashier can view order details and generate order/client/custom invoices. useClientPermissions requires admin for editing existing clients; ClientsPage/ClientsTable omit inline edits, SinglePageClient renders ClientReadOnlyDetails, and OrderPage hides customer reassignment. New customer creation and customer self-service retain existing permissions.
+- BOS enforces PUT /clients/:id admin access and rejects non-admin clientId changes on PUT /orders/:id. Deploy both projects. ClientPermissions.test.js verifies admin/cashier roles and read-only details/table controls.
+- Verification: 7 POS permission/UI tests and 35 BOS order/client/billing tests passed; BOS TypeScript and POS production build passed (existing bundle-size/Browserslist notices). Identity, provider and persistence mocked; no invoices issued.
+
+PPD correction verification (2026-10-10): 46 BOS public-invoice/claim/route tests and 3 POS public-page tests passed; BOS typecheck passed. External provider and database mocked; no real invoices issued or deployment performed.

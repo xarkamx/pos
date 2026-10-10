@@ -75,7 +75,7 @@ export function PublicInvoiceContent ({ uuid }) {
                 ].map(([label, value]) => <Box key={label}><Typography component="dt" variant="body2">{label}</Typography><Typography component="dd">{value || 'No registrado'}</Typography></Box>)}
               </Box>
             </Box>
-            <Alert severity="info">Si la orden aún no está facturada, al descargar se validará que sus datos fiscales sean válidos para emitirla. Si ya tiene facturas, se descargarán las existentes.</Alert>
+            <Alert severity="info">Las órdenes PPD (forma de pago 99) permiten descargar sus facturas sin estar liquidadas. Si la orden está pendiente y aún no tiene factura, se emitirá como PPD después de validar los datos fiscales. Las demás formas de pago requieren que la orden esté pagada.</Alert>
             {downloadError && <Alert severity="error">{downloadError}</Alert>}
             {success && <Alert severity="success">La descarga del ZIP se ha iniciado.</Alert>}
             <Button variant="contained" size="large" disabled={downloading} onClick={download}>
